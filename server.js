@@ -78,7 +78,7 @@ function createServer(options = {}) {
 
   fs.mkdirSync(uploadsDir, { recursive: true });
 
-  let store = loadStore(stateFile);
+  let store = loadStore(stateFile, uploadsDir);
   let writeChain = Promise.resolve();
 
   function withLock(fn) {
@@ -193,7 +193,7 @@ function createServer(options = {}) {
     res.setHeader('X-Content-Type-Options', 'nosniff');
     next();
   });
-  app.use(express.json({ limit: '40mb' }));
+  app.use(express.json({ limit: '8mb' }));
 
   app.get('/api/health', (req, res) => {
     res.json({ ok: true });
@@ -341,9 +341,47 @@ function extFromName(name) {
   return allowed.has(ext) ? ext : '';
 }
 
-function loadStore(stateFile) {
+function materializeDataUrlsInText(text, uploadsDir) {
+  if (!text.includes('data:image/')) return text;
+  return text.replace(/data:(image\/[a-zA-Z0-9.+-]+);base64,([A-Za-z0-9+/=\r\n]+)/g, (match, mime, b64) => {
+    const ext = extFromMime(mime);
+    if (!ext) return '';
+    let buf;
+    try {
+      buf = Buffer.from(b64.replace(/\s/g, ''), 'base64');
+    } catch (err) {
+      return '';
+    }
+    if (!buf.length || buf.length > MAX_IMAGE_BYTES) return '';
+    const name = crypto.createHash('sha256').update(buf).digest('hex').slice(0, 32) + ext;
+    const dest = path.join(uploadsDir, name);
+    try {
+      if (!fs.existsSync(dest)) fs.writeFileSync(dest, buf);
+    } catch (err) {
+      console.error('Could not store embedded image', err.message);
+      return '';
+    }
+    return `/uploads/${name}`;
+  });
+}
+
+function loadStore(stateFile, uploadsDir) {
   try {
-    const parsed = JSON.parse(fs.readFileSync(stateFile, 'utf8'));
+    const size = fs.statSync(stateFile).size;
+    if (size > 24 * 1024 * 1024) {
+      const parked = `${stateFile}.too-large-${Date.now()}`;
+      console.error(`State file is ${size} bytes and would be killed while loading. Moved to ${parked}`);
+      fs.renameSync(stateFile, parked);
+      return { initialized: false, revision: 0, state: emptyState() };
+    }
+    let text = fs.readFileSync(stateFile, 'utf8');
+    if (uploadsDir && text.includes('data:image/')) {
+      text = materializeDataUrlsInText(text, uploadsDir);
+      const tmp = `${stateFile}.slim`;
+      fs.writeFileSync(tmp, text);
+      fs.renameSync(tmp, stateFile);
+    }
+    const parsed = JSON.parse(text);
     if (parsed && parsed.initialized && parsed.state) {
       return {
         initialized: true,
@@ -373,7 +411,14 @@ function listen(server, port) {
 
 if (require.main === module) {
   const port = Number(process.env.PORT) || 8080;
-  const { server, dataDir } = createServer();
+  const { server, wss, dataDir } = createServer();
+  const shutdown = () => {
+    wss.close();
+    server.close(() => process.exit(0));
+    setTimeout(() => process.exit(0), 2000).unref();
+  };
+  process.on('SIGTERM', shutdown);
+  process.on('SIGINT', shutdown);
   listen(server, port).then(() => {
     console.log(`F1 Fiber manager listening on ${port}`);
     console.log(`Data directory: ${dataDir}`);

@@ -20,7 +20,7 @@
   <!-- Supabase JS Client library -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-  <!-- Google Fonts: Inter & Titillium Web -->
+  <!-- Google Fonts: Inter & Titillium Web for F1 aesthetic -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Titillium+Web:wght@600;700;900&display=swap" rel="stylesheet">
@@ -123,6 +123,7 @@
       min-width: 38px;
     }
 
+    /* Prevent body scrolling when mobile drawer is active */
     body.sidebar-open {
       overflow: hidden;
     }
@@ -171,7 +172,7 @@
 
       <!-- F1 Race Calendar Accordion List -->
       <div class="flex-1 overflow-y-auto dark-scroll p-2 space-y-1.5" id="raceList">
-        <!-- Dynamic Race & Sub-menu items -->
+        <!-- Dynamic Race & Sub-menu items injected by JS -->
       </div>
 
       <!-- Sidebar Footer Settings & Supabase status -->
@@ -305,13 +306,229 @@
     </main>
   </div>
 
+
+  <!-- MODAL: Image Lightbox Viewer -->
+  <div id="lightboxModal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex flex-col items-center justify-between p-4 hidden">
+    <div class="w-full flex justify-end p-2">
+      <button onclick="closeModal('lightboxModal')" class="text-white hover:text-slate-300 text-2xl p-2 touch-target">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+    <div class="flex-1 flex items-center justify-center max-w-4xl max-h-[80vh] w-full">
+      <img id="lightboxImage" src="" alt="Enlarged circuit map" class="max-w-full max-h-full object-contain rounded-xl shadow-2xl">
+    </div>
+    <div class="p-4 text-slate-400 text-xs text-center">
+      Tik buiten de foto of op de X om te sluiten
+    </div>
+  </div>
+
+  <!-- MODAL: Add / Edit Joinbox -->
+  <div id="joinboxModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4 hidden">
+    <div class="bg-white rounded-2xl max-w-md w-full shadow-2xl border border-slate-100 overflow-hidden max-h-[90vh] flex flex-col">
+      <div class="bg-slate-900 text-white p-4 flex items-center justify-between shrink-0">
+        <h3 id="joinboxModalTitle" class="font-f1 font-bold text-base sm:text-lg uppercase tracking-wide flex items-center gap-2">
+          <i class="fa-solid fa-box-archive text-amber-400"></i> Joinbox Patchpunt
+        </h3>
+        <button onclick="closeModal('joinboxModal')" class="text-slate-400 hover:text-white text-lg p-2 touch-target"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form id="joinboxForm" onsubmit="saveJoinboxForm(event)" class="p-4 sm:p-5 space-y-4 overflow-y-auto">
+        <input type="hidden" id="joinboxIndex" value="-1">
+        
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1 uppercase tracking-wider">Joinbox Naam / Locatie</label>
+          <input type="text" id="joinboxNameInput" required placeholder="bijv. Joinbox JB-01 (Pit Wall Turn 1)" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-medium focus:ring-2 focus:ring-amber-500 focus:outline-none">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1 uppercase tracking-wider">Inkomende Kabel / Feed</label>
+          <input type="text" id="joinboxInCableInput" required placeholder="bijv. Tac 24 SC/APC TATA" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-medium focus:ring-2 focus:ring-amber-500 focus:outline-none">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1 uppercase tracking-wider">Uitgaande Kabel / Bestemming</label>
+          <input type="text" id="joinboxOutCableInput" required placeholder="bijv. Tac 24 A1 (300m)" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-medium focus:ring-2 focus:ring-amber-500 focus:outline-none">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1 uppercase tracking-wider">Aantal Doorpatch Fibers</label>
+          <input type="number" id="joinboxFiberCountInput" min="1" max="48" value="12" required class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-medium focus:ring-2 focus:ring-amber-500 focus:outline-none">
+        </div>
+
+        <div class="pt-2 flex justify-end gap-2 shrink-0">
+          <button type="button" onclick="closeModal('joinboxModal')" class="px-4 py-2.5 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl touch-target">Annuleren</button>
+          <button type="submit" class="px-5 py-2.5 text-xs font-bold text-white bg-amber-600 hover:bg-amber-700 rounded-xl shadow touch-target">Opslaan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: Copy Layout To Other Races -->
+  <div id="copyModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4 hidden">
+    <div class="bg-white rounded-2xl max-w-lg w-full shadow-2xl border border-slate-100 overflow-hidden max-h-[90vh] flex flex-col">
+      <div class="bg-slate-900 text-white p-4 flex items-center justify-between shrink-0">
+        <h3 class="font-f1 font-bold text-base sm:text-lg uppercase tracking-wide flex items-center gap-2">
+          <i class="fa-regular fa-copy text-emerald-400"></i> Kopieer Indeling
+        </h3>
+        <button onclick="closeModal('copyModal')" class="text-slate-400 hover:text-white text-lg p-2 touch-target"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="p-4 sm:p-5 space-y-3 overflow-y-auto">
+        <p class="text-xs sm:text-sm text-slate-600">
+          Kopieer de kabelstructuur en joinboxes van <strong id="copySourceRaceName" class="text-slate-900">...</strong> naar een of meerdere andere races.
+        </p>
+
+        <div class="border border-slate-200 rounded-xl p-2.5 bg-slate-50 max-h-60 overflow-y-auto space-y-1.5" id="copyTargetRaceList">
+          <!-- Dynamic checkable race list -->
+        </div>
+
+        <div class="flex items-center justify-between text-xs text-slate-500 pt-1">
+          <button onclick="selectAllCopyTargets(true)" class="text-emerald-600 hover:underline font-semibold p-1">Selecteer Alles</button>
+          <button onclick="selectAllCopyTargets(false)" class="text-slate-500 hover:underline p-1">Deselecteer Alles</button>
+        </div>
+      </div>
+      <div class="bg-slate-50 px-4 py-3 border-t border-slate-100 flex items-center justify-between shrink-0">
+        <button onclick="closeModal('copyModal')" class="text-slate-600 text-xs font-semibold px-3 py-2 touch-target">Annuleren</button>
+        <button onclick="executeCopyLayout()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow touch-target">
+          Kopieer Naar Races
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Add / Edit Cable Group Header -->
+  <div id="groupModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4 hidden">
+    <div class="bg-white rounded-2xl max-w-md w-full shadow-2xl border border-slate-100 overflow-hidden max-h-[90vh] flex flex-col">
+      <div class="bg-slate-900 text-white p-4 flex items-center justify-between shrink-0">
+        <h3 id="groupModalTitle" class="font-f1 font-bold text-base sm:text-lg uppercase tracking-wide">Nieuwe Kabelgroep</h3>
+        <button onclick="closeModal('groupModal')" class="text-slate-400 hover:text-white text-lg p-2 touch-target"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form id="groupForm" onsubmit="saveGroupForm(event)" class="p-4 sm:p-5 space-y-4 overflow-y-auto">
+        <input type="hidden" id="groupModalIndex" value="-1">
+        
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1 uppercase tracking-wider">Kabel Naam & Lengte</label>
+          <input type="text" id="groupNameInput" required placeholder="bijv. Tac 24 A1 (300m) of Tac 12 D AUDIO (400m)" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-medium focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1 uppercase tracking-wider">Kleur Thema Banner</label>
+          <div class="grid grid-cols-5 gap-2" id="colorPickerOptions">
+            <button type="button" onclick="selectGroupColor('bg-emerald-600')" class="h-10 rounded-xl bg-emerald-600 border-2 border-emerald-800 touch-target"></button>
+            <button type="button" onclick="selectGroupColor('bg-blue-600')" class="h-10 rounded-xl bg-blue-600 border-2 border-transparent touch-target"></button>
+            <button type="button" onclick="selectGroupColor('bg-purple-600')" class="h-10 rounded-xl bg-purple-600 border-2 border-transparent touch-target"></button>
+            <button type="button" onclick="selectGroupColor('bg-amber-600')" class="h-10 rounded-xl bg-amber-600 border-2 border-transparent touch-target"></button>
+            <button type="button" onclick="selectGroupColor('bg-slate-700')" class="h-10 rounded-xl bg-slate-700 border-2 border-transparent touch-target"></button>
+          </div>
+          <input type="hidden" id="groupColorInput" value="bg-emerald-600">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1 uppercase tracking-wider">Aantal Fiber Paren (Aanmaken)</label>
+          <select id="groupPairCountInput" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-medium focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+            <option value="6">6 Paren (12 Fibers)</option>
+            <option value="12" selected>12 Paren (24 Fibers)</option>
+            <option value="2">2 Paren (4 Fibers)</option>
+            <option value="24">24 Paren (48 Fibers)</option>
+          </select>
+        </div>
+
+        <div class="pt-2 flex justify-end gap-2 shrink-0">
+          <button type="button" onclick="closeModal('groupModal')" class="px-4 py-2.5 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl touch-target">Annuleren</button>
+          <button type="submit" class="px-5 py-2.5 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-xl shadow touch-target">Opslaan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: Add/Edit Race -->
+  <div id="raceModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4 hidden">
+    <div class="bg-white rounded-2xl max-w-md w-full shadow-2xl border border-slate-100 overflow-hidden max-h-[90vh] flex flex-col">
+      <div class="bg-slate-900 text-white p-4 flex items-center justify-between shrink-0">
+        <h3 id="raceModalTitle" class="font-f1 font-bold text-base sm:text-lg uppercase tracking-wide">Race Bewerken / Toevoegen</h3>
+        <button onclick="closeModal('raceModal')" class="text-slate-400 hover:text-white text-lg p-2 touch-target"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form id="raceForm" onsubmit="saveRaceForm(event)" class="p-4 sm:p-5 space-y-4 overflow-y-auto">
+        <input type="hidden" id="raceModalId" value="">
+        
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1 uppercase tracking-wider">Grand Prix Naam</label>
+          <input type="text" id="raceNameInput" required placeholder="bijv. Dutch Grand Prix" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-medium focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1 uppercase tracking-wider">Circuit Naam & Locatie</label>
+          <input type="text" id="raceCircuitInput" required placeholder="bijv. Circuit Zandvoort • Zandvoort, Nederland" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-medium focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+        </div>
+
+        <div class="pt-2 flex justify-end gap-2 shrink-0">
+          <button type="button" onclick="closeModal('raceModal')" class="px-4 py-2.5 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl touch-target">Annuleren</button>
+          <button type="submit" class="px-5 py-2.5 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-xl shadow touch-target">Opslaan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: Supabase Config -->
+  <div id="supabaseModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4 hidden">
+    <div class="bg-white rounded-2xl max-w-md w-full shadow-2xl border border-slate-100 overflow-hidden max-h-[90vh] flex flex-col">
+      <div class="bg-slate-900 text-white p-4 flex items-center justify-between shrink-0">
+        <h3 class="font-f1 font-bold text-base sm:text-lg uppercase tracking-wide flex items-center gap-2">
+          <i class="fa-solid fa-bolt text-amber-400"></i> Supabase Live Sync
+        </h3>
+        <button onclick="closeModal('supabaseModal')" class="text-slate-400 hover:text-white text-lg p-2 touch-target"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form onsubmit="saveSupabaseConfig(event)" class="p-4 sm:p-5 space-y-4 overflow-y-auto">
+        <p class="text-xs text-slate-600">
+          Vul je Supabase credentials in om wijzigingen realtime tussen apparaten te synchroniseren.
+        </p>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1 uppercase tracking-wider">Supabase Project URL</label>
+          <input type="url" id="sbUrlInput" placeholder="https://xyzcompany.supabase.co" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-xs font-mono focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1 uppercase tracking-wider">Supabase Anon Key</label>
+          <input type="password" id="sbKeyInput" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6..." class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-xs font-mono focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+        </div>
+
+        <div class="pt-2 flex justify-between items-center shrink-0">
+          <button type="button" onclick="clearSupabaseConfig()" class="text-xs text-red-600 hover:underline p-1">Verwijder Koppeling</button>
+          <div class="flex gap-2">
+            <button type="button" onclick="closeModal('supabaseModal')" class="px-3 py-2 text-xs font-semibold text-slate-600 touch-target">Annuleren</button>
+            <button type="submit" class="px-4 py-2.5 text-xs font-bold text-white bg-slate-900 hover:bg-black rounded-xl shadow touch-target">Opslaan</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <script>
     const DEFAULT_F1_CALENDAR_2027 = [
       { id: "r1", code: "R1", name: "Bahrain Grand Prix", circuit: "Bahrain International Circuit • Sakhir, Bahrein" },
       { id: "r2", code: "R2", name: "Saudi Arabian Grand Prix", circuit: "Jeddah Corniche Circuit • Jeddah, Saoedi-Arabië" },
       { id: "r3", code: "R3", name: "Australian Grand Prix", circuit: "Albert Park Circuit • Melbourne, Australië" },
       { id: "r4", code: "R4", name: "Japanese Grand Prix", circuit: "Suzuka Circuit • Suzuka, Japan" },
-      { id: "r5", code: "R5", name: "Chinese Grand Prix", circuit: "Shanghai International Circuit • Shanghai, China" }
+      { id: "r5", code: "R5", name: "Chinese Grand Prix", circuit: "Shanghai International Circuit • Shanghai, China" },
+      { id: "r6", code: "R6", name: "Miami Grand Prix", circuit: "Miami International Autodrome • Florida, VS" },
+      { id: "r7", code: "R7", name: "Portuguese Grand Prix", circuit: "Autódromo Internacional do Algarve • Portimão, Portugal" },
+      { id: "r8", code: "R8", name: "Emilia Romagna Grand Prix", circuit: "Autodromo Enzo e Dino Ferrari • Imola, Italië" },
+      { id: "r9", code: "R9", name: "Monaco Grand Prix", circuit: "Circuit de Monaco • Monte Carlo, Monaco" },
+      { id: "r10", code: "R10", name: "Spanish Grand Prix", circuit: "Madrid Street Circuit • Madrid, Spanje" },
+      { id: "r11", code: "R11", name: "Canadian Grand Prix", circuit: "Circuit Gilles Villeneuve • Montréal, Canada" },
+      { id: "r12", code: "R12", name: "Austrian Grand Prix", circuit: "Red Bull Ring • Spielberg, Oostenrijk" },
+      { id: "r13", code: "R13", name: "British Grand Prix", circuit: "Silverstone Circuit • Silverstone, VK" },
+      { id: "r14", code: "R14", name: "Belgian Grand Prix", circuit: "Circuit de Spa-Francorchamps • Stavelot, België" },
+      { id: "r15", code: "R15", name: "Hungarian Grand Prix", circuit: "Hungaroring • Mogyoród, Hongarije" },
+      { id: "r16", code: "R16", name: "Dutch Grand Prix", circuit: "Circuit Zandvoort • Zandvoort, Nederland" },
+      { id: "r17", code: "R17", name: "Italian Grand Prix", circuit: "Autodromo Nazionale Monza • Monza, Italië" },
+      { id: "r18", code: "R18", name: "Azerbaijan Grand Prix", circuit: "Baku City Circuit • Bakoe, Azerbeidzjan" },
+      { id: "r19", code: "R19", name: "Singapore Grand Prix", circuit: "Marina Bay Street Circuit • Singapore" },
+      { id: "r20", code: "R20", name: "United States Grand Prix", circuit: "Circuit of the Americas • Austin, VS" },
+      { id: "r21", code: "R21", name: "Mexico City Grand Prix", circuit: "Autódromo Hermanos Rodríguez • Mexico-Stad" },
+      { id: "r22", code: "R22", name: "São Paulo Grand Prix", circuit: "Autódromo José Carlos Pace • São Paulo, Brazilië" },
+      { id: "r23", code: "R23", name: "Las Vegas Grand Prix", circuit: "Las Vegas Strip Circuit • Nevada, VS" },
+      { id: "r24", code: "R24", name: "Qatar Grand Prix", circuit: "Lusail International Circuit • Lusail, Qatar" },
+      { id: "r25", code: "R25", name: "Abu Dhabi Grand Prix", circuit: "Yas Marina Circuit • Abu Dhabi, VAE" }
     ];
 
     const SAMPLE_CABLE_GROUPS = [
@@ -323,7 +540,35 @@
         items: [
           { pair: "1,2", label: "FIREWALL MAIN", connector: "SC/APC", defect: false, half: false, full: true },
           { pair: "3,4", label: "CAM 9 (K)", connector: "SC/APC", defect: false, half: false, full: false },
-          { pair: "5,6", label: "Blackmagic Fiber converter t.b.v. 32\"", connector: "SC/APC", defect: false, half: false, full: false }
+          { pair: "5,6", label: "Blackmagic Fiber converter t.b.v. 32\"", connector: "SC/APC", defect: false, half: false, full: false },
+          { pair: "7,8", label: "LABEL / BESTEMMING", connector: "SC/APC", defect: false, half: false, full: false },
+          { pair: "9,10", label: "LABEL / BESTEMMING", connector: "SC/APC", defect: false, half: false, full: false },
+          { pair: "11,12", label: "LABEL / BESTEMMING", connector: "ST", defect: false, half: false, full: false }
+        ]
+      },
+      {
+        id: "g2",
+        title: "Tac 24 A1 (300m)",
+        color: "bg-blue-600",
+        collapsed: false,
+        items: [
+          { pair: "1,2", label: "SWITCH MAIN AP", connector: "LC", defect: true, half: false, full: false },
+          { pair: "3,4", label: "RADIO REPEATER 1", connector: "ST", defect: false, half: true, full: false },
+          { pair: "5,6", label: "TIMING GRAPHICS 1", connector: "ST", defect: false, half: false, full: true },
+          { pair: "7,8", label: "LABEL / BESTEMMING", connector: "ST", defect: false, half: false, full: false }
+        ]
+      }
+    ];
+
+    const SAMPLE_JOINBOXES = [
+      {
+        id: "jb1",
+        name: "Joinbox JB-01 (Pit Lane West)",
+        inCable: "Tac 24 SC/APC TATA",
+        outCable: "Tac 24 A1 (300m)",
+        patches: [
+          { fiberIn: "Fiber 1,2", fiberOut: "Fiber 1,2", notes: "Firewall Direct Passthrough", status: "full" },
+          { fiberIn: "Fiber 3,4", fiberOut: "Fiber 5,6", notes: "Cam 9 Reroute", status: "half" }
         ]
       }
     ];
@@ -331,12 +576,635 @@
     let state = {
       races: [],
       activeRaceId: "r1",
-      activeSubSection: "cables",
-      expandedRaceId: "r1",
+      activeSubSection: "cables", // 'cables', 'maps', 'joinbox', 'notes'
+      expandedRaceId: "r1",       // Which race accordion is expanded in sidebar
       raceCableData: {},
       raceJoinboxData: {},
-      raceMediaData: {}
+      raceMediaData: {},
+      supabaseConfig: { url: '', key: '' }
     };
+
+    let supabaseClient = null;
+    let supabaseActive = false;
+    let serverConnected = false;
+    let syncRevision = 0;
+    let syncBase = null;
+    let syncTimer = null;
+    let flushInFlight = false;
+    let flushAgain = false;
+    let queuedRemote = null;
+    let renderQueued = false;
+    let liveSocket = null;
+    let liveRetry = null;
+    let collapseMap = {};
+    const COLLAPSE_KEY = 'f1_collapse_v1';
+    const clientId = (window.crypto && crypto.randomUUID)
+      ? crypto.randomUUID()
+      : ('c_' + Date.now().toString(36) + Math.random().toString(36).slice(2));
+
+    window.addEventListener('DOMContentLoaded', () => {
+      boot();
+    });
+
+    window.addEventListener('beforeunload', () => {
+      if (!isDirty()) return;
+      clearTimeout(syncTimer);
+      fetch('/api/state', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ clientId, base: syncBase, state: sharedSnapshot() }),
+        keepalive: true
+      });
+    });
+
+    function loadStateFromLocalStorage() {
+      const savedRaces = localStorage.getItem('f1_races_v3');
+      if (savedRaces) {
+        state.races = JSON.parse(savedRaces);
+      } else {
+        state.races = DEFAULT_F1_CALENDAR_2027;
+        localStorage.setItem('f1_races_v3', JSON.stringify(state.races));
+      }
+
+      const savedCableData = localStorage.getItem('f1_cable_data_v3');
+      if (savedCableData) {
+        state.raceCableData = JSON.parse(savedCableData);
+      } else {
+        state.raceCableData["r1"] = JSON.parse(JSON.stringify(SAMPLE_CABLE_GROUPS));
+        saveCableDataToLocal();
+      }
+
+      const savedJoinboxData = localStorage.getItem('f1_joinbox_data_v3');
+      if (savedJoinboxData) {
+        state.raceJoinboxData = JSON.parse(savedJoinboxData);
+      } else {
+        state.raceJoinboxData["r1"] = JSON.parse(JSON.stringify(SAMPLE_JOINBOXES));
+        localStorage.setItem('f1_joinbox_data_v3', JSON.stringify(state.raceJoinboxData));
+      }
+
+      const savedMediaData = localStorage.getItem('f1_media_data_v3');
+      if (savedMediaData) {
+        state.raceMediaData = JSON.parse(savedMediaData);
+      }
+
+      const savedSb = localStorage.getItem('f1_sb_config');
+      if (savedSb) {
+        state.supabaseConfig = JSON.parse(savedSb);
+      }
+    }
+
+    function saveStateToLocal() {
+      queueServerSync();
+    }
+
+    function saveCableDataToLocal() {
+      queueServerSync();
+    }
+
+    function saveJoinboxDataToLocal() {
+      queueServerSync();
+    }
+
+    function saveMediaDataToLocal() {
+      queueServerSync();
+    }
+
+    function loadCollapseMap() {
+      try {
+        collapseMap = JSON.parse(localStorage.getItem(COLLAPSE_KEY) || '{}') || {};
+      } catch (e) {
+        collapseMap = {};
+      }
+    }
+
+    function isGroupCollapsed(raceId, group, gIdx) {
+      const key = (group && group.id) || ('idx:' + gIdx);
+      const raceMap = collapseMap[raceId] || {};
+      if (Object.prototype.hasOwnProperty.call(raceMap, key)) return !!raceMap[key];
+      return !!(group && group.collapsed);
+    }
+
+    function setGroupCollapsed(raceId, group, gIdx, value) {
+      const key = (group && group.id) || ('idx:' + gIdx);
+      if (!collapseMap[raceId]) collapseMap[raceId] = {};
+      collapseMap[raceId][key] = value;
+      if (group) group.collapsed = value;
+      localStorage.setItem(COLLAPSE_KEY, JSON.stringify(collapseMap));
+    }
+
+    function applyCollapseOverlay() {
+      Object.entries(state.raceCableData || {}).forEach(([raceId, groups]) => {
+        if (!Array.isArray(groups)) return;
+        groups.forEach((group, gIdx) => {
+          const key = (group && group.id) || ('idx:' + gIdx);
+          const raceMap = collapseMap[raceId] || {};
+          if (group && Object.prototype.hasOwnProperty.call(raceMap, key)) {
+            group.collapsed = !!raceMap[key];
+          }
+        });
+      });
+    }
+
+    function deepEqual(a, b) {
+      if (a === b) return true;
+      if (typeof a !== typeof b) return false;
+      if (a === null || b === null || a === undefined || b === undefined) return a === b;
+      if (Array.isArray(a)) {
+        if (!Array.isArray(b) || a.length !== b.length) return false;
+        for (let i = 0; i < a.length; i += 1) {
+          if (!deepEqual(a[i], b[i])) return false;
+        }
+        return true;
+      }
+      if (typeof a === 'object') {
+        const aKeys = Object.keys(a);
+        const bKeys = Object.keys(b);
+        if (aKeys.length !== bKeys.length) return false;
+        for (const key of aKeys) {
+          if (!Object.prototype.hasOwnProperty.call(b, key) || !deepEqual(a[key], b[key])) return false;
+        }
+        return true;
+      }
+      return false;
+    }
+
+    function sharedSnapshot() {
+      const copy = structuredClone({
+        races: state.races,
+        raceCableData: state.raceCableData,
+        raceJoinboxData: state.raceJoinboxData,
+        raceMediaData: state.raceMediaData
+      });
+      Object.values(copy.raceCableData || {}).forEach(groups => {
+        if (!Array.isArray(groups)) return;
+        groups.forEach(group => {
+          if (group && typeof group === 'object') delete group.collapsed;
+        });
+      });
+      return copy;
+    }
+
+    function writeLocalCache() {
+      try {
+        localStorage.setItem('f1_races_v3', JSON.stringify(state.races));
+        localStorage.setItem('f1_cable_data_v3', JSON.stringify(state.raceCableData));
+        localStorage.setItem('f1_joinbox_data_v3', JSON.stringify(state.raceJoinboxData));
+        localStorage.setItem('f1_media_data_v3', JSON.stringify(state.raceMediaData));
+      } catch (e) {
+        console.warn('Local cache skipped', e);
+      }
+    }
+
+    function isDirty() {
+      if (!syncBase) return false;
+      return !deepEqual(sharedSnapshot(), syncBase);
+    }
+
+    function showDefaultSyncStatus() {
+      if (supabaseActive) return;
+      const dot = document.getElementById('syncStatusDot');
+      const text = document.getElementById('syncStatusText');
+      if (!dot || !text) return;
+      if (serverConnected) {
+        dot.className = "w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block";
+        text.innerText = "Server sync";
+      } else {
+        dot.className = "w-2.5 h-2.5 rounded-full bg-amber-500 inline-block animate-pulse";
+        text.innerText = "Local Storage Mode";
+      }
+    }
+
+    function canRenderNow() {
+      const active = document.activeElement;
+      if (!active || active === document.body) return true;
+      if (active.id === 'raceSearch') return true;
+      const tag = active.tagName;
+      return tag !== 'INPUT' && tag !== 'TEXTAREA' && tag !== 'SELECT';
+    }
+
+    function safeRender() {
+      if (!canRenderNow()) {
+        if (renderQueued) return;
+        renderQueued = true;
+        const active = document.activeElement;
+        const resume = () => {
+          active.removeEventListener('blur', resume);
+          active.removeEventListener('change', resume);
+          if (!renderQueued || !canRenderNow()) return;
+          renderQueued = false;
+          renderRaceSidebar();
+          renderCurrentView();
+        };
+        active.addEventListener('blur', resume);
+        active.addEventListener('change', resume);
+        return;
+      }
+      renderQueued = false;
+      renderRaceSidebar();
+      renderCurrentView();
+    }
+
+    function adoptServerState(next, revision) {
+      if (!next || !Array.isArray(next.races) || next.races.length === 0) return;
+      state.races = next.races;
+      state.raceCableData = next.raceCableData || {};
+      state.raceJoinboxData = next.raceJoinboxData || {};
+      state.raceMediaData = next.raceMediaData || {};
+      applyCollapseOverlay();
+      if (!state.races.some(race => race.id === state.activeRaceId)) {
+        state.activeRaceId = state.races[0].id;
+        state.expandedRaceId = state.races[0].id;
+      }
+      syncRevision = revision;
+      syncBase = sharedSnapshot();
+      writeLocalCache();
+    }
+
+    function queueServerSync() {
+      writeLocalCache();
+      syncToSupabase();
+      clearTimeout(syncTimer);
+      syncTimer = setTimeout(() => flushServerSync(), 150);
+    }
+
+    async function flushServerSync(opts = {}) {
+      if (flushInFlight) {
+        flushAgain = true;
+        return false;
+      }
+      flushInFlight = true;
+      let ok = false;
+      try {
+        do {
+          flushAgain = false;
+          const bootstrap = opts.bootstrap === true && syncRevision === 0;
+          opts.bootstrap = false;
+          const localBefore = sharedSnapshot();
+          const res = await fetch('/api/state', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              clientId,
+              bootstrap,
+              base: syncBase,
+              state: localBefore
+            })
+          });
+          if (!res.ok) throw new Error('save failed');
+          const data = await res.json();
+          serverConnected = true;
+          if (bootstrap) {
+            adoptServerState(data.state, data.revision);
+            ok = true;
+            break;
+          }
+          const localNow = sharedSnapshot();
+          if (!deepEqual(localBefore, localNow)) {
+            flushAgain = true;
+            continue;
+          }
+          if (!deepEqual(localNow, data.state)) {
+            adoptServerState(data.state, data.revision);
+            safeRender();
+          } else {
+            syncRevision = data.revision;
+            syncBase = structuredClone(data.state);
+            writeLocalCache();
+          }
+          ok = true;
+        } while (flushAgain);
+        showDefaultSyncStatus();
+      } catch (e) {
+        console.error(e);
+        serverConnected = false;
+        showDefaultSyncStatus();
+        ok = false;
+      } finally {
+        flushInFlight = false;
+        if (flushAgain) {
+          flushServerSync();
+        } else if (queuedRemote && queuedRemote.revision > syncRevision && !isDirty()) {
+          const queued = queuedRemote;
+          queuedRemote = null;
+          adoptServerState(queued.state, queued.revision);
+          safeRender();
+        }
+      }
+      return ok;
+    }
+
+    function onRemoteState(msg) {
+      if (!msg || msg.type !== 'state' || !msg.state || typeof msg.revision !== 'number') return;
+      if (msg.revision <= syncRevision) return;
+      if (flushInFlight || isDirty()) {
+        queuedRemote = msg;
+        return;
+      }
+      adoptServerState(msg.state, msg.revision);
+      safeRender();
+    }
+
+    function connectLive() {
+      if (liveSocket && (liveSocket.readyState === 0 || liveSocket.readyState === 1)) return;
+      const proto = location.protocol === 'https:' ? 'wss' : 'ws';
+      const ws = new WebSocket(proto + '://' + location.host + '/api/live');
+      liveSocket = ws;
+      ws.onopen = () => {
+        serverConnected = true;
+        showDefaultSyncStatus();
+        if (isDirty() || syncRevision === 0) flushServerSync();
+      };
+      ws.onmessage = (event) => {
+        try {
+          onRemoteState(JSON.parse(event.data));
+        } catch (e) {
+          console.error(e);
+        }
+      };
+      ws.onclose = () => {
+        if (liveSocket !== ws) return;
+        serverConnected = false;
+        showDefaultSyncStatus();
+        clearTimeout(liveRetry);
+        liveRetry = setTimeout(connectLive, 1500);
+      };
+    }
+
+    async function boot() {
+      registerServiceWorker();
+      loadCollapseMap();
+      try {
+        const savedSb = localStorage.getItem('f1_sb_config');
+        if (savedSb) state.supabaseConfig = JSON.parse(savedSb);
+      } catch (e) {
+        state.supabaseConfig = { url: '', key: '' };
+      }
+
+      let loadedFromServer = false;
+      try {
+        const res = await fetch('/api/state', { cache: 'no-store' });
+        if (!res.ok) throw new Error('state');
+        const data = await res.json();
+        if (data.initialized && data.state) {
+          adoptServerState(data.state, data.revision);
+          serverConnected = true;
+          loadedFromServer = true;
+        }
+      } catch (e) {
+        serverConnected = false;
+      }
+
+      if (!loadedFromServer) {
+        loadStateFromLocalStorage();
+        syncBase = sharedSnapshot();
+        syncRevision = 0;
+        await flushServerSync({ bootstrap: true });
+      }
+
+      connectLive();
+      initSupabase();
+      showDefaultSyncStatus();
+      renderRaceSidebar();
+      renderCurrentView();
+    }
+
+    function initSupabase() {
+      const { url, key } = state.supabaseConfig;
+      const dot = document.getElementById('syncStatusDot');
+      const text = document.getElementById('syncStatusText');
+
+      if (url && key && window.supabase) {
+        try {
+          supabaseClient = window.supabase.createClient(url, key);
+          supabaseActive = true;
+          dot.className = "w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block animate-pulse";
+          text.innerText = "Supabase Realtime";
+
+          supabaseClient
+            .channel('public:f1_cables_v3')
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'f1_cables' }, payload => {
+              if (payload.new && payload.new.data) {
+                const nextCables = payload.new.data.cables || state.raceCableData;
+                const nextJoinboxes = payload.new.data.joinboxes || state.raceJoinboxData;
+                const nextMedia = payload.new.data.media || state.raceMediaData;
+                if (deepEqual(nextCables, state.raceCableData) && deepEqual(nextJoinboxes, state.raceJoinboxData) && deepEqual(nextMedia, state.raceMediaData)) {
+                  return;
+                }
+                state.raceCableData = nextCables;
+                state.raceJoinboxData = nextJoinboxes;
+                state.raceMediaData = nextMedia;
+                queueServerSync();
+                safeRender();
+              }
+            })
+            .subscribe();
+
+        } catch (e) {
+          console.error("Supabase connect error:", e);
+          supabaseActive = false;
+          dot.className = "w-2.5 h-2.5 rounded-full bg-red-500 inline-block";
+          text.innerText = "Sync Fout";
+        }
+      } else {
+        supabaseActive = false;
+        showDefaultSyncStatus();
+      }
+    }
+
+    function syncToSupabase() {
+      if (!supabaseClient) return;
+      supabaseClient.from('f1_cables').upsert({ 
+        id: 'main_schedule', 
+        data: {
+          cables: state.raceCableData,
+          joinboxes: state.raceJoinboxData,
+          media: state.raceMediaData
+        } 
+      });
+    }
+
+    function renderRaceSidebar() {
+      const raceListEl = document.getElementById('raceList');
+      const searchVal = (document.getElementById('raceSearch')?.value || '').toLowerCase();
+
+      raceListEl.innerHTML = '';
+
+      state.races.forEach((race, index) => {
+        if (searchVal && !race.name.toLowerCase().includes(searchVal) && !race.circuit.toLowerCase().includes(searchVal)) {
+          return;
+        }
+
+        const isSelectedRace = race.id === state.activeRaceId;
+        const isExpanded = race.id === state.expandedRaceId;
+        const code = race.code || `R${index + 1}`;
+
+        const raceWrapper = document.createElement('div');
+        raceWrapper.className = "space-y-1";
+
+        const raceBtn = document.createElement('div');
+        raceBtn.className = `group flex items-center justify-between p-2.5 sm:p-3 rounded-xl cursor-pointer transition-all ${
+          isSelectedRace 
+            ? 'bg-emerald-600 text-white font-semibold shadow-md shadow-emerald-900/30' 
+            : 'text-slate-300 hover:bg-sidebarHover hover:text-white'
+        }`;
+
+        raceBtn.onclick = () => toggleRaceAccordion(race.id);
+
+        raceBtn.innerHTML = `
+          <div class="flex items-center space-x-2.5 overflow-hidden">
+            <i class="fa-solid fa-chevron-right text-[10px] transition-transform duration-200 ${isExpanded ? 'rotate-90 text-emerald-300' : 'text-slate-500'}"></i>
+            <span class="text-[10px] font-f1 font-extrabold px-1.5 py-0.5 rounded ${
+              isSelectedRace ? 'bg-black/30 text-white' : 'bg-slate-800 text-slate-400 group-hover:text-slate-200'
+            }">${code}</span>
+            <div class="truncate">
+              <p class="text-xs sm:text-sm font-bold leading-snug truncate">${race.name}</p>
+            </div>
+          </div>
+          <div class="flex items-center space-x-1">
+            <button onclick="event.stopPropagation(); deleteRace('${race.id}')" class="p-2 hover:text-red-400 text-xs text-slate-400 touch-target flex items-center justify-center" title="Race verwijderen">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </div>
+        `;
+
+        raceWrapper.appendChild(raceBtn);
+
+        // Render Expandable Sub-items
+        if (isExpanded) {
+          const subContainer = document.createElement('div');
+          subContainer.className = "ml-5 pl-2 border-l border-slate-800 space-y-1 my-1";
+
+          const subItems = [
+            { key: 'cables', label: 'Fiber Indeling', icon: 'fa-network-wired', color: 'text-emerald-400' },
+            { key: 'maps', label: "Plattegronden & Foto's", icon: 'fa-map-location-dot', color: 'text-blue-400' },
+            { key: 'joinbox', label: 'Joinbox Patchpunten', icon: 'fa-box-archive', color: 'text-amber-400' },
+            { key: 'notes', label: 'Opmerkingen / Notities', icon: 'fa-pen-to-square', color: 'text-purple-400' }
+          ];
+
+          subItems.forEach(item => {
+            const isSubActive = isSelectedRace && state.activeSubSection === item.key;
+            const subBtn = document.createElement('button');
+            subBtn.onclick = (e) => {
+              e.stopPropagation();
+              selectSubSection(race.id, item.key);
+            };
+
+            subBtn.className = `w-full text-left px-3 py-2.5 rounded-xl text-xs font-medium flex items-center gap-2.5 transition-all touch-target ${
+              isSubActive 
+                ? 'bg-slate-800 text-white font-bold shadow-xs' 
+                : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/60'
+            }`;
+
+            subBtn.innerHTML = `
+              <i class="fa-solid ${item.icon} text-sm ${item.color}"></i>
+              <span>${item.label}</span>
+            `;
+
+            subContainer.appendChild(subBtn);
+          });
+
+          raceWrapper.appendChild(subContainer);
+        }
+
+        raceListEl.appendChild(raceWrapper);
+      });
+    }
+
+    function toggleRaceAccordion(raceId) {
+      if (state.expandedRaceId === raceId) {
+        state.expandedRaceId = null;
+      } else {
+        state.expandedRaceId = raceId;
+        state.activeRaceId = raceId;
+      }
+      renderRaceSidebar();
+      renderCurrentView();
+    }
+
+    function selectSubSection(raceId, subKey) {
+      state.activeRaceId = raceId;
+      state.expandedRaceId = raceId;
+      state.activeSubSection = subKey;
+
+      renderRaceSidebar();
+      renderCurrentView();
+
+      // Automatically auto-close mobile drawer when tapping any item on phone
+      toggleMobileSidebar(false);
+    }
+
+    function filterRaces() {
+      renderRaceSidebar();
+    }
+
+    function toggleMobileSidebar(forceState) {
+      const sidebar = document.getElementById('sidebar');
+      const backdrop = document.getElementById('sidebarBackdrop');
+      
+      const isOpen = forceState !== undefined 
+        ? forceState 
+        : sidebar.classList.contains('-translate-x-full');
+
+      if (isOpen) {
+        sidebar.classList.remove('-translate-x-full');
+        backdrop.classList.remove('hidden');
+        document.body.classList.add('sidebar-open');
+      } else {
+        sidebar.classList.add('-translate-x-full');
+        backdrop.classList.add('hidden');
+        document.body.classList.remove('sidebar-open');
+      }
+    }
+
+    function renderCurrentView() {
+      const activeRace = state.races.find(r => r.id === state.activeRaceId) || state.races[0];
+      if (!activeRace) return;
+
+      document.getElementById('headerRaceBadge').innerText = activeRace.code || 'RACE';
+      document.getElementById('headerRaceTitle').innerText = activeRace.name;
+      document.getElementById('headerRaceSub').innerText = activeRace.circuit;
+
+      const viewCables = document.getElementById('viewCables');
+      const viewMaps = document.getElementById('viewMaps');
+      const viewJoinbox = document.getElementById('viewJoinbox');
+      const viewNotes = document.getElementById('viewNotes');
+      const mainActionText = document.getElementById('mainActionButtonText');
+
+      viewCables.classList.add('hidden');
+      viewMaps.classList.add('hidden');
+      viewJoinbox.classList.add('hidden');
+      viewNotes.classList.add('hidden');
+
+      if (state.activeSubSection === 'cables') {
+        viewCables.classList.remove('hidden');
+        if(mainActionText) mainActionText.innerText = "+ Nieuwe kabel";
+        renderCableBoard();
+      } else if (state.activeSubSection === 'maps') {
+        viewMaps.classList.remove('hidden');
+        if(mainActionText) mainActionText.innerText = "+ Plattegrond URL";
+        renderMapsView();
+      } else if (state.activeSubSection === 'joinbox') {
+        viewJoinbox.classList.remove('hidden');
+        if(mainActionText) mainActionText.innerText = "+ Nieuwe Joinbox";
+        renderJoinboxBoard();
+      } else if (state.activeSubSection === 'notes') {
+        viewNotes.classList.remove('hidden');
+        if(mainActionText) mainActionText.innerText = "Opslaan";
+        renderNotesView();
+      }
+    }
+
+    function triggerMainAddAction() {
+      if (state.activeSubSection === 'cables') {
+        openAddGroupModal();
+      } else if (state.activeSubSection === 'maps') {
+        promptMediaUrlUpload();
+      } else if (state.activeSubSection === 'joinbox') {
+        openAddJoinboxModal();
+      } else if (state.activeSubSection === 'notes') {
+        saveNotesManually();
+      }
+    }
 
     function renderCableBoard() {
       const activeRaceId = state.activeRaceId;
@@ -348,33 +1216,63 @@
       if (groups.length === 0) {
         container.innerHTML = `
           <div class="bg-white border-2 border-dashed border-slate-200 rounded-2xl p-6 sm:p-12 text-center max-w-lg mx-auto my-6 sm:my-10">
-            <i class="fa-solid fa-network-wired text-3xl text-emerald-600 mb-2"></i>
-            <h3 class="font-f1 font-bold text-base text-slate-800 uppercase">Geen kabels ingesteld</h3>
+            <div class="w-12 h-12 sm:w-16 sm:h-16 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-3 text-lg sm:text-2xl">
+              <i class="fa-solid fa-network-wired"></i>
+            </div>
+            <h3 class="font-f1 font-bold text-base sm:text-lg text-slate-800 uppercase">Nog geen kabel indeling</h3>
+            <p class="text-xs text-slate-500 mt-1 mb-5">Voeg je eerste fiber-kabelgroep toe of kopieer de indeling uit een andere race.</p>
+            <div class="flex flex-wrap justify-center gap-2.5">
+              <button onclick="openAddGroupModal()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-3 rounded-xl shadow transition-all touch-target">+ Nieuwe Kabelgroep</button>
+              <button onclick="openCopyModal()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold px-4 py-3 rounded-xl transition-all touch-target">Kopieer Indeling</button>
+            </div>
           </div>
         `;
         return;
       }
 
       groups.forEach((group, gIdx) => {
+        const totalCount = group.items.length;
+        const defectCount = group.items.filter(i => i.defect).length;
+        const halfCount = group.items.filter(i => i.half).length;
+        const fullCount = group.items.filter(i => i.full).length;
+        const isCollapsed = isGroupCollapsed(activeRaceId, group, gIdx);
+
         const groupEl = document.createElement('div');
         groupEl.className = "bg-white rounded-2xl shadow-2xs border border-slate-200/80 overflow-hidden max-w-5xl mx-auto transition-all";
 
         groupEl.innerHTML = `
-          <div class="${group.color || 'bg-emerald-600'} text-white px-3 sm:px-4 py-3 flex items-center justify-between gap-2 shadow-md">
-            <h3 class="font-f1 font-extrabold text-xs xs:text-sm sm:text-base tracking-wide uppercase truncate">${group.title}</h3>
+          <div onclick="toggleGroupCollapse(${gIdx})" class="${group.color || 'bg-emerald-600'} text-white px-3 sm:px-4 py-3 flex items-center justify-between gap-2 shadow-md cursor-pointer select-none active:brightness-95 transition-all">
+            
+            <div class="flex items-center gap-2 sm:gap-3 overflow-hidden">
+              <i class="fa-solid fa-chevron-down text-xs sm:text-sm transition-transform duration-200 ${isCollapsed ? '-rotate-90 text-white/70' : 'rotate-0 text-white'} shrink-0"></i>
+              <h3 class="font-f1 font-extrabold text-xs xs:text-sm sm:text-base tracking-wide uppercase truncate">${group.title}</h3>
+            </div>
+
+            <div class="flex items-center gap-1 sm:gap-1.5 shrink-0" onclick="event.stopPropagation()">
+              <button onclick="openEditGroupModal(${gIdx})" class="text-white/80 hover:text-white p-2 hover:bg-black/10 rounded-xl transition-colors touch-target flex items-center justify-center" title="Groep bewerken">
+                <i class="fa-solid fa-pen text-xs"></i>
+              </button>
+              <button onclick="deleteGroup(${gIdx})" class="text-white/80 hover:text-white p-2 hover:bg-black/10 rounded-xl transition-colors touch-target flex items-center justify-center" title="Groep verwijderen">
+                <i class="fa-solid fa-trash text-xs"></i>
+              </button>
+
+              <span class="bg-slate-900 text-white font-f1 font-extrabold text-[11px] xs:text-xs px-2 py-0.5 sm:py-1 rounded-full min-w-[22px] sm:min-w-[26px] text-center shadow-inner" title="Totaal aders">${totalCount}</span>
+              <span class="bg-statusRed text-white font-f1 font-extrabold text-[11px] xs:text-xs px-2 py-0.5 sm:py-1 rounded-full min-w-[22px] sm:min-w-[26px] text-center shadow-inner" title="Defect">${defectCount}</span>
+              <span class="bg-statusYellow text-white font-f1 font-extrabold text-[11px] xs:text-xs px-2 py-0.5 sm:py-1 rounded-full min-w-[22px] sm:min-w-[26px] text-center shadow-inner" title="1-Kant gestoken">${halfCount}</span>
+              <span class="bg-statusGreen text-white font-f1 font-extrabold text-[11px] xs:text-xs px-2 py-0.5 sm:py-1 rounded-full min-w-[22px] sm:min-w-[26px] text-center shadow-inner" title="Volledig gestoken">${fullCount}</span>
+            </div>
           </div>
 
-          <div class="p-2 sm:p-3 space-y-2.5 bg-slate-50/50">
+          <!-- Cable Items Container -->
+          <div class="p-2 sm:p-4 space-y-2 sm:space-y-3 bg-slate-50/50 ${isCollapsed ? 'hidden' : ''}">
             ${group.items.map((item, iIdx) => `
               <div class="bg-white border border-slate-200 rounded-xl p-2.5 sm:p-3 flex flex-col sm:flex-row sm:items-center gap-2 shadow-2xs hover:border-slate-300">
-                
-                <!-- Bovenste rij op mobiel: Aderpaar, Connector & Drie Vinkjes -->
                 <div class="flex items-center justify-between gap-2 w-full sm:w-auto">
                   <div class="flex items-center gap-1.5">
                     <span class="bg-slate-100 text-slate-900 border border-slate-300 font-f1 font-extrabold text-xs sm:text-sm px-2 py-1 rounded-lg text-center shrink-0 min-w-[50px]">
                       ${item.pair}
                     </span>
-                    <select onchange="updateCableConnector(${gIdx},${iIdx}, this.value)" class="text-xs font-extrabold text-slate-700 bg-slate-100 rounded-lg px-2 py-1 border border-slate-300 focus:outline-none cursor-pointer uppercase">
+                    <select onchange="updateCableConnector(${gIdx}, ${iIdx}, this.value)" class="text-xs font-extrabold text-slate-700 bg-slate-100 rounded-lg px-2 py-1 border border-slate-300 focus:outline-none cursor-pointer uppercase">
                       <option value="ST" ${item.connector === 'ST' ? 'selected' : ''}>ST</option>
                       <option value="SC" ${item.connector === 'SC' ? 'selected' : ''}>SC</option>
                       <option value="SC/APC" ${item.connector === 'SC/APC' ? 'selected' : ''}>SC/APC</option>
@@ -382,56 +1280,654 @@
                       <option value="APC" ${item.connector === 'APC' ? 'selected' : ''}>APC</option>
                     </select>
                   </div>
-
-                  <!-- Status vinkjes op mobiel rechtsboven uitgelijnd -->
                   <div class="flex items-center gap-1.5 shrink-0 sm:hidden">
-                    <button onclick="toggleCableStatus(${gIdx},${iIdx}, 'defect')" title="Defect (Rood)" class="status-btn status-btn-red ${item.defect ? 'active' : ''} w-7 h-7 rounded-lg flex items-center justify-center font-bold active:scale-95">
+                    <button onclick="toggleCableStatus(${gIdx}, ${iIdx}, 'defect')" title="Defect (Rood)" class="status-btn status-btn-red ${item.defect ? 'active' : ''} w-7 h-7 rounded-lg flex items-center justify-center font-bold active:scale-95">
                       <i class="fa-solid fa-check text-[11px]"></i>
                     </button>
-                    <button onclick="toggleCableStatus(${gIdx},${iIdx}, 'half')" title="1-kant gestoken (Geel)" class="status-btn status-btn-yellow ${item.half ? 'active' : ''} w-7 h-7 rounded-lg flex items-center justify-center font-bold active:scale-95">
+                    <button onclick="toggleCableStatus(${gIdx}, ${iIdx}, 'half')" title="1-kant gestoken (Geel)" class="status-btn status-btn-yellow ${item.half ? 'active' : ''} w-7 h-7 rounded-lg flex items-center justify-center font-bold active:scale-95">
                       <i class="fa-solid fa-check text-[11px]"></i>
                     </button>
-                    <button onclick="toggleCableStatus(${gIdx},${iIdx}, 'full')" title="Volledig gestoken (Groen)" class="status-btn status-btn-green ${item.full ? 'active' : ''} w-7 h-7 rounded-lg flex items-center justify-center font-bold active:scale-95">
+                    <button onclick="toggleCableStatus(${gIdx}, ${iIdx}, 'full')" title="Volledig gestoken (Groen)" class="status-btn status-btn-green ${item.full ? 'active' : ''} w-7 h-7 rounded-lg flex items-center justify-center font-bold active:scale-95">
                       <i class="fa-solid fa-check text-[11px]"></i>
+                    </button>
+                    <button onclick="deleteCableItem(${gIdx}, ${iIdx})" title="Verwijder" class="text-slate-300 hover:text-red-500 p-1 flex items-center justify-center">
+                      <i class="fa-regular fa-trash-can text-xs"></i>
                     </button>
                   </div>
                 </div>
-
-                <!-- Onderste rij op mobiel / Middelste kolom op desktop: Tekstveld over de volle breedte -->
                 <div class="flex-1 min-w-0 w-full">
-                  <input type="text" value="${escapeHtml(item.label)}" onchange="updateCableLabel(${gIdx},${iIdx}, this.value)" placeholder="LABEL / BESTEMMING" class="w-full bg-slate-50 border border-slate-200 hover:border-slate-300 focus:border-emerald-500 focus:bg-white text-xs sm:text-sm font-semibold text-slate-900 rounded-lg px-2.5 py-1.5 transition-all focus:outline-none">
+                  <input type="text" value="${escapeHtml(item.label)}" onchange="updateCableLabel(${gIdx}, ${iIdx}, this.value)" placeholder="LABEL / BESTEMMING" class="w-full bg-slate-50 border border-slate-200 hover:border-slate-300 focus:border-emerald-500 focus:bg-white text-xs sm:text-sm font-semibold text-slate-900 rounded-lg px-2.5 py-1.5 transition-all focus:outline-none">
                 </div>
-
-                <!-- Status vinkjes op grotere schermen (Desktop/Tablet) -->
                 <div class="hidden sm:flex items-center gap-1.5 shrink-0">
-                  <button onclick="toggleCableStatus(${gIdx},${iIdx}, 'defect')" title="Defect (Rood)" class="status-btn status-btn-red ${item.defect ? 'active' : ''} w-8 h-8 rounded-lg flex items-center justify-center font-bold active:scale-95">
+                  <button onclick="toggleCableStatus(${gIdx}, ${iIdx}, 'defect')" title="Defect (Rood)" class="status-btn status-btn-red ${item.defect ? 'active' : ''} w-8 h-8 rounded-lg flex items-center justify-center font-bold active:scale-95">
                     <i class="fa-solid fa-check text-xs"></i>
                   </button>
-                  <button onclick="toggleCableStatus(${gIdx},${iIdx}, 'half')" title="1-kant gestoken (Geel)" class="status-btn status-btn-yellow ${item.half ? 'active' : ''} w-8 h-8 rounded-lg flex items-center justify-center font-bold active:scale-95">
+                  <button onclick="toggleCableStatus(${gIdx}, ${iIdx}, 'half')" title="1-kant gestoken (Geel)" class="status-btn status-btn-yellow ${item.half ? 'active' : ''} w-8 h-8 rounded-lg flex items-center justify-center font-bold active:scale-95">
                     <i class="fa-solid fa-check text-xs"></i>
                   </button>
-                  <button onclick="toggleCableStatus(${gIdx},${iIdx}, 'full')" title="Volledig gestoken (Groen)" class="status-btn status-btn-green ${item.full ? 'active' : ''} w-8 h-8 rounded-lg flex items-center justify-center font-bold active:scale-95">
+                  <button onclick="toggleCableStatus(${gIdx}, ${iIdx}, 'full')" title="Volledig gestoken (Groen)" class="status-btn status-btn-green ${item.full ? 'active' : ''} w-8 h-8 rounded-lg flex items-center justify-center font-bold active:scale-95">
                     <i class="fa-solid fa-check text-xs"></i>
+                  </button>
+                  <button onclick="deleteCableItem(${gIdx}, ${iIdx})" title="Verwijder" class="text-slate-300 hover:text-red-500 p-2 transition-colors touch-target flex items-center justify-center">
+                    <i class="fa-regular fa-trash-can text-sm"></i>
                   </button>
                 </div>
-
               </div>
             `).join('')}
+
+            <div class="pt-1 flex justify-end">
+              <button onclick="addPairToGroup(${gIdx})" class="text-xs font-bold text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 border border-emerald-200/80 px-3 py-2 rounded-xl transition-all flex items-center gap-1.5 touch-target">
+                <i class="fa-solid fa-plus text-xs"></i> + Extra Ader-paar Toevoegen
+              </button>
+            </div>
           </div>
         `;
+
         container.appendChild(groupEl);
       });
     }
 
-    function escapeHtml(str) {
-      return (str || '').replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    function renderMapsView() {
+      const raceId = state.activeRaceId;
+      const media = state.raceMediaData[raceId] || { notes: '', images: [] };
+      const grid = document.getElementById('circuitMediaGrid');
+      grid.innerHTML = '';
+
+      const images = media.images || [];
+
+      if (images.length === 0) {
+        grid.innerHTML = `
+          <div class="col-span-full py-10 text-center text-slate-400 text-xs border border-dashed border-slate-200 rounded-2xl p-4">
+            Geen plattegronden of foto's toegevoegd voor deze race. Tik bovenaan op Upload of URL om een afbeelding toe te voegen.
+          </div>
+        `;
+        return;
+      }
+
+      images.forEach((imgUrl, idx) => {
+        const card = document.createElement('div');
+        card.className = "relative group rounded-xl overflow-hidden border border-slate-200 bg-slate-900 h-32 sm:h-44 shadow-2xs cursor-pointer";
+        card.onclick = () => openLightbox(imgUrl);
+
+        card.innerHTML = `
+          <img src="${imgUrl}" alt="Circuit media" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+          <div class="absolute inset-0 bg-slate-900/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+            <button onclick="event.stopPropagation(); openLightbox('${imgUrl}')" class="p-2.5 bg-white/90 text-slate-900 rounded-xl text-xs hover:bg-white touch-target" title="Groot bekijken">
+              <i class="fa-solid fa-expand"></i>
+            </button>
+            <button onclick="event.stopPropagation(); removeMediaImage(${idx})" class="p-2.5 bg-red-600/90 text-white rounded-xl text-xs hover:bg-red-600 touch-target" title="Verwijderen">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
     }
 
-    window.onload = () => {
-      state.races = DEFAULT_F1_CALENDAR_2027;
-      state.raceCableData["r1"] = SAMPLE_CABLE_GROUPS;
+    function openLightbox(url) {
+      document.getElementById('lightboxImage').src = url;
+      openModal('lightboxModal');
+    }
+
+    function renderJoinboxBoard() {
+      const raceId = state.activeRaceId;
+      const container = document.getElementById('joinboxContainer');
+      container.innerHTML = '';
+
+      const joinboxes = state.raceJoinboxData[raceId] || [];
+
+      if (joinboxes.length === 0) {
+        container.innerHTML = `
+          <div class="bg-white border-2 border-dashed border-slate-200 rounded-2xl p-6 sm:p-12 text-center max-w-lg mx-auto my-6">
+            <div class="w-12 h-12 bg-amber-50 text-amber-500 rounded-full flex items-center justify-center mx-auto mb-3 text-lg">
+              <i class="fa-solid fa-box-archive"></i>
+            </div>
+            <h3 class="font-f1 font-bold text-base sm:text-lg text-slate-800 uppercase">Geen Joinboxes ingesteld</h3>
+            <p class="text-xs text-slate-500 mt-1 mb-5">Voeg een Joinbox patchpunt toe om glasvezels door te koppelen.</p>
+            <button onclick="openAddJoinboxModal()" class="bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold px-4 py-3 rounded-xl shadow transition-all touch-target">+ Nieuwe Joinbox Toevoegen</button>
+          </div>
+        `;
+        return;
+      }
+
+      joinboxes.forEach((jb, jIdx) => {
+        const boxEl = document.createElement('div');
+        boxEl.className = "bg-white rounded-2xl border border-slate-200/90 shadow-2xs overflow-hidden";
+
+        boxEl.innerHTML = `
+          <div class="bg-slate-900 text-white p-3.5 sm:p-4 flex items-center justify-between gap-2">
+            <div class="flex items-center gap-2.5 min-w-0">
+              <div class="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold shrink-0">
+                <i class="fa-solid fa-box-archive text-sm"></i>
+              </div>
+              <div class="min-w-0">
+                <h3 class="font-f1 font-bold text-xs xs:text-sm sm:text-base tracking-wide uppercase truncate">${jb.name}</h3>
+                <p class="text-[10px] sm:text-xs text-slate-400 truncate">IN: <span class="text-slate-200 font-semibold">${jb.inCable}</span> → UIT: <span class="text-slate-200 font-semibold">${jb.outCable}</span></p>
+              </div>
+            </div>
+            <div class="flex items-center gap-1 shrink-0">
+              <button onclick="openEditJoinboxModal(${jIdx})" class="text-slate-400 hover:text-white p-2 touch-target flex items-center justify-center"><i class="fa-solid fa-pen text-xs"></i></button>
+              <button onclick="deleteJoinbox(${jIdx})" class="text-slate-400 hover:text-red-400 p-2 touch-target flex items-center justify-center"><i class="fa-solid fa-trash text-xs"></i></button>
+            </div>
+          </div>
+
+          <div class="p-2.5 sm:p-4 bg-slate-50/50 space-y-2">
+            ${jb.patches.map((patch, pIdx) => `
+              <div class="bg-white border border-slate-200 rounded-xl p-2 flex flex-col xs:flex-row items-stretch xs:items-center gap-2 text-xs">
+                <div class="flex items-center gap-1.5 shrink-0">
+                  <span class="bg-slate-100 font-f1 font-bold px-2 py-1 rounded-lg border border-slate-200 text-slate-700">${patch.fiberIn || 'In ' + (pIdx+1)}</span>
+                  <i class="fa-solid fa-arrow-right text-slate-400 text-[10px]"></i>
+                  <span class="bg-slate-100 font-f1 font-bold px-2 py-1 rounded-lg border border-slate-200 text-slate-700">${patch.fiberOut || 'Uit ' + (pIdx+1)}</span>
+                </div>
+                
+                <input type="text" value="${escapeHtml(patch.notes)}" onchange="updateJoinboxPatchNotes(${jIdx}, ${pIdx}, this.value)" placeholder="Patch opmerking..." class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-1.5 text-xs font-medium focus:outline-none focus:border-amber-500">
+                
+                <button onclick="deleteJoinboxPatchRow(${jIdx}, ${pIdx})" class="text-slate-300 hover:text-red-500 p-2 self-end xs:self-center touch-target flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
+              </div>
+            `).join('')}
+
+            <div class="pt-2 flex justify-end">
+              <button onclick="addJoinboxPatchRow(${jIdx})" class="text-xs font-bold text-amber-600 hover:text-amber-700 hover:bg-amber-50 border border-amber-200 px-3 py-2 rounded-xl transition-all touch-target">
+                + Extra Patch Lijn
+              </button>
+            </div>
+          </div>
+        `;
+
+        container.appendChild(boxEl);
+      });
+    }
+
+    function renderNotesView() {
+      const raceId = state.activeRaceId;
+      const media = state.raceMediaData[raceId] || { notes: '', images: [] };
+      const input = document.getElementById('circuitNotesInput');
+      if (document.activeElement === input) return;
+      input.value = media.notes || '';
+    }
+
+    function saveCircuitNotes(notes) {
+      const raceId = state.activeRaceId;
+      if (!state.raceMediaData[raceId]) {
+        state.raceMediaData[raceId] = { notes: '', images: [] };
+      }
+      state.raceMediaData[raceId].notes = notes;
+      saveMediaDataToLocal();
+    }
+
+    async function saveNotesManually() {
+      saveCircuitNotes(document.getElementById('circuitNotesInput').value);
+      clearTimeout(syncTimer);
+      await flushServerSync();
+      alert("Notities opgeslagen!");
+    }
+
+    function promptMediaUrlUpload() {
+      const url = prompt("Voer de afbeelding/plattegrond URL in:");
+      if (url && url.trim()) {
+        addMediaImage(url.trim());
+      }
+    }
+
+    async function handleMediaFileUpload(event) {
+      const input = event.target;
+      const file = input.files && input.files[0];
+      input.value = '';
+      if (!file) return;
+
+      try {
+        const body = new FormData();
+        body.append('file', file);
+        const res = await fetch('/api/uploads', { method: 'POST', body });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok || !data.url) {
+          alert(data.error || 'Upload mislukt.');
+          return;
+        }
+        addMediaImage(data.url);
+      } catch (e) {
+        const reader = new FileReader();
+        reader.onload = (ev) => addMediaImage(ev.target.result);
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function addMediaImage(imgUrl) {
+      const raceId = state.activeRaceId;
+      if (!state.raceMediaData[raceId]) {
+        state.raceMediaData[raceId] = { notes: '', images: [] };
+      }
+      if (!state.raceMediaData[raceId].images) {
+        state.raceMediaData[raceId].images = [];
+      }
+      state.raceMediaData[raceId].images.push(imgUrl);
+      saveMediaDataToLocal();
+      renderMapsView();
+    }
+
+    function removeMediaImage(idx) {
+      const raceId = state.activeRaceId;
+      if (state.raceMediaData[raceId]?.images) {
+        state.raceMediaData[raceId].images.splice(idx, 1);
+        saveMediaDataToLocal();
+        renderMapsView();
+      }
+    }
+
+    function openAddJoinboxModal() {
+      document.getElementById('joinboxModalTitle').innerText = "Nieuwe Joinbox Patchpunt";
+      document.getElementById('joinboxIndex').value = "-1";
+      document.getElementById('joinboxNameInput').value = "";
+      document.getElementById('joinboxInCableInput').value = "";
+      document.getElementById('joinboxOutCableInput').value = "";
+      document.getElementById('joinboxFiberCountInput').value = "12";
+      openModal('joinboxModal');
+    }
+
+    function openEditJoinboxModal(jIdx) {
+      const raceId = state.activeRaceId;
+      const jb = state.raceJoinboxData[raceId][jIdx];
+      document.getElementById('joinboxModalTitle').innerText = "Joinbox Bewerken";
+      document.getElementById('joinboxIndex').value = jIdx;
+      document.getElementById('joinboxNameInput').value = jb.name;
+      document.getElementById('joinboxInCableInput').value = jb.inCable;
+      document.getElementById('joinboxOutCableInput').value = jb.outCable;
+      document.getElementById('joinboxFiberCountInput').value = jb.patches.length || 12;
+      openModal('joinboxModal');
+    }
+
+    function saveJoinboxForm(e) {
+      e.preventDefault();
+      const jIdx = parseInt(document.getElementById('joinboxIndex').value);
+      const name = document.getElementById('joinboxNameInput').value.trim();
+      const inCable = document.getElementById('joinboxInCableInput').value.trim();
+      const outCable = document.getElementById('joinboxOutCableInput').value.trim();
+      const fiberCount = parseInt(document.getElementById('joinboxFiberCountInput').value);
+
+      const raceId = state.activeRaceId;
+      if (!state.raceJoinboxData[raceId]) {
+        state.raceJoinboxData[raceId] = [];
+      }
+
+      if (jIdx >= 0) {
+        const jb = state.raceJoinboxData[raceId][jIdx];
+        jb.name = name;
+        jb.inCable = inCable;
+        jb.outCable = outCable;
+      } else {
+        const patches = [];
+        for (let i = 1; i <= fiberCount; i++) {
+          patches.push({
+            fiberIn: `Fiber ${i}`,
+            fiberOut: `Fiber ${i}`,
+            notes: "Doorpatched",
+            status: "full"
+          });
+        }
+        state.raceJoinboxData[raceId].push({
+          id: 'jb_' + Date.now(),
+          name,
+          inCable,
+          outCable,
+          patches
+        });
+      }
+
+      saveJoinboxDataToLocal();
+      closeModal('joinboxModal');
+      renderJoinboxBoard();
+    }
+
+    function addJoinboxPatchRow(jIdx) {
+      const raceId = state.activeRaceId;
+      const jb = state.raceJoinboxData[raceId][jIdx];
+      const count = jb.patches.length + 1;
+      jb.patches.push({
+        fiberIn: `Fiber ${count}`,
+        fiberOut: `Fiber ${count}`,
+        notes: "Doorpatched",
+        status: "full"
+      });
+      saveJoinboxDataToLocal();
+      renderJoinboxBoard();
+    }
+
+    function deleteJoinboxPatchRow(jIdx, pIdx) {
+      const raceId = state.activeRaceId;
+      state.raceJoinboxData[raceId][jIdx].patches.splice(pIdx, 1);
+      saveJoinboxDataToLocal();
+      renderJoinboxBoard();
+    }
+
+    function updateJoinboxPatchNotes(jIdx, pIdx, val) {
+      const raceId = state.activeRaceId;
+      state.raceJoinboxData[raceId][jIdx].patches[pIdx].notes = val;
+      saveJoinboxDataToLocal();
+    }
+
+    function deleteJoinbox(jIdx) {
+      if (confirm("Weet je zeker dat je deze Joinbox wilt verwijderen?")) {
+        const raceId = state.activeRaceId;
+        state.raceJoinboxData[raceId].splice(jIdx, 1);
+        saveJoinboxDataToLocal();
+        renderJoinboxBoard();
+      }
+    }
+
+    function toggleGroupCollapse(gIdx) {
+      const activeRaceId = state.activeRaceId;
+      const group = state.raceCableData[activeRaceId][gIdx];
+      setGroupCollapsed(activeRaceId, group, gIdx, !isGroupCollapsed(activeRaceId, group, gIdx));
       renderCableBoard();
-    };
+    }
+
+    function toggleCableStatus(gIdx, iIdx, targetStatus) {
+      const activeRaceId = state.activeRaceId;
+      const item = state.raceCableData[activeRaceId][gIdx].items[iIdx];
+
+      if (targetStatus === 'defect') item.defect = !item.defect;
+      if (targetStatus === 'half') item.half = !item.half;
+      if (targetStatus === 'full') item.full = !item.full;
+
+      saveCableDataToLocal();
+      renderCableBoard();
+    }
+
+    function updateCableLabel(gIdx, iIdx, val) {
+      state.raceCableData[state.activeRaceId][gIdx].items[iIdx].label = val;
+      saveCableDataToLocal();
+    }
+
+    function updateCableConnector(gIdx, iIdx, val) {
+      state.raceCableData[state.activeRaceId][gIdx].items[iIdx].connector = val;
+      saveCableDataToLocal();
+    }
+
+    function addPairToGroup(gIdx) {
+      const group = state.raceCableData[state.activeRaceId][gIdx];
+      const count = group.items.length + 1;
+      group.items.push({
+        pair: `${(count * 2) - 1},${count * 2}`,
+        label: "LABEL / BESTEMMING",
+        connector: "ST",
+        defect: false,
+        half: false,
+        full: false
+      });
+
+      saveCableDataToLocal();
+      renderCableBoard();
+    }
+
+    function deleteCableItem(gIdx, iIdx) {
+      state.raceCableData[state.activeRaceId][gIdx].items.splice(iIdx, 1);
+      saveCableDataToLocal();
+      renderCableBoard();
+    }
+
+    function deleteGroup(gIdx) {
+      if (confirm("Weet je zeker dat je deze gehele kabelgroep wilt verwijderen?")) {
+        state.raceCableData[state.activeRaceId].splice(gIdx, 1);
+        saveCableDataToLocal();
+        renderCableBoard();
+      }
+    }
+
+    function openAddGroupModal() {
+      document.getElementById('groupModalTitle').innerText = "Nieuwe Kabelgroep";
+      document.getElementById('groupModalIndex').value = "-1";
+      document.getElementById('groupNameInput').value = "";
+      document.getElementById('groupColorInput').value = "bg-emerald-600";
+      selectGroupColor('bg-emerald-600');
+      openModal('groupModal');
+    }
+
+    function openEditGroupModal(gIdx) {
+      const group = state.raceCableData[state.activeRaceId][gIdx];
+      document.getElementById('groupModalTitle').innerText = "Kabelgroep Bewerken";
+      document.getElementById('groupModalIndex').value = gIdx;
+      document.getElementById('groupNameInput').value = group.title;
+      document.getElementById('groupColorInput').value = group.color || "bg-emerald-600";
+      selectGroupColor(group.color || "bg-emerald-600");
+      openModal('groupModal');
+    }
+
+    function selectGroupColor(colorClass) {
+      document.getElementById('groupColorInput').value = colorClass;
+      const buttons = document.querySelectorAll('#colorPickerOptions button');
+      buttons.forEach(btn => {
+        if (btn.classList.contains(colorClass)) {
+          btn.classList.add('border-black');
+          btn.classList.remove('border-transparent');
+        } else {
+          btn.classList.remove('border-black');
+          btn.classList.add('border-transparent');
+        }
+      });
+    }
+
+    function saveGroupForm(e) {
+      e.preventDefault();
+      const gIdx = parseInt(document.getElementById('groupModalIndex').value);
+      const title = document.getElementById('groupNameInput').value.trim();
+      const color = document.getElementById('groupColorInput').value;
+      const pairCount = parseInt(document.getElementById('groupPairCountInput').value);
+
+      if (!state.raceCableData[state.activeRaceId]) {
+        state.raceCableData[state.activeRaceId] = [];
+      }
+
+      if (gIdx >= 0) {
+        state.raceCableData[state.activeRaceId][gIdx].title = title;
+        state.raceCableData[state.activeRaceId][gIdx].color = color;
+      } else {
+        const newItems = [];
+        for (let i = 1; i <= pairCount; i++) {
+          newItems.push({
+            pair: `${(i * 2) - 1},${i * 2}`,
+            label: "LABEL / BESTEMMING",
+            connector: "SC/APC",
+            defect: false,
+            half: false,
+            full: false
+          });
+        }
+
+        state.raceCableData[state.activeRaceId].push({
+          id: 'g_' + Date.now(),
+          title,
+          color,
+          collapsed: false,
+          items: newItems
+        });
+      }
+
+      saveCableDataToLocal();
+      closeModal('groupModal');
+      renderCableBoard();
+    }
+
+    function openAddRaceModal() {
+      document.getElementById('raceModalTitle').innerText = "Nieuwe Race Toevoegen";
+      document.getElementById('raceModalId').value = "";
+      document.getElementById('raceNameInput').value = "";
+      document.getElementById('raceCircuitInput').value = "";
+      openModal('raceModal');
+    }
+
+    function openEditRaceModal() {
+      const race = state.races.find(r => r.id === state.activeRaceId);
+      if (!race) return;
+      document.getElementById('raceModalTitle').innerText = "Race Bewerken";
+      document.getElementById('raceModalId').value = race.id;
+      document.getElementById('raceNameInput').value = race.name;
+      document.getElementById('raceCircuitInput').value = race.circuit;
+      openModal('raceModal');
+    }
+
+    function saveRaceForm(e) {
+      e.preventDefault();
+      const raceId = document.getElementById('raceModalId').value;
+      const name = document.getElementById('raceNameInput').value.trim();
+      const circuit = document.getElementById('raceCircuitInput').value.trim();
+
+      if (raceId) {
+        const race = state.races.find(r => r.id === raceId);
+        if (race) {
+          race.name = name;
+          race.circuit = circuit;
+        }
+      } else {
+        const newId = 'r_' + Date.now();
+        const code = `R${state.races.length + 1}`;
+        state.races.push({ id: newId, code, name, circuit });
+        state.activeRaceId = newId;
+        state.expandedRaceId = newId;
+      }
+
+      saveStateToLocal();
+      closeModal('raceModal');
+      renderRaceSidebar();
+      renderCurrentView();
+    }
+
+    function deleteRace(raceId) {
+      if (state.races.length <= 1) {
+        alert("Er moet minimaal 1 race in de kalender blijven staan.");
+        return;
+      }
+
+      if (confirm("Weet je zeker dat je deze race en alle bijbehorende data wilt verwijderen?")) {
+        state.races = state.races.filter(r => r.id !== raceId);
+        delete state.raceCableData[raceId];
+        delete state.raceJoinboxData[raceId];
+        delete state.raceMediaData[raceId];
+
+        if (state.activeRaceId === raceId) {
+          state.activeRaceId = state.races[0].id;
+          state.expandedRaceId = state.races[0].id;
+        }
+
+        saveStateToLocal();
+        renderRaceSidebar();
+        renderCurrentView();
+      }
+    }
+
+    function openCopyModal() {
+      const activeRace = state.races.find(r => r.id === state.activeRaceId);
+      document.getElementById('copySourceRaceName').innerText = activeRace ? activeRace.name : 'huidige race';
+
+      const targetListEl = document.getElementById('copyTargetRaceList');
+      targetListEl.innerHTML = '';
+
+      state.races.forEach(race => {
+        if (race.id === state.activeRaceId) return;
+
+        const row = document.createElement('label');
+        row.className = "flex items-center justify-between p-3 hover:bg-white rounded-xl cursor-pointer text-xs font-semibold text-slate-700 transition-colors touch-target";
+        row.innerHTML = `
+          <div class="flex items-center gap-2">
+            <span class="bg-slate-200 text-slate-600 px-1.5 py-0.5 rounded text-[10px] font-f1 font-extrabold">${race.code}</span>
+            <span>${race.name}</span>
+          </div>
+          <input type="checkbox" value="${race.id}" class="copy-target-checkbox w-5 h-5 text-emerald-600 rounded focus:ring-emerald-500">
+        `;
+        targetListEl.appendChild(row);
+      });
+
+      openModal('copyModal');
+    }
+
+    function selectAllCopyTargets(select) {
+      const checkboxes = document.querySelectorAll('.copy-target-checkbox');
+      checkboxes.forEach(cb => cb.checked = select);
+    }
+
+    function executeCopyLayout() {
+      const sourceGroups = state.raceCableData[state.activeRaceId];
+      const sourceJoinboxes = state.raceJoinboxData[state.activeRaceId];
+
+      const selectedTargets = Array.from(document.querySelectorAll('.copy-target-checkbox:checked')).map(cb => cb.value);
+
+      if (selectedTargets.length === 0) {
+        alert("Selecteer minimaal één race om de indeling naar toe te kopiëren.");
+        return;
+      }
+
+      selectedTargets.forEach(targetRaceId => {
+        if (sourceGroups) {
+          const copiedGroups = JSON.parse(JSON.stringify(sourceGroups));
+          copiedGroups.forEach(group => {
+            group.items.forEach(item => {
+              item.defect = false;
+              item.half = false;
+              item.full = false;
+            });
+          });
+          state.raceCableData[targetRaceId] = copiedGroups;
+        }
+
+        if (sourceJoinboxes) {
+          state.raceJoinboxData[targetRaceId] = JSON.parse(JSON.stringify(sourceJoinboxes));
+        }
+      });
+
+      saveStateToLocal();
+      closeModal('copyModal');
+      alert(`Kabel & Joinbox indeling succesvol gekopieerd naar ${selectedTargets.length} race(s)!`);
+    }
+
+    function openModal(id) {
+      document.getElementById(id).classList.remove('hidden');
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.add('hidden');
+    }
+
+    function openSupabaseModal() {
+      document.getElementById('sbUrlInput').value = state.supabaseConfig.url || '';
+      document.getElementById('sbKeyInput').value = state.supabaseConfig.key || '';
+      openModal('supabaseModal');
+    }
+
+    function saveSupabaseConfig(e) {
+      e.preventDefault();
+      state.supabaseConfig.url = document.getElementById('sbUrlInput').value.trim();
+      state.supabaseConfig.key = document.getElementById('sbKeyInput').value.trim();
+      localStorage.setItem('f1_sb_config', JSON.stringify(state.supabaseConfig));
+      closeModal('supabaseModal');
+      initSupabase();
+    }
+
+    function clearSupabaseConfig() {
+      state.supabaseConfig = { url: '', key: '' };
+      localStorage.removeItem('f1_sb_config');
+      supabaseClient = null;
+      supabaseActive = false;
+      closeModal('supabaseModal');
+      initSupabase();
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+    }
+
+    function registerServiceWorker() {
+      if ('serviceWorker' in navigator) {
+        const swCode = `
+          self.addEventListener('install', e => self.skipWaiting());
+          self.addEventListener('activate', e => self.clients.claim());
+          self.addEventListener('fetch', e => e.respondWith(fetch(e.request).catch(() => new Response("Offline"))));
+        `;
+        const blob = new Blob([swCode], { type: 'application/javascript' });
+        navigator.serviceWorker.register(URL.createObjectURL(blob))
+          .then(() => console.log('F1 Cable SW active'))
+          .catch(err => console.log('SW registration skipped:', err));
+      }
+    }
   </script>
 </body>
 </html>
