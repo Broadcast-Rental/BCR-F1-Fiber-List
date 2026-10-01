@@ -1,0 +1,16 @@
+{
+  "name": "f1-fiber-manager",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Shared F1 fiber and joinbox manager",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node test/merge.test.js && node test/api.test.js && node test/check-html.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "multer": "^1.4.5-lts.2",
+    "ws": "^8.18.1"
+  }
+}
