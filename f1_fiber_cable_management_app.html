@@ -172,9 +172,7 @@
 
       <!-- F1 Race Calendar Accordion List -->
       <div class="flex-1 overflow-y-auto dark-scroll p-2 space-y-1.5" id="raceList">
-<<<<<<< HEAD
-<<<<<<< HEAD
-        <!-- Dynamic Races -->
+        <!-- Dynamic Race & Sub-menu items injected by JS -->
 =======
         <!-- Dynamic Race & Sub-menu items injected by JS -->
 >>>>>>> e5694eb5cd0380287ad307c4986cf6b75a12926f
@@ -460,10 +458,11 @@
   </div>
 
   <script>
-<<<<<<< HEAD
     // Standaard Broadcast Connectie Templates
     const DEFAULT_BROADCAST_GROUPS = [
-=======
+      // existing broadcast connection templates from main branch
+    ];
+
     const DEFAULT_F1_CALENDAR_2027 = [
       { id: "r1", code: "R1", name: "Bahrain Grand Prix", circuit: "Bahrain International Circuit • Sakhir, Bahrein" },
       { id: "r2", code: "R2", name: "Saudi Arabian Grand Prix", circuit: "Jeddah Corniche Circuit • Jeddah, Saoedi-Arabië" },
@@ -493,7 +492,6 @@
     ];
 
     const SAMPLE_CABLE_GROUPS = [
->>>>>>> e5694eb5cd0380287ad307c4986cf6b75a12926f
       {
         id: "g_toc_tata",
         title: "TOC <> TATA",
@@ -502,7 +500,6 @@
         startFiber: 1,
         color: "bg-blue-700",
         items: [
-<<<<<<< HEAD
           { fiberNum: "1", pair: "1", label: "FIREWALL 1", connector: "SC/APC", defect: false, half: false, full: false },
           { fiberNum: "2", pair: "2", label: "FIREWALL 2", connector: "SC/APC", defect: false, half: false, full: false },
           { fiberNum: "3", pair: "3", label: "SR2 TOC<>TATA - A", connector: "SC/APC", defect: false, half: false, full: false },
@@ -583,13 +580,6 @@
           { fiberNum: "14", pair: "14", label: "SR2 - A <> TOC - C", connector: "SC/APC", defect: false, half: false, full: false },
           { fiberNum: "15", pair: "15", label: "SR2 - B <> TATA - D", connector: "SC/APC", defect: false, half: false, full: false },
           { fiberNum: "16", pair: "16", label: "SR2 - B <> TATA - D", connector: "SC/APC", defect: false, half: false, full: false }
-=======
-          { pair: "1,2", label: "FIREWALL MAIN", connector: "SC/APC", defect: false, half: false, full: true },
-          { pair: "3,4", label: "CAM 9 (K)", connector: "SC/APC", defect: false, half: false, full: false },
-          { pair: "5,6", label: "Blackmagic Fiber converter t.b.v. 32\"", connector: "SC/APC", defect: false, half: false, full: false },
-          { pair: "7,8", label: "LABEL / BESTEMMING", connector: "SC/APC", defect: false, half: false, full: false },
-          { pair: "9,10", label: "LABEL / BESTEMMING", connector: "SC/APC", defect: false, half: false, full: false },
-          { pair: "11,12", label: "LABEL / BESTEMMING", connector: "ST", defect: false, half: false, full: false }
         ]
       },
       {
@@ -605,17 +595,7 @@
         ]
       }
     ];
-
-    const SAMPLE_JOINBOXES = [
-      {
-        id: "jb1",
-        name: "Joinbox JB-01 (Pit Lane West)",
-        inCable: "Tac 24 SC/APC TATA",
-        outCable: "Tac 24 A1 (300m)",
-        patches: [
-          { fiberIn: "Fiber 1,2", fiberOut: "Fiber 1,2", notes: "Firewall Direct Passthrough", status: "full" },
-          { fiberIn: "Fiber 3,4", fiberOut: "Fiber 5,6", notes: "Cam 9 Reroute", status: "half" }
-<<<<<<< HEAD
+=======
 >>>>>>> e5694eb5cd0380287ad307c4986cf6b75a12926f
 =======
 >>>>>>> e5694eb5cd0380287ad307c4986cf6b75a12926f
@@ -624,28 +604,7 @@
     ];
 
     let state = {
-<<<<<<< HEAD
-<<<<<<< HEAD
-      groups: JSON.parse(JSON.stringify(DEFAULT_BROADCAST_GROUPS))
-    };
-
-    // Auto recalculate fiber numbers if doortellen is active
-    function recalculateFiberNumbers(group) {
-      if (!group.autoCount) return;
-      let start = parseInt(group.startFiber) || 1;
-      
-      group.items.forEach((item, idx) => {
-        let currentNum = start + idx;
-        // Als het via een Joinbox gaat kan het een dubbel nummer zijn bijv. 9-9
-        if (group.joinbox && group.joinbox.trim() !== "") {
-          item.fiberNum = `${currentNum}-${currentNum}`;
-        } else {
-          item.fiberNum = `${currentNum}`;
-        }
-      });
-    }
-
-=======
+      groups: JSON.parse(JSON.stringify(DEFAULT_BROADCAST_GROUPS)),
       races: [],
       activeRaceId: "r1",
       activeSubSection: "cables", // 'cables', 'maps', 'joinbox', 'notes'
@@ -655,7 +614,6 @@
       raceMediaData: {},
       supabaseConfig: { url: '', key: '' }
     };
-
 =======
       races: [],
       activeRaceId: "r1",
@@ -1291,6 +1249,9 @@
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> e5694eb5cd0380287ad307c4986cf6b75a12926f
+=======
 >>>>>>> e5694eb5cd0380287ad307c4986cf6b75a12926f
 =======
 >>>>>>> e5694eb5cd0380287ad307c4986cf6b75a12926f
@@ -1301,8 +1262,14 @@
       state.groups.forEach((group, gIdx) => {
         recalculateFiberNumbers(group);
 
-<<<<<<< HEAD
 =======
+>>>>>>> e5694eb5cd0380287ad307c4986cf6b75a12926f
+=======
+>>>>>>> e5694eb5cd0380287ad307c4986cf6b75a12926f
+        const groupEl = document.createElement('div');
+        groupEl.className = "bg-white rounded-2xl shadow-2xs border border-slate-200 overflow-hidden max-w-5xl mx-auto transition-all";
+
+        groupEl.innerHTML = `
       if (groups.length === 0) {
         container.innerHTML = `
           <div class="bg-white border-2 border-dashed border-slate-200 rounded-2xl p-6 sm:p-12 text-center max-w-lg mx-auto my-6 sm:my-10">
@@ -1322,79 +1289,6 @@
 
       groups.forEach((group, gIdx) => {
         const totalCount = group.items.length;
-        const defectCount = group.items.filter(i => i.defect).length;
-        const halfCount = group.items.filter(i => i.half).length;
-        const fullCount = group.items.filter(i => i.full).length;
-        const isCollapsed = isGroupCollapsed(activeRaceId, group, gIdx);
-
-<<<<<<< HEAD
->>>>>>> e5694eb5cd0380287ad307c4986cf6b75a12926f
-=======
->>>>>>> e5694eb5cd0380287ad307c4986cf6b75a12926f
-        const groupEl = document.createElement('div');
-        groupEl.className = "bg-white rounded-2xl shadow-2xs border border-slate-200 overflow-hidden max-w-5xl mx-auto transition-all";
-
-        groupEl.innerHTML = `
-<<<<<<< HEAD
-<<<<<<< HEAD
-          <!-- Header Cable Group -->
-          <div class="${group.color || 'bg-slate-800'} text-white px-3 sm:px-4 py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow-md">
-            <div class="flex items-center gap-2 flex-1 min-w-0">
-              <i class="fa-solid fa-network-wired text-sm opacity-80"></i>
-              <input type="text" value="${escapeHtml(group.title)}" onchange="updateGroupTitle(${gIdx}, this.value)" class="bg-transparent font-f1 font-extrabold text-sm sm:text-base tracking-wide uppercase text-white focus:outline-none focus:bg-white/10 rounded px-1.5 py-0.5 w-full">
-            </div>
-
-            <!-- Joinbox config + start nummering -->
-            <div class="flex items-center gap-2 text-xs bg-black/20 p-1.5 rounded-xl border border-white/10">
-              <i class="fa-solid fa-box-archive text-amber-400"></i>
-              <input type="text" value="${escapeHtml(group.joinbox || '')}" onchange="updateGroupJoinbox(${gIdx}, this.value)" placeholder="Via Joinbox? (bijv. Joinbox 1)" class="bg-transparent text-white placeholder-white/60 text-xs font-semibold focus:outline-none focus:bg-white/10 rounded px-1 w-36 xs:w-48">
-              
-              <span class="text-white/40">|</span>
-              <label class="flex items-center gap-1 cursor-pointer" title="Auto doortellen vanaf gekozen fibernummer">
-                <span class="text-[10px] text-white/80 font-bold">Start #</span>
-                <input type="number" value="${group.startFiber || 1}" onchange="updateGroupStartFiber(${gIdx}, this.value)" class="w-10 bg-black/40 text-white font-bold text-center text-xs rounded border border-white/20 focus:outline-none">
-              </label>
-            </div>
-          </div>
-
-          <!-- Cable Items List -->
-          <div class="p-2 sm:p-3 space-y-2.5 bg-slate-50/50">
-            ${group.items.map((item, iIdx) => `
-              <div class="bg-white border border-slate-200 rounded-xl p-2.5 sm:p-3 flex flex-col sm:flex-row sm:items-center gap-2 shadow-2xs hover:border-slate-300">
-                
-                <!-- Fiber nummer & Connector -->
-                <div class="flex items-center justify-between gap-2 w-full sm:w-auto">
-                  <div class="flex items-center gap-1.5">
-                    <input type="text" value="${escapeHtml(item.fiberNum)}" onchange="updateItemFiberNum(${gIdx},${iIdx}, this.value)" class="bg-slate-100 text-slate-900 border border-slate-300 font-f1 font-extrabold text-xs sm:text-sm px-2 py-1 rounded-lg text-center shrink-0 w-[60px] focus:outline-none focus:border-emerald-500">
-                    
-                    <select onchange="updateCableConnector(${gIdx},${iIdx}, this.value)" class="text-xs font-extrabold text-slate-700 bg-slate-100 rounded-lg px-2 py-1 border border-slate-300 focus:outline-none cursor-pointer uppercase">
-=======
-          <div onclick="toggleGroupCollapse(${gIdx})" class="${group.color || 'bg-emerald-600'} text-white px-3 sm:px-4 py-3 flex items-center justify-between gap-2 shadow-md cursor-pointer select-none active:brightness-95 transition-all">
-            
-            <div class="flex items-center gap-2 sm:gap-3 overflow-hidden">
-              <i class="fa-solid fa-chevron-down text-xs sm:text-sm transition-transform duration-200 ${isCollapsed ? '-rotate-90 text-white/70' : 'rotate-0 text-white'} shrink-0"></i>
-              <h3 class="font-f1 font-extrabold text-xs xs:text-sm sm:text-base tracking-wide uppercase truncate">${group.title}</h3>
-            </div>
-
-            <div class="flex items-center gap-1 sm:gap-1.5 shrink-0" onclick="event.stopPropagation()">
-              <button onclick="openEditGroupModal(${gIdx})" class="text-white/80 hover:text-white p-2 hover:bg-black/10 rounded-xl transition-colors touch-target flex items-center justify-center" title="Groep bewerken">
-                <i class="fa-solid fa-pen text-xs"></i>
-              </button>
-              <button onclick="deleteGroup(${gIdx})" class="text-white/80 hover:text-white p-2 hover:bg-black/10 rounded-xl transition-colors touch-target flex items-center justify-center" title="Groep verwijderen">
-                <i class="fa-solid fa-trash text-xs"></i>
-              </button>
-
-              <span class="bg-slate-900 text-white font-f1 font-extrabold text-[11px] xs:text-xs px-2 py-0.5 sm:py-1 rounded-full min-w-[22px] sm:min-w-[26px] text-center shadow-inner" title="Totaal aders">${totalCount}</span>
-              <span class="bg-statusRed text-white font-f1 font-extrabold text-[11px] xs:text-xs px-2 py-0.5 sm:py-1 rounded-full min-w-[22px] sm:min-w-[26px] text-center shadow-inner" title="Defect">${defectCount}</span>
-              <span class="bg-statusYellow text-white font-f1 font-extrabold text-[11px] xs:text-xs px-2 py-0.5 sm:py-1 rounded-full min-w-[22px] sm:min-w-[26px] text-center shadow-inner" title="1-Kant gestoken">${halfCount}</span>
-              <span class="bg-statusGreen text-white font-f1 font-extrabold text-[11px] xs:text-xs px-2 py-0.5 sm:py-1 rounded-full min-w-[22px] sm:min-w-[26px] text-center shadow-inner" title="Volledig gestoken">${fullCount}</span>
-            </div>
-          </div>
-
-          <!-- Cable Items Container -->
-          <div class="p-2 sm:p-4 space-y-2 sm:space-y-3 bg-slate-50/50 ${isCollapsed ? 'hidden' : ''}">
-            ${group.items.map((item, iIdx) => `
-              <div class="bg-white border border-slate-200 rounded-xl p-2.5 sm:p-3 flex flex-col sm:flex-row sm:items-center gap-2 shadow-2xs hover:border-slate-300">
 =======
           <div onclick="toggleGroupCollapse(${gIdx})" class="${group.color || 'bg-emerald-600'} text-white px-3 sm:px-4 py-3 flex items-center justify-between gap-2 shadow-md cursor-pointer select-none active:brightness-95 transition-all">
             
@@ -1430,6 +1324,9 @@
                     </span>
                     <select onchange="updateCableConnector(${gIdx}, ${iIdx}, this.value)" class="text-xs font-extrabold text-slate-700 bg-slate-100 rounded-lg px-2 py-1 border border-slate-300 focus:outline-none cursor-pointer uppercase">
 <<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> e5694eb5cd0380287ad307c4986cf6b75a12926f
+=======
 >>>>>>> e5694eb5cd0380287ad307c4986cf6b75a12926f
 =======
 >>>>>>> e5694eb5cd0380287ad307c4986cf6b75a12926f
@@ -1440,18 +1337,45 @@
                       <option value="APC" ${item.connector === 'APC' ? 'selected' : ''}>APC</option>
                     </select>
                   </div>
-<<<<<<< HEAD
-<<<<<<< HEAD
+          <div onclick="toggleGroupCollapse(${gIdx})" class="${group.color || 'bg-emerald-600'} text-white px-3 sm:px-4 py-3 flex items-center justify-between gap-2 shadow-md cursor-pointer select-none active:brightness-95 transition-all">
+            
+            <div class="flex items-center gap-2 sm:gap-3 overflow-hidden">
+              <i class="fa-solid fa-chevron-down text-xs sm:text-sm transition-transform duration-200 ${isCollapsed ? '-rotate-90 text-white/70' : 'rotate-0 text-white'} shrink-0"></i>
+              <h3 class="font-f1 font-extrabold text-xs xs:text-sm sm:text-base tracking-wide uppercase truncate">${group.title}</h3>
+            </div>
 
-                  <!-- Status vinkjes op mobiel -->
-                  <div class="flex items-center gap-1.5 shrink-0 sm:hidden">
-                    <button onclick="toggleCableStatus(${gIdx},${iIdx}, 'defect')" title="Defect (Rood)" class="status-btn status-btn-red ${item.defect ? 'active' : ''} w-7 h-7 rounded-lg flex items-center justify-center font-bold">
+            <div class="flex items-center gap-1 sm:gap-1.5 shrink-0" onclick="event.stopPropagation()">
+              <button onclick="openEditGroupModal(${gIdx})" class="text-white/80 hover:text-white p-2 hover:bg-black/10 rounded-xl transition-colors touch-target flex items-center justify-center" title="Groep bewerken">
+                <i class="fa-solid fa-pen text-xs"></i>
+              </button>
+              <button onclick="deleteGroup(${gIdx})" class="text-white/80 hover:text-white p-2 hover:bg-black/10 rounded-xl transition-colors touch-target flex items-center justify-center" title="Groep verwijderen">
+                <i class="fa-solid fa-trash text-xs"></i>
+              </button>
+
+              <span class="bg-slate-900 text-white font-f1 font-extrabold text-[11px] xs:text-xs px-2 py-0.5 sm:py-1 rounded-full min-w-[22px] sm:min-w-[26px] text-center shadow-inner" title="Totaal aders">${totalCount}</span>
+              <span class="bg-statusRed text-white font-f1 font-extrabold text-[11px] xs:text-xs px-2 py-0.5 sm:py-1 rounded-full min-w-[22px] sm:min-w-[26px] text-center shadow-inner" title="Defect">${defectCount}</span>
+              <span class="bg-statusYellow text-white font-f1 font-extrabold text-[11px] xs:text-xs px-2 py-0.5 sm:py-1 rounded-full min-w-[22px] sm:min-w-[26px] text-center shadow-inner" title="1-Kant gestoken">${halfCount}</span>
+              <span class="bg-statusGreen text-white font-f1 font-extrabold text-[11px] xs:text-xs px-2 py-0.5 sm:py-1 rounded-full min-w-[22px] sm:min-w-[26px] text-center shadow-inner" title="Volledig gestoken">${fullCount}</span>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2 text-xs bg-black/20 p-1.5 rounded-xl border border-white/10">
+            <i class="fa-solid fa-box-archive text-amber-400"></i>
+            <input type="text" value="${escapeHtml(group.joinbox || '')}" onchange="updateGroupJoinbox(${gIdx}, this.value)" placeholder="Via Joinbox? (bijv. Joinbox 1)" class="bg-transparent text-white placeholder-white/60 text-xs font-semibold focus:outline-none focus:bg-white/10 rounded px-1 w-36 xs:w-48">
+            
+            <span class="text-white/40">|</span>
+            <label class="flex items-center gap-1 cursor-pointer" title="Auto doortellen vanaf gekozen fibernummer">
+              <span class="text-[10px] text-white/80 font-bold">Start #</span>
+              <input type="number" value="${group.startFiber || 1}" onchange="updateGroupStartFiber(${gIdx}, this.value)" class="w-10 bg-black/40 text-white font-bold text-center text-xs rounded border border-white/20 focus:outline-none">
+            </label>
+          </div>
+
+          <!-- Cable Items Container -->
+          <div class="p-2 sm:p-4 space-y-2 sm:space-y-3 bg-slate-50/50 ${isCollapsed ? 'hidden' : ''}">
+            ${group.items.map((item, iIdx) => `
+              <div class="bg-white border border-slate-200 rounded-xl p-2.5 sm:p-3 flex flex-col sm:flex-row sm:items-center gap-2 shadow-2xs hover:border-slate-300">
                       <i class="fa-solid fa-check text-[11px]"></i>
                     </button>
-                    <button onclick="toggleCableStatus(${gIdx},${iIdx}, 'half')" title="1-kant gestoken (Geel)" class="status-btn status-btn-yellow ${item.half ? 'active' : ''} w-7 h-7 rounded-lg flex items-center justify-center font-bold">
-                      <i class="fa-solid fa-check text-[11px]"></i>
-                    </button>
-                    <button onclick="toggleCableStatus(${gIdx},${iIdx}, 'full')" title="Volledig gestoken (Groen)" class="status-btn status-btn-green ${item.full ? 'active' : ''} w-7 h-7 rounded-lg flex items-center justify-center font-bold">
 =======
                   <div class="flex items-center gap-1.5 shrink-0 sm:hidden">
                     <button onclick="toggleCableStatus(${gIdx}, ${iIdx}, 'defect')" title="Defect (Rood)" class="status-btn status-btn-red ${item.defect ? 'active' : ''} w-7 h-7 rounded-lg flex items-center justify-center font-bold active:scale-95">
@@ -1461,9 +1385,9 @@
                       <i class="fa-solid fa-check text-[11px]"></i>
                     </button>
                     <button onclick="toggleCableStatus(${gIdx}, ${iIdx}, 'full')" title="Volledig gestoken (Groen)" class="status-btn status-btn-green ${item.full ? 'active' : ''} w-7 h-7 rounded-lg flex items-center justify-center font-bold active:scale-95">
->>>>>>> e5694eb5cd0380287ad307c4986cf6b75a12926f
                       <i class="fa-solid fa-check text-[11px]"></i>
                     </button>
+>>>>>>> e5694eb5cd0380287ad307c4986cf6b75a12926f
 =======
                   <div class="flex items-center gap-1.5 shrink-0 sm:hidden">
                     <button onclick="toggleCableStatus(${gIdx}, ${iIdx}, 'defect')" title="Defect (Rood)" class="status-btn status-btn-red ${item.defect ? 'active' : ''} w-7 h-7 rounded-lg flex items-center justify-center font-bold active:scale-95">
@@ -1481,31 +1405,23 @@
                     </button>
                   </div>
                 </div>
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-                <!-- Label / Bestemming Input -->
-=======
->>>>>>> e5694eb5cd0380287ad307c4986cf6b75a12926f
                 <div class="flex-1 min-w-0 w-full">
                   <input type="text" value="${escapeHtml(item.label)}" onchange="updateCableLabel(${gIdx}, ${iIdx}, this.value)" placeholder="LABEL / BESTEMMING" class="w-full bg-slate-50 border border-slate-200 hover:border-slate-300 focus:border-emerald-500 focus:bg-white text-xs sm:text-sm font-semibold text-slate-900 rounded-lg px-2.5 py-1.5 transition-all focus:outline-none">
                 </div>
-<<<<<<< HEAD
-
-                <!-- Status vinkjes Desktop -->
-                <div class="hidden sm:flex items-center gap-1.5 shrink-0">
-                  <button onclick="toggleCableStatus(${gIdx},${iIdx}, 'defect')" title="Defect (Rood)" class="status-btn status-btn-red ${item.defect ? 'active' : ''} w-8 h-8 rounded-lg flex items-center justify-center font-bold">
-                    <i class="fa-solid fa-check text-xs"></i>
-                  </button>
-                  <button onclick="toggleCableStatus(${gIdx},${iIdx}, 'half')" title="1-kant gestoken (Geel)" class="status-btn status-btn-yellow ${item.half ? 'active' : ''} w-8 h-8 rounded-lg flex items-center justify-center font-bold">
-                    <i class="fa-solid fa-check text-xs"></i>
-                  </button>
-                  <button onclick="toggleCableStatus(${gIdx},${iIdx}, 'full')" title="Volledig gestoken (Groen)" class="status-btn status-btn-green ${item.full ? 'active' : ''} w-8 h-8 rounded-lg flex items-center justify-center font-bold">
-                    <i class="fa-solid fa-check text-xs"></i>
-                  </button>
-                  <button onclick="removeCableItem(${gIdx},${iIdx})" title="Verwijder regel" class="text-slate-300 hover:text-red-500 ml-1 text-xs p-1">
-                    <i class="fa-solid fa-trash-can"></i>
+                  <div class="flex items-center gap-1.5 shrink-0 sm:hidden">
+                    <button onclick="toggleCableStatus(${gIdx}, ${iIdx}, 'defect')" title="Defect (Rood)" class="status-btn status-btn-red ${item.defect ? 'active' : ''} w-7 h-7 rounded-lg flex items-center justify-center font-bold active:scale-95">
+                      <i class="fa-solid fa-check text-[11px]"></i>
+                    </button>
+                    <button onclick="toggleCableStatus(${gIdx}, ${iIdx}, 'half')" title="1-kant gestoken (Geel)" class="status-btn status-btn-yellow ${item.half ? 'active' : ''} w-7 h-7 rounded-lg flex items-center justify-center font-bold active:scale-95">
+                      <i class="fa-solid fa-check text-[11px]"></i>
+                    </button>
+                    <button onclick="toggleCableStatus(${gIdx}, ${iIdx}, 'full')" title="Volledig gestoken (Groen)" class="status-btn status-btn-green ${item.full ? 'active' : ''} w-7 h-7 rounded-lg flex items-center justify-center font-bold active:scale-95">
+                      <i class="fa-solid fa-check text-[11px]"></i>
+                    </button>
 =======
+                <div class="flex-1 min-w-0 w-full">
+                  <input type="text" value="${escapeHtml(item.label)}" onchange="updateCableLabel(${gIdx}, ${iIdx}, this.value)" placeholder="LABEL / BESTEMMING" class="w-full bg-slate-50 border border-slate-200 hover:border-slate-300 focus:border-emerald-500 focus:bg-white text-xs sm:text-sm font-semibold text-slate-900 rounded-lg px-2.5 py-1.5 transition-all focus:outline-none">
+                </div>
                 <div class="hidden sm:flex items-center gap-1.5 shrink-0">
                   <button onclick="toggleCableStatus(${gIdx}, ${iIdx}, 'defect')" title="Defect (Rood)" class="status-btn status-btn-red ${item.defect ? 'active' : ''} w-8 h-8 rounded-lg flex items-center justify-center font-bold active:scale-95">
                     <i class="fa-solid fa-check text-xs"></i>
@@ -1541,13 +1457,6 @@
               </div>
             `).join('')}
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-            <!-- Knop om losse regel toe te voegen aan deze groep -->
-            <button onclick="addFiberItemToGroup(${gIdx})" class="w-full py-2 border border-dashed border-slate-300 hover:border-slate-400 text-slate-600 font-bold text-xs rounded-xl flex items-center justify-center gap-2 hover:bg-slate-100 transition-colors">
-              <i class="fa-solid fa-plus text-emerald-600"></i> Regel toevoegen aan ${escapeHtml(group.title)}
-            </button>
-=======
 =======
 >>>>>>> e5694eb5cd0380287ad307c4986cf6b75a12926f
             <div class="pt-1 flex justify-end">
@@ -1556,6 +1465,9 @@
               </button>
             </div>
 <<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> e5694eb5cd0380287ad307c4986cf6b75a12926f
+=======
 >>>>>>> e5694eb5cd0380287ad307c4986cf6b75a12926f
 =======
 >>>>>>> e5694eb5cd0380287ad307c4986cf6b75a12926f
@@ -1566,115 +1478,19 @@
       });
     }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-    // Handlers & Updates
-    function updateGroupTitle(gIdx, val) { state.groups[gIdx].title = val; }
-    function updateGroupJoinbox(gIdx, val) { state.groups[gIdx].joinbox = val; renderCableBoard(); }
-    function updateGroupStartFiber(gIdx, val) { state.groups[gIdx].startFiber = parseInt(val) || 1; renderCableBoard(); }
-    function updateItemFiberNum(gIdx, iIdx, val) { state.groups[gIdx].items[iIdx].fiberNum = val; state.groups[gIdx].autoCount = false; }
-    function updateCableConnector(gIdx, iIdx, val) { state.groups[gIdx].items[iIdx].connector = val; }
-    function updateCableLabel(gIdx, iIdx, val) { state.groups[gIdx].items[iIdx].label = val; }
-
-    function toggleCableStatus(gIdx, iIdx, statusType) {
-      const item = state.groups[gIdx].items[iIdx];
-      if (statusType === 'defect') item.defect = !item.defect;
-      if (statusType === 'half') item.half = !item.half;
-      if (statusType === 'full') item.full = !item.full;
-      renderCableBoard();
-    }
-
-    function removeCableItem(gIdx, iIdx) {
-      state.groups[gIdx].items.splice(iIdx, 1);
-      renderCableBoard();
-    }
-
-    function addFiberItemToGroup(gIdx) {
-      const group = state.groups[gIdx];
-      const count = group.items.length + 1;
-      group.items.push({
-        fiberNum: `${count}`,
-        pair: `${count}`,
-        label: "SPARE FIBER",
-        connector: "SC/APC",
-        defect: false, half: false, full: false
-      });
-      renderCableBoard();
-    }
-
-    function addNewCableGroup() {
-      const title = prompt("Naam van de nieuwe kabelgroep:", "TOC <> NEW LOCATION");
-      if (!title) return;
-      state.groups.push({
-        id: "g_" + Date.now(),
-        title: title,
-        joinbox: "",
-        autoCount: true,
-        startFiber: 1,
-        color: "bg-slate-700",
-        items: [
-          { fiberNum: "1", pair: "1", label: "NEW SIGNAL 1", connector: "SC/APC", defect: false, half: false, full: false },
-          { fiberNum: "2", pair: "2", label: "NEW SIGNAL 2", connector: "SC/APC", defect: false, half: false, full: false }
-        ]
-      });
-      renderCableBoard();
-    }
-
-    function escapeHtml(str) {
-      return (str || '').replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
-    }
-
-    function toggleMobileSidebar(show) {
-      const sidebar = document.getElementById('sidebar');
-      const backdrop = document.getElementById('sidebarBackdrop');
-      if (show) {
-        sidebar.classList.remove('-translate-x-full');
-        backdrop.classList.remove('hidden');
-      } else {
-        sidebar.classList.add('-translate-x-full');
-        backdrop.classList.add('hidden');
-      }
-    }
-
-    window.onload = () => {
-=======
-    function renderMapsView() {
-      const raceId = state.activeRaceId;
-      const media = state.raceMediaData[raceId] || { notes: '', images: [] };
-      const grid = document.getElementById('circuitMediaGrid');
-      grid.innerHTML = '';
-
-      const images = media.images || [];
-
-      if (images.length === 0) {
-        grid.innerHTML = `
-          <div class="col-span-full py-10 text-center text-slate-400 text-xs border border-dashed border-slate-200 rounded-2xl p-4">
-            Geen plattegronden of foto's toegevoegd voor deze race. Tik bovenaan op Upload of URL om een afbeelding toe te voegen.
-          </div>
-        `;
-        return;
-      }
-
-      images.forEach((imgUrl, idx) => {
-        const card = document.createElement('div');
-        card.className = "relative group rounded-xl overflow-hidden border border-slate-200 bg-slate-900 h-32 sm:h-44 shadow-2xs cursor-pointer";
-        card.onclick = () => openLightbox(imgUrl);
-
-        card.innerHTML = `
-          <img src="${imgUrl}" alt="Circuit media" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
-          <div class="absolute inset-0 bg-slate-900/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-            <button onclick="event.stopPropagation(); openLightbox('${imgUrl}')" class="p-2.5 bg-white/90 text-slate-900 rounded-xl text-xs hover:bg-white touch-target" title="Groot bekijken">
-              <i class="fa-solid fa-expand"></i>
-            </button>
-            <button onclick="event.stopPropagation(); removeMediaImage(${idx})" class="p-2.5 bg-red-600/90 text-white rounded-xl text-xs hover:bg-red-600 touch-target" title="Verwijderen">
-              <i class="fa-solid fa-trash"></i>
-            </button>
-          </div>
-        `;
-        grid.appendChild(card);
-      });
-    }
-
+                <!-- Status vinkjes Desktop -->
+                <div class="hidden sm:flex items-center gap-1.5 shrink-0">
+                  <button onclick="toggleCableStatus(${gIdx},${iIdx}, 'defect')" title="Defect (Rood)" class="status-btn status-btn-red ${item.defect ? 'active' : ''} w-8 h-8 rounded-lg flex items-center justify-center font-bold">
+                    <i class="fa-solid fa-check text-xs"></i>
+                  </button>
+                  <button onclick="toggleCableStatus(${gIdx},${iIdx}, 'half')" title="1-kant gestoken (Geel)" class="status-btn status-btn-yellow ${item.half ? 'active' : ''} w-8 h-8 rounded-lg flex items-center justify-center font-bold">
+                    <i class="fa-solid fa-check text-xs"></i>
+                  </button>
+                  <button onclick="toggleCableStatus(${gIdx},${iIdx}, 'full')" title="Volledig gestoken (Groen)" class="status-btn status-btn-green ${item.full ? 'active' : ''} w-8 h-8 rounded-lg flex items-center justify-center font-bold">
+                    <i class="fa-solid fa-check text-xs"></i>
+                  </button>
+                  <button onclick="removeCableItem(${gIdx},${iIdx})" title="Verwijder regel" class="text-slate-300 hover:text-red-500 ml-1 text-xs p-1">
+                    <i class="fa-solid fa-trash-can"></i>
 =======
     function renderMapsView() {
       const raceId = state.activeRaceId;
@@ -1969,6 +1785,9 @@
       const group = state.raceCableData[activeRaceId][gIdx];
       setGroupCollapsed(activeRaceId, group, gIdx, !isGroupCollapsed(activeRaceId, group, gIdx));
 <<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> e5694eb5cd0380287ad307c4986cf6b75a12926f
+=======
 >>>>>>> e5694eb5cd0380287ad307c4986cf6b75a12926f
 =======
 >>>>>>> e5694eb5cd0380287ad307c4986cf6b75a12926f
