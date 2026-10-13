@@ -25,3 +25,7 @@ volumes:
 npm install
 npm start
 ```
+
+## Deploy
+
+Merging to `main` builds and rolls out the container. See [DEPLOY.md](DEPLOY.md).
