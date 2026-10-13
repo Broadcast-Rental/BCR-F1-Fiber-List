@@ -2,7 +2,7 @@
 
 Merging to `main` is the deploy. Nobody builds or restarts anything by hand.
 
-Pull requests run the same tests but build nothing, so a red check on a pull request means: do not merge, it would not deploy anyway.
+A pull request from a branch in this repository is merged automatically as soon as its tests pass, and then deploys like any other change on `main`. A red check means it stays open and nothing is rolled out.
 
 ## What happens on a push to `main`
 

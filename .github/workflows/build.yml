@@ -30,6 +30,29 @@ jobs:
           npm ci
           npm test
 
+  # A pull request that passes the tests is merged without anyone clicking.
+  # Only for branches in this repository, so a fork cannot merge itself in.
+  automerge:
+    needs: test
+    if: >-
+      github.event_name == 'pull_request' &&
+      github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      actions: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Merge
+        run: gh pr merge "${{ github.event.pull_request.html_url }}" --merge --delete-branch --match-head-commit "${{ github.event.pull_request.head.sha }}"
+
+      # A merge made with the workflow token does not fire the push trigger, so
+      # the build on main is started explicitly.
+      - name: Start build on main
+        run: gh workflow run build.yml --repo "${{ github.repository }}" --ref main
+
   build:
     needs: test
     if: github.event_name != 'pull_request'
