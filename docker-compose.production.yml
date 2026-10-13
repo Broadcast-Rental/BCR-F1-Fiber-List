@@ -1,0 +1,17 @@
+# Portainer stack: runs the image CI pushes to the registry instead of building
+# locally. Set REGISTRY_URL (and optionally F1_FIBER_PORT) in the stack environment.
+services:
+  f1-fiber:
+    image: ${REGISTRY_URL:?set REGISTRY_URL in the stack environment}/bcr-f1-fiber-list:latest
+    container_name: bcr-f1-fiber-list
+    ports:
+      - "${F1_FIBER_PORT:-8080}:8080"
+    environment:
+      PORT: "8080"
+      DATA_DIR: /data
+    volumes:
+      - f1-fiber-data:/data
+    restart: unless-stopped
+
+volumes:
+  f1-fiber-data:
