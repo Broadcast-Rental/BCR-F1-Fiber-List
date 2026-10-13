@@ -15,6 +15,12 @@ ENV PORT=8080
 ENV DATA_DIR=/data
 ENV NODE_OPTIONS=--max-old-space-size=192
 
+# Written to a file as well: Portainer copies the old container's environment
+# when it recreates one, so the env value alone can lag behind the image.
+ARG BUILD_NUMBER=dev
+ENV BUILD_NUMBER=${BUILD_NUMBER}
+RUN echo "${BUILD_NUMBER}" > /app/BUILD_NUMBER
+
 RUN mkdir -p /data/uploads && chown -R node:node /data
 
 VOLUME ["/data"]

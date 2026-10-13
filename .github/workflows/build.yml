@@ -1,0 +1,72 @@
+name: Build & Push
+
+on:
+  push:
+    branches: [main]
+  # Pull requests only run the tests; nothing is built or rolled out.
+  pull_request:
+    branches: [main]
+  # Build by hand from the Actions tab, without needing a commit.
+  workflow_dispatch:
+
+# Two builds in quick succession would otherwise compute the same build number.
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Test
+        run: |
+          npm ci
+          npm test
+
+  build:
+    needs: test
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get next build number
+        id: build
+        run: |
+          git fetch --tags
+          LATEST=$(git tag -l 'b*' --sort=-v:refname | head -1 | tr -cd '0-9')
+          NEXT=$((${LATEST:-0} + 1))
+          echo "tag=b${NEXT}" >> $GITHUB_OUTPUT
+          echo "Build tag: b${NEXT}"
+
+      - name: Log in to registry
+        run: echo "${{ secrets.REGISTRY_PASSWORD }}" | docker login ${{ secrets.REGISTRY_URL }} -u "${{ secrets.REGISTRY_USERNAME }}" --password-stdin
+
+      # Pushing :latest is what triggers the rollout: the registry notifies the
+      # BCR registry module, which redeploys the Portainer stack mapped to this
+      # image in DEPLOY_STACK_MAP.
+      - name: Build & push
+        run: |
+          IMAGE=${{ secrets.REGISTRY_URL }}/bcr-f1-fiber-list
+          docker buildx build \
+            --platform linux/amd64 \
+            --build-arg BUILD_NUMBER=${{ steps.build.outputs.tag }} \
+            -t ${IMAGE}:${{ steps.build.outputs.tag }} \
+            -t ${IMAGE}:latest \
+            --push .
+
+      - name: Tag build number
+        run: |
+          git tag ${{ steps.build.outputs.tag }}
+          git push origin ${{ steps.build.outputs.tag }}

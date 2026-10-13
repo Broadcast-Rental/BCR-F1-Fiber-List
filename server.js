@@ -10,6 +10,17 @@ const { WebSocketServer } = require('ws');
 const { mergeState } = require('./merge');
 
 const MAX_IMAGE_BYTES = 20 * 1024 * 1024;
+
+// The image carries its build number in a file; see the Dockerfile for why the
+// file wins over the environment.
+function readBuildNumber() {
+  try {
+    return fs.readFileSync(path.join(__dirname, 'BUILD_NUMBER'), 'utf8').trim() || 'dev';
+  } catch {
+    return process.env.BUILD_NUMBER || 'dev';
+  }
+}
+const BUILD_NUMBER = readBuildNumber();
 const MIME_EXT = {
   'image/jpeg': '.jpg',
   'image/jpg': '.jpg',
@@ -196,7 +207,7 @@ function createServer(options = {}) {
   app.use(express.json({ limit: '8mb' }));
 
   app.get('/api/health', (req, res) => {
-    res.json({ ok: true });
+    res.json({ ok: true, build: BUILD_NUMBER });
   });
 
   app.get('/api/state', (req, res) => {
