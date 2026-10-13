@@ -50,8 +50,14 @@ jobs:
           echo "tag=b${NEXT}" >> $GITHUB_OUTPUT
           echo "Build tag: b${NEXT}"
 
+      # Through the environment, not pasted into the script: a password with a
+      # $, quote or backslash would otherwise be mangled by the shell.
       - name: Log in to registry
-        run: echo "${{ secrets.REGISTRY_PASSWORD }}" | docker login ${{ secrets.REGISTRY_URL }} -u "${{ secrets.REGISTRY_USERNAME }}" --password-stdin
+        env:
+          REGISTRY_URL: ${{ secrets.REGISTRY_URL }}
+          REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
+          REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+        run: printf '%s' "$REGISTRY_PASSWORD" | docker login "$REGISTRY_URL" -u "$REGISTRY_USERNAME" --password-stdin
 
       # Pushing :latest is what triggers the rollout: the registry notifies the
       # BCR registry module, which redeploys the Portainer stack mapped to this
