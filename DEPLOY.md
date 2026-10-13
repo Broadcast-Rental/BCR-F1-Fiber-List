@@ -2,6 +2,8 @@
 
 Merging to `main` is the deploy. Nobody builds or restarts anything by hand.
 
+Pull requests run the same tests but build nothing, so a red check on a pull request means: do not merge, it would not deploy anyway.
+
 ## What happens on a push to `main`
 
 1. GitHub Actions (`.github/workflows/build.yml`) runs `npm test`. A failing test stops here and nothing is deployed.

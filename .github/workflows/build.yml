@@ -3,23 +3,22 @@ name: Build & Push
 on:
   push:
     branches: [main]
+  # Pull requests only run the tests; nothing is built or rolled out.
+  pull_request:
+    branches: [main]
   # Build by hand from the Actions tab, without needing a commit.
   workflow_dispatch:
 
-# Two pushes in quick succession would otherwise compute the same build number.
+# Two builds in quick succession would otherwise compute the same build number.
 concurrency:
   group: build-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - uses: actions/setup-node@v4
         with:
@@ -30,6 +29,17 @@ jobs:
         run: |
           npm ci
           npm test
+
+  build:
+    needs: test
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Get next build number
         id: build
