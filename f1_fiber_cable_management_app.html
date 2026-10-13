@@ -1,13 +1,15 @@
 <!DOCTYPE html>
-<html lang="nl" class="h-full bg-slate-100">
+<html lang="en" class="h-full bg-slate-100">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>F1 Fiber Cable & Joinbox Manager</title>
+  <title>BCR F1 Patch list</title>
 
   <!-- PWA Web App Meta -->
-  <link rel="manifest" id="pwa-manifest" href="data:application/manifest+json;utf8,%7B%22name%22%3A%22F1%20Fiber%20Cable%20Manager%22%2C%22short_name%22%3A%22F1Fiber%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23121621%22%2C%22theme_color%22%3A%22%2310b981%22%7D">
-  <meta name="theme-color" content="#121621">
+  <link rel="icon" type="image/png" href="/public/logo.png?v=2">
+  <link rel="apple-touch-icon" href="/public/logo.png?v=2">
+  <link rel="manifest" id="pwa-manifest" href="data:application/manifest+json;utf8,%7B%22name%22%3A%22F1%20Fiber%20Cable%20Manager%22%2C%22short_name%22%3A%22F1Fiber%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23121621%22%2C%22theme_color%22%3A%22%2310b981%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22%2Fpublic%2Flogo.png%3Fv%3D2%22%2C%22sizes%22%3A%22200x200%22%2C%22type%22%3A%22image%2Fpng%22%7D%5D%7D">
+  <meta name="theme-color" content="#f8fafc">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
@@ -23,7 +25,7 @@
   <!-- Google Fonts: Inter & Titillium Web for F1 aesthetic -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Titillium+Web:wght@600;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Barlow+Condensed:wght@600;700;800&family=Titillium+Web:wght@600;700;900&display=swap" rel="stylesheet">
 
   <script>
     tailwind.config = {
@@ -43,6 +45,8 @@
           colors: {
             sidebar: '#121621',
             sidebarHover: '#1c2232',
+            gold: '#c4a35a',
+            ink: '#0b0e14',
             f1red: '#e10600',
             statusRed: '#ef4444',
             statusYellow: '#f59e0b',
@@ -93,7 +97,7 @@
     .status-btn-red.active {
       background-color: #ef4444;
       color: #ffffff;
-      box-shadow: 0 2px 6px rgba(239, 68, 68, 0.45);
+      box-shadow: 0 2px 8px rgba(239, 68, 68, 0.45);
     }
 
     .status-btn-yellow {
@@ -104,7 +108,7 @@
     .status-btn-yellow.active {
       background-color: #f59e0b;
       color: #ffffff;
-      box-shadow: 0 2px 6px rgba(245, 158, 11, 0.45);
+      box-shadow: 0 2px 8px rgba(245, 158, 11, 0.45);
     }
 
     .status-btn-green {
@@ -115,17 +119,439 @@
     .status-btn-green.active {
       background-color: #10b981;
       color: #ffffff;
-      box-shadow: 0 2px 6px rgba(16, 185, 129, 0.45);
+      box-shadow: 0 2px 8px rgba(16, 185, 129, 0.45);
     }
 
     .touch-target {
-      min-height: 38px;
-      min-width: 38px;
+      min-height: 44px;
+      min-width: 44px;
+    }
+
+    .fiber-num-input {
+      width: 2.15rem;
+      min-width: 2.15rem;
+      flex-shrink: 0;
+      min-height: 1.5rem;
+      padding: 0;
+      text-align: center;
+      font-family: "Titillium Web", sans-serif;
+      font-weight: 800;
+      font-size: 0.75rem;
+      letter-spacing: 0.02em;
+      color: #1e293b;
+      background: #e8eef4;
+      border: 1px solid #cbd5e1;
+      border-radius: 0.25rem;
+      -moz-appearance: textfield;
+    }
+    .fiber-num-input:focus {
+      border-color: #10b981;
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.22);
+    }
+    .fiber-num-input::-webkit-outer-spin-button,
+    .fiber-num-input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    .fiber-label-input,
+    .fiber-title-input {
+      width: 100%;
+      min-height: 1.5rem;
+      padding: 0.1rem 0.35rem;
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: 0.25rem;
+    }
+    .fiber-label-input {
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      min-width: 0;
+    }
+    .fiber-title-input {
+      font-family: "Titillium Web", sans-serif;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .fiber-label-input:hover {
+      background: #fff;
+      border-color: #cbd5e1;
+    }
+    .fiber-label-input:focus,
+    .fiber-title-input:focus {
+      background: #fff;
+      border-color: #10b981;
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.18);
+    }
+    .fiber-title-input.on-route {
+      background: transparent;
+      border-color: transparent;
+      color: #f8fafc;
+      text-align: center;
+    }
+    .fiber-plan-head {
+      display: grid;
+      grid-template-columns: minmax(5.4rem, 1fr) minmax(0, 1.6fr) minmax(5.4rem, 1fr);
+      align-items: center;
+      column-gap: 0.25rem;
+      padding: 0.28rem 0.4rem;
+    }
+    .fiber-plan-head-side {
+      min-width: 0;
+    }
+    .fiber-plan-head-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 0.1rem;
+    }
+    .fiber-plan-head-title {
+      width: 100%;
+      min-width: 0;
+      text-align: center;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .fiber-list-banner {
+      display: grid;
+      grid-template-columns: minmax(4.5rem, 1fr) minmax(0, auto) minmax(4.5rem, 1fr);
+      align-items: center;
+      column-gap: 0.5rem;
+    }
+    .fiber-list-banner h3 {
+      text-align: center;
+      justify-self: center;
+    }
+    .fiber-list-banner button {
+      justify-self: end;
+    }
+    .fiber-plan-table th.col-nr {
+      text-align: center;
+    }
+    .section-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+    @media (max-width: 420px) {
+      .fiber-plan-head {
+        grid-template-columns: minmax(3.6rem, 1fr) minmax(0, 1.8fr) minmax(3.6rem, 1fr);
+        padding: 0.28rem 0.3rem;
+      }
+      .fiber-plan-head-actions .joinbox-label {
+        font-size: 8px;
+      }
+    }
+    .fiber-title-input.on-route:focus {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.28);
+      color: #fff;
+      box-shadow: none;
+    }
+    .fiber-plan-card {
+      border-radius: 0.5rem;
+      overflow: hidden;
+      background: #fff;
+    }
+    .fiber-plan-card tbody tr.fiber-row:hover {
+      background: #f8fafc;
+    }
+    .fiber-plan-table {
+      table-layout: fixed;
+    }
+    .fiber-plan-table th {
+      font-family: "Titillium Web", sans-serif;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      border-bottom: 1px solid #e2e8f0;
+      background: #f8fafc;
+    }
+    .fiber-plan-table .col-nr { width: 3.1rem; }
+    .fiber-plan-table .col-act { width: 1.75rem; }
+    .fiber-row-layout {
+      display: grid;
+      grid-template-columns: max-content max-content minmax(0, 1fr) 1.5rem;
+      align-items: center;
+      column-gap: 0.3rem;
+      min-width: 0;
+    }
+    .fiber-row-layout > * { min-width: 0; }
+    .sortable-row {
+      cursor: grab;
+      touch-action: pan-y;
+    }
+    .sortable-row.is-row-dragging {
+      cursor: grabbing;
+      opacity: 0.42;
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.18);
+      transform: scale(1.015);
+      position: relative;
+      z-index: 4;
+      touch-action: none;
+    }
+    .fiber-row.is-selected {
+      background: #ecfdf5;
+      box-shadow: inset 2px 0 0 #10b981;
+    }
+    .cable-item-row.is-selected {
+      background: #f0fdf4;
+      border-color: #10b981;
+    }
+    .fiber-row-move {
+      display: flex;
+      align-items: center;
+      gap: 0.2rem;
+      flex-shrink: 0;
+      width: max-content;
+      max-width: 4.75rem;
+    }
+    .fiber-row-grip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 1.75rem;
+      min-width: 1.75rem;
+      min-height: 1.75rem;
+      color: #64748b;
+      cursor: grab;
+      touch-action: none !important;
+      -webkit-user-select: none;
+      user-select: none;
+      -webkit-touch-callout: none;
+      -webkit-user-drag: none;
+      flex-shrink: 0;
+    }
+    .fiber-row-grip,
+    .fiber-row-grip * {
+      touch-action: none !important;
+    }
+    .fiber-row-grip:active { cursor: grabbing; }
+    .row-select {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 1.15rem;
+      min-width: 1.15rem;
+      height: 1.15rem;
+      margin: 0;
+      flex-shrink: 0;
+    }
+    .row-select input {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 1.05rem;
+      height: 1.05rem;
+      min-width: 1.05rem;
+      min-height: 1.05rem;
+      margin: 0;
+      padding: 0;
+      border: 1.5px solid #94a3b8;
+      border-radius: 0.22rem;
+      background: #fff;
+      cursor: pointer;
+      display: grid;
+      place-content: center;
+      flex-shrink: 0;
+    }
+    .row-select input:checked {
+      background: #10b981;
+      border-color: #10b981;
+    }
+    .row-select input:checked::after {
+      content: "";
+      width: 0.22rem;
+      height: 0.42rem;
+      border: solid #fff;
+      border-width: 0 1.5px 1.5px 0;
+      transform: rotate(45deg) translate(-0.5px, -1px);
+    }
+    @media (max-width: 640px), (pointer: coarse) {
+      .fiber-row-move { max-width: 3.35rem; gap: 0.12rem; }
+      .fiber-row-grip {
+        width: 2rem;
+        min-width: 2rem;
+        min-height: 2.25rem;
+      }
+      .row-select,
+      .row-select input {
+        width: 1.15rem;
+        min-width: 1.15rem;
+        height: 1.15rem;
+        min-height: 1.15rem;
+      }
+      .fiber-row-layout {
+        column-gap: 0.2rem;
+        grid-template-columns: max-content max-content minmax(0, 1fr) 1.35rem;
+      }
+      .fiber-label-input {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+    @media (min-width: 640px) and (pointer: fine) {
+      .fiber-row-move { max-width: none; }
+    }
+    .fiber-move-btns {
+      display: none;
+      flex-direction: column;
+    }
+    @media (min-width: 640px) and (pointer: fine) {
+      .fiber-move-btns { display: flex; }
+    }
+    .fiber-move-btns button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 0.95rem;
+      height: 0.7rem;
+      padding: 0;
+      color: #94a3b8;
+      line-height: 1;
+      font-size: 8px;
+    }
+    .fiber-move-btns button:disabled {
+      opacity: 0.28;
+      pointer-events: none;
+    }
+    body.is-sorting-rows {
+      overflow: hidden !important;
+      overscroll-behavior: none;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: none !important;
+      cursor: grabbing;
+    }
+    body.is-sorting-rows * {
+      touch-action: none !important;
+    }
+    .row-drop-line {
+      position: fixed;
+      height: 3px;
+      margin-top: -1px;
+      background: #10b981;
+      border-radius: 999px;
+      z-index: 80;
+      pointer-events: none;
+      box-shadow: 0 0 0 1px rgba(16, 185, 129, 0.28);
+    }
+    .row-drag-ghost {
+      position: fixed;
+      z-index: 90;
+      pointer-events: none;
+      padding: 0.4rem 0.75rem;
+      border-radius: 0.55rem;
+      background: #0f172a;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      box-shadow: 0 10px 28px rgba(15, 23, 42, 0.28);
+      transform: translate(14px, 16px);
+      max-width: 240px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .fiber-nums {
+      display: flex;
+      align-items: center;
+      gap: 0.15rem;
+      flex-shrink: 0;
+      min-width: 2.15rem;
+    }
+    .fiber-nums.is-pair {
+      min-width: 5.2rem;
+    }
+    .fiber-nums .fiber-num-slash {
+      flex-shrink: 0;
+      color: #94a3b8;
+      font-family: "Titillium Web", sans-serif;
+      font-weight: 800;
+      font-size: 10px;
+      line-height: 1;
+    }
+    .cable-pair-input {
+      width: 4.5rem;
+      min-width: 4.5rem;
+      max-width: 5.6rem;
+      flex-shrink: 0;
+      min-height: 1.85rem;
+      padding: 0.2rem 0.35rem;
+      text-align: center;
+      font-family: "Barlow Condensed", "Titillium Web", sans-serif;
+      font-weight: 800;
+      font-size: 0.85rem;
+      letter-spacing: 0.02em;
+      color: #1e293b;
+      background: #e8eef4;
+      border: 1px solid #cbd5e1;
+      border-radius: 0.5rem;
+    }
+    .cable-pair-input:focus {
+      border-color: #10b981;
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.22);
+      background: #fff;
+    }
+
+    .cable-item-row {
+      display: grid;
+      grid-template-columns: 3.35rem minmax(0, 1fr) auto;
+      grid-template-areas:
+        "move meta status"
+        "move label label";
+      align-items: center;
+      column-gap: 0.4rem;
+      row-gap: 0.45rem;
+      min-width: 0;
+    }
+    .cable-item-move { grid-area: move; max-width: 3.35rem; min-width: 0; }
+    .cable-item-meta { grid-area: meta; min-width: 0; }
+    .cable-item-label { grid-area: label; min-width: 0; }
+    .cable-item-label input {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .cable-item-status { grid-area: status; }
+    .cable-item-status .status-btn {
+      width: 1.75rem;
+      height: 1.75rem;
+      min-width: 1.75rem;
+      min-height: 1.75rem;
+    }
+    @media (min-width: 640px) {
+      .cable-item-row {
+        grid-template-columns: max-content auto minmax(0, 1fr) auto;
+        grid-template-areas: "move meta label status";
+      }
+      .cable-item-move { max-width: none; }
+      .cable-item-status .status-btn {
+        width: 2.5rem;
+        height: 2.5rem;
+        min-width: 2.5rem;
+        min-height: 2.5rem;
+      }
     }
 
     /* Prevent body scrolling when mobile drawer is active */
     body.sidebar-open {
       overflow: hidden;
+    }
+
+    .theme-race-current {
+      background: #e10600 !important;
+      color: #ffffff !important;
+      box-shadow: 0 8px 18px rgba(225, 6, 0, 0.38) !important;
+    }
+    .theme-race-current .text-emerald-300 {
+      color: rgba(255, 255, 255, 0.8);
     }
   </style>
 </head>
@@ -141,13 +567,14 @@
       
       <!-- App Header Branding -->
       <div class="p-3.5 sm:p-4 border-b border-slate-800 flex items-center justify-between shrink-0">
-        <div class="flex items-center space-x-3">
-          <div class="bg-f1red text-white p-2 rounded-xl font-f1 font-black tracking-wider text-xl flex items-center justify-center w-10 h-10 shadow-lg shadow-red-900/40">
-            F1
+        <div class="flex items-center space-x-3 min-w-0">
+          <div class="relative shrink-0">
+            <span class="absolute inset-0 rounded-full bg-gold/30 blur-[6px]"></span>
+            <img src="/public/logo.png" alt="Broadcast Rental" class="relative w-11 h-11 rounded-full object-cover ring-1 ring-gold/70 shadow-lg">
           </div>
-          <div>
-            <h1 class="font-f1 font-bold text-base leading-tight uppercase tracking-wide text-white">Fiber & Joinbox</h1>
-            <p class="text-xs text-slate-400 font-medium">Kabel & Patch Manager</p>
+          <div class="min-w-0">
+            <h1 class="font-f1 font-bold text-[15px] sm:text-base leading-tight uppercase tracking-wide text-white">BCR F1 Patch list</h1>
+            <p class="text-[11px] text-gold font-semibold tracking-wide">Cable &amp; Patch Manager</p>
           </div>
         </div>
         <button onclick="toggleMobileSidebar(false)" class="md:hidden text-slate-400 hover:text-white p-2.5 rounded-xl hover:bg-slate-800 touch-target flex items-center justify-center">
@@ -159,14 +586,14 @@
       <div class="p-3 border-b border-slate-800 shrink-0">
         <div class="relative">
           <i class="fa-solid fa-magnifying-glass absolute left-3 top-3.5 text-slate-500 text-sm"></i>
-          <input type="text" id="raceSearch" oninput="filterRaces()" placeholder="Zoek circuit of race..." class="w-full bg-slate-900 text-xs sm:text-sm text-white pl-9 pr-3 py-2.5 rounded-xl border border-slate-700/60 focus:outline-none focus:border-emerald-500 transition-colors placeholder-slate-500">
+          <input type="text" id="raceSearch" oninput="filterRaces()" placeholder="Search circuit or race..." class="w-full bg-slate-900 text-xs sm:text-sm text-white pl-9 pr-3 py-2.5 rounded-xl border border-slate-700/60 focus:outline-none focus:border-emerald-500 transition-colors placeholder-slate-500">
         </div>
       </div>
 
       <!-- Add New Custom Race Button -->
       <div class="p-3 border-b border-slate-800/60 shrink-0">
         <button onclick="openAddRaceModal()" class="w-full bg-slate-800 hover:bg-slate-700 active:bg-slate-900 text-emerald-400 hover:text-emerald-300 text-xs font-bold py-3 px-3 rounded-xl flex items-center justify-center gap-2 transition-all border border-slate-700/50 touch-target">
-          <i class="fa-solid fa-plus text-sm"></i> Nieuwe race toevoegen
+          <i class="fa-solid fa-plus text-sm"></i> Add new race
         </button>
       </div>
 
@@ -175,82 +602,83 @@
         <!-- Dynamic Race & Sub-menu items injected by JS -->
       </div>
 
-      <!-- Sidebar Footer Settings & Supabase status -->
-      <div class="p-3 border-t border-slate-800 bg-slate-950/60 text-xs shrink-0">
-        <div class="flex items-center justify-between text-slate-400">
-          <span class="flex items-center gap-2 font-medium">
-            <span id="syncStatusDot" class="w-2.5 h-2.5 rounded-full bg-amber-500 inline-block animate-pulse"></span>
-            <span id="syncStatusText" class="truncate max-w-[170px]">Verbinden...</span>
-          </span>
-          <button onclick="openSupabaseModal()" title="Database Sync Instellingen" class="text-slate-400 hover:text-white p-2 hover:bg-slate-800 rounded-xl transition-colors touch-target flex items-center justify-center">
-            <i class="fa-solid fa-gear text-base"></i>
-          </button>
-        </div>
-      </div>
     </aside>
 
     <!-- Main Content Board -->
     <main class="flex-1 flex flex-col h-full overflow-hidden bg-slate-100 min-w-0">
       
       <!-- Top Navigation Header -->
-      <header class="bg-white border-b border-slate-200 px-3 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between gap-2 shadow-xs z-10 shrink-0">
+      <header class="bg-white border-b border-slate-200 px-2 md:px-6 py-1.5 md:py-3 flex flex-wrap items-start md:items-center justify-between gap-x-1.5 gap-y-1 md:gap-2 shadow-xs z-10 shrink-0">
         
-        <div class="flex items-center gap-2.5 min-w-0 flex-1">
-          <button onclick="toggleMobileSidebar(true)" class="md:hidden text-slate-700 hover:text-black p-2.5 rounded-xl border border-slate-200 bg-slate-50 touch-target flex items-center justify-center active:bg-slate-200 shrink-0">
-            <i class="fa-solid fa-bars text-lg"></i>
+        <div class="flex items-start md:items-center gap-1.5 md:gap-2.5 min-w-0 flex-[1_1_12rem]">
+          <button onclick="toggleMobileSidebar(true)" class="md:hidden text-slate-700 hover:text-black p-1.5 rounded-lg border border-slate-200 bg-slate-50 flex items-center justify-center active:bg-slate-200 shrink-0 mt-0.5">
+            <i class="fa-solid fa-bars text-sm"></i>
           </button>
           
           <div class="min-w-0 flex-1">
-            <div class="flex items-center gap-1.5 sm:gap-2">
-              <span id="headerRaceBadge" class="bg-f1red text-white text-[10px] sm:text-xs font-bold px-1.5 py-0.5 rounded tracking-wide font-f1 uppercase shrink-0">RACE 1</span>
-              <h2 id="headerRaceTitle" class="text-xs xs:text-sm sm:text-lg font-f1 font-extrabold text-slate-900 tracking-tight uppercase truncate">BAHRAIN INTERNATIONAL CIRCUIT</h2>
-              <button onclick="openEditRaceModal()" class="text-slate-400 hover:text-slate-700 text-xs p-1 shrink-0" title="Race naam bewerken">
+            <div class="flex items-start md:items-center gap-1 md:gap-2">
+              <span id="headerRaceBadge" class="bg-f1red text-white text-[9px] md:text-xs font-bold px-1 md:px-1.5 py-px md:py-0.5 rounded tracking-wide font-f1 uppercase shrink-0 mt-0.5 md:mt-0">RACE 1</span>
+              <h2 id="headerRaceTitle" class="text-xs md:text-lg font-f1 font-extrabold text-slate-900 tracking-tight uppercase leading-tight line-clamp-2 md:truncate">BAHRAIN INTERNATIONAL CIRCUIT</h2>
+              <button onclick="openEditRaceModal()" class="text-slate-400 hover:text-slate-700 text-[10px] md:text-xs p-0.5 md:p-1 shrink-0 mt-0.5 md:mt-0" title="Edit race name">
                 <i class="fa-solid fa-pen"></i>
               </button>
             </div>
-            <p id="headerRaceSub" class="text-[10px] sm:text-xs text-slate-500 font-medium truncate">Bahrain Grand Prix • Sakhir, Bahrein</p>
+            <p id="headerRaceSub" class="text-[10px] md:text-xs text-slate-500 font-medium leading-snug line-clamp-2 md:truncate">Bahrain • Sakhir, Bahrain</p>
           </div>
         </div>
 
-        <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
-          <button onclick="openCopyModal()" class="flex items-center gap-1.5 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 active:bg-slate-300 px-2.5 sm:px-3 py-2 rounded-xl transition-colors border border-slate-200 shadow-2xs touch-target">
-            <i class="fa-regular fa-copy text-slate-600 text-sm"></i>
-            <span class="hidden sm:inline">Kopieer indeling</span>
+        <div class="flex items-center gap-1 md:gap-2 shrink-0 ml-auto">
+          <button onclick="openCopyModal('plans')" title="Copy standard list" class="flex items-center justify-center gap-1 md:gap-1.5 text-[10px] md:text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 active:bg-slate-300 px-1.5 py-1 md:px-3 md:py-2 rounded-lg md:rounded-xl transition-colors border border-slate-200 shadow-2xs">
+            <i class="fa-regular fa-copy text-slate-600 text-xs md:text-sm"></i>
+            <span class="hidden md:inline">Copy standard list</span>
+          </button>
+          <button onclick="openCopyModal('cables')" title="Copy cables" class="flex items-center justify-center gap-1 md:gap-1.5 text-[10px] md:text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 active:bg-slate-300 px-1.5 py-1 md:px-3 md:py-2 rounded-lg md:rounded-xl transition-colors border border-slate-200 shadow-2xs">
+            <i class="fa-solid fa-bezier-curve text-slate-600 text-xs md:text-sm"></i>
+            <span class="hidden md:inline">Copy cables</span>
           </button>
 
-          <button id="mainActionButton" onclick="triggerMainAddAction()" class="flex items-center gap-1.5 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 px-3 sm:px-4 py-2 rounded-xl shadow-2xs transition-colors touch-target">
-            <i class="fa-solid fa-plus"></i>
-            <span id="mainActionButtonText" class="hidden xs:inline">+ Nieuwe kabel</span>
+          <button id="mainActionButton" onclick="triggerMainAddAction()" class="theme-btn-primary flex items-center gap-0.5 md:gap-1.5 text-[10px] md:text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 px-1.5 py-1 md:px-4 md:py-2 rounded-lg md:rounded-xl shadow-2xs transition-colors leading-none whitespace-nowrap">
+            <i id="mainActionButtonIcon" class="fa-solid fa-plus text-[10px] md:text-xs"></i>
+            <span id="mainActionButtonText">New cable</span>
           </button>
         </div>
       </header>
 
       <!-- Main Scrollable Body Area -->
-      <div class="flex-1 overflow-y-auto p-2 sm:p-5 space-y-3 sm:space-y-5 min-w-0">
+      <div class="flex-1 overflow-y-auto p-2.5 sm:p-5 space-y-3 sm:space-y-5 min-w-0">
         
         <!-- View 1: Fiber Cables View -->
         <div id="viewCables" class="space-y-3 sm:space-y-5">
           
           <!-- Mobile-Optimized Status Legend Bar -->
-          <div id="cablesLegendBar" class="bg-white rounded-2xl border border-slate-200/90 p-2.5 sm:p-3 max-w-5xl mx-auto shadow-2xs">
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs font-semibold text-slate-700">
+          <div id="cablesLegendBar" class="bg-white rounded-2xl border border-slate-200/90 p-3 max-w-5xl mx-auto shadow-2xs">
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-x-3 gap-y-2 text-xs font-semibold text-slate-700 items-center">
               <div class="flex items-center gap-2">
-                <span class="w-5 h-5 sm:w-6 sm:h-6 rounded-lg bg-statusRed text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-2xs"><i class="fa-solid fa-check text-[10px]"></i></span>
-                <span class="truncate text-[11px] sm:text-xs">Rood: Defect</span>
+                <span class="w-6 h-6 rounded-lg bg-statusRed text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-2xs"><i class="fa-solid fa-check text-[10px]"></i></span>
+                <span class="truncate">Red: Fault</span>
               </div>
               <div class="flex items-center gap-2">
-                <span class="w-5 h-5 sm:w-6 sm:h-6 rounded-lg bg-statusYellow text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-2xs"><i class="fa-solid fa-check text-[10px]"></i></span>
-                <span class="truncate text-[11px] sm:text-xs">Geel: 1-kant gestoken</span>
+                <span class="w-6 h-6 rounded-lg bg-statusYellow text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-2xs"><i class="fa-solid fa-check text-[10px]"></i></span>
+                <span class="truncate">Yellow: One end patched</span>
               </div>
               <div class="flex items-center gap-2">
-                <span class="w-5 h-5 sm:w-6 sm:h-6 rounded-lg bg-statusGreen text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-2xs"><i class="fa-solid fa-check text-[10px]"></i></span>
-                <span class="truncate text-[11px] sm:text-xs">Groen: Volledig</span>
+                <span class="w-6 h-6 rounded-lg bg-statusGreen text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-2xs"><i class="fa-solid fa-check text-[10px]"></i></span>
+                <span class="truncate">Green: Fully patched</span>
               </div>
               <div class="flex items-center gap-2">
-                <span class="w-5 h-5 sm:w-6 sm:h-6 rounded-lg bg-slate-900 text-white flex items-center justify-center font-f1 font-extrabold text-[11px] sm:text-xs shrink-0 shadow-2xs">24</span>
-                <span class="truncate text-[11px] sm:text-xs">Zwart: Vrije fibers</span>
+                <span class="w-6 h-6 rounded-lg bg-slate-900 text-white flex items-center justify-center font-f1 font-extrabold text-xs shrink-0 shadow-2xs">24</span>
+                <span class="truncate">Black: Spare fibers</span>
               </div>
             </div>
+            <p class="mt-2 text-[11px] text-slate-500">The standard patch list is at the top. You can type fiber numbers there and on your own cables.</p>
+          </div>
+
+          <div id="fiberPlanContainer" class="space-y-3 sm:space-y-4"></div>
+
+          <div class="max-w-5xl mx-auto flex items-center gap-2 px-1">
+            <div class="h-px flex-1 bg-slate-200"></div>
+            <p class="text-[10px] font-bold uppercase tracking-wider text-slate-400 shrink-0">Own cables</p>
+            <div class="h-px flex-1 bg-slate-200"></div>
           </div>
 
           <div id="cableGroupContainer" class="space-y-3 sm:space-y-4">
@@ -260,17 +688,17 @@
 
         <!-- View 2: Maps & Photos Gallery View -->
         <div id="viewMaps" class="max-w-5xl mx-auto bg-white rounded-2xl border border-slate-200 p-3.5 sm:p-6 shadow-2xs space-y-4 hidden">
-          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-3">
+          <div class="section-toolbar border-b border-slate-200 pb-3">
             <div>
-              <h3 class="font-f1 font-extrabold text-base sm:text-lg text-slate-900 uppercase">Circuit Plattegronden & Foto's</h3>
-              <p class="text-xs text-slate-500">Upload of koppel plattegronden en kabeltracé foto's.</p>
+              <h3 class="font-f1 font-extrabold text-base sm:text-lg text-slate-900 uppercase">Circuit maps &amp; photos</h3>
+              <p class="text-xs text-slate-500">Upload or link photos, PDFs and other files for this circuit.</p>
             </div>
             <div class="flex items-center gap-2">
               <label class="bg-slate-200 hover:bg-slate-300 text-slate-800 text-xs font-bold px-3 py-2.5 rounded-xl cursor-pointer transition-colors flex items-center gap-1.5 touch-target">
                 <i class="fa-solid fa-upload text-sm"></i> <span>Upload</span>
-                <input type="file" accept="image/*" onchange="handleMediaFileUpload(event)" class="hidden">
+                <input type="file" accept="image/*,.pdf,.png,.jpg,.jpeg,.webp,.gif,.heic,.heif,.bmp,.zip,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,application/pdf" onchange="handleLibraryFileUpload(event, 'maps')" class="hidden">
               </label>
-              <button onclick="promptMediaUrlUpload()" class="bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 text-xs font-bold px-3 py-2.5 rounded-xl transition-colors flex items-center gap-1.5 touch-target">
+              <button onclick="promptLibraryUrl('maps')" class="bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 text-xs font-bold px-3 py-2.5 rounded-xl transition-colors flex items-center gap-1.5 touch-target">
                 <i class="fa-solid fa-link text-sm"></i> <span>URL</span>
               </button>
             </div>
@@ -290,16 +718,92 @@
 
         <!-- View 4: Circuit Notes View -->
         <div id="viewNotes" class="max-w-5xl mx-auto bg-white rounded-2xl border border-slate-200 p-3.5 sm:p-6 shadow-2xs space-y-3 hidden">
-          <div class="flex items-center justify-between">
+          <div class="section-toolbar">
             <h3 class="font-f1 font-extrabold text-base sm:text-lg text-slate-900 uppercase flex items-center gap-2">
-              <i class="fa-solid fa-pen-to-square text-emerald-600"></i> Race Opmerkingen & Notities
+              <i class="fa-solid fa-pen-to-square text-emerald-600"></i> Race notes
             </h3>
-            <button onclick="saveNotesManually()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-3 py-2 rounded-xl shadow-2xs touch-target">
-              Opslaan
+            <button onclick="saveNotesManually()" class="theme-btn-primary bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-3 py-2 rounded-xl shadow-2xs touch-target">
+              Save
             </button>
           </div>
-          <p class="text-xs text-slate-500">Notities worden automatisch opgeslagen en gesynchroniseerd.</p>
-          <textarea id="circuitNotesInput" oninput="saveCircuitNotes(this.value)" rows="12" placeholder="Typ hier specifieke circuit opmerkingen, afspraken of patching instructies..." class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3.5 text-xs sm:text-sm text-slate-800 focus:ring-2 focus:ring-emerald-500 focus:outline-none transition-all placeholder-slate-400"></textarea>
+          <p class="text-xs text-slate-500">Notes are saved and synced automatically.</p>
+          <textarea id="circuitNotesInput" oninput="saveCircuitNotes(this.value)" rows="12" placeholder="Circuit notes, agreements or patching instructions..." class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3.5 text-xs sm:text-sm text-slate-800 focus:ring-2 focus:ring-emerald-500 focus:outline-none transition-all placeholder-slate-400"></textarea>
+        </div>
+
+        <!-- View 5: Media Accreditation Centre -->
+        <div id="viewMac" class="max-w-5xl mx-auto bg-white rounded-2xl border border-slate-200 p-3.5 sm:p-6 shadow-2xs space-y-4 hidden">
+          <div class="section-toolbar">
+            <h3 class="font-f1 font-extrabold text-base sm:text-lg text-slate-900 uppercase flex items-center gap-2">
+              <i class="fa-solid fa-id-card text-emerald-600"></i> MAC
+            </h3>
+            <button onclick="saveMacManually()" class="theme-btn-primary bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-3 py-2 rounded-xl shadow-2xs touch-target">
+              Save
+            </button>
+          </div>
+          <p class="text-xs text-slate-500">Media Accreditation Centre for this race. Paste the Google Maps location and add PDFs or other files. Everything is stored per circuit.</p>
+
+          <div class="space-y-3">
+            <div>
+              <label for="macNameInput" class="block text-xs font-bold text-slate-700 mb-1 uppercase tracking-wider">Location / name</label>
+              <input type="text" id="macNameInput" oninput="saveMacField('name', this.value)" placeholder="e.g. Media Accreditation Centre — paddock gate 3" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-xs sm:text-sm font-medium focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+            </div>
+            <div>
+              <label for="macMapsInput" class="block text-xs font-bold text-slate-700 mb-1 uppercase tracking-wider">Google Maps link</label>
+              <input type="url" id="macMapsInput" oninput="saveMacField('mapsUrl', this.value); refreshMacMapsPreview()" placeholder="Paste a Google Maps share link" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-xs sm:text-sm font-medium focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+              <div class="mt-2 flex flex-wrap items-center gap-2">
+                <a id="macOpenMaps" href="#" target="_blank" rel="noopener noreferrer" class="hidden inline-flex items-center gap-1.5 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 theme-btn-primary px-3 py-2 rounded-xl">
+                  <i class="fa-solid fa-map-location-dot"></i> Open in Maps
+                </a>
+              </div>
+              <div id="macMapsEmbedWrap" class="hidden mt-3 overflow-hidden rounded-xl border border-slate-200 bg-slate-50">
+                <iframe id="macMapsEmbed" title="MAC on Google Maps" class="w-full h-56 sm:h-72 border-0" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+              </div>
+            </div>
+            <div>
+              <label for="macNotesInput" class="block text-xs font-bold text-slate-700 mb-1 uppercase tracking-wider">Short note</label>
+              <textarea id="macNotesInput" oninput="saveMacField('notes', this.value)" rows="4" placeholder="Gate, opening hours, contact…" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-xs sm:text-sm text-slate-800 focus:ring-2 focus:ring-emerald-500 focus:outline-none placeholder-slate-400"></textarea>
+            </div>
+            <div class="pt-2 border-t border-slate-200">
+              <div class="section-toolbar mb-2">
+                <div>
+                  <p class="text-xs font-bold text-slate-700 uppercase tracking-wider">Files</p>
+                  <p class="text-[11px] text-slate-500">PDFs, photos or documents for the accreditation centre. Kept separate from circuit photos.</p>
+                </div>
+                <div class="flex items-center gap-2">
+                  <label class="bg-slate-200 hover:bg-slate-300 text-slate-800 text-xs font-bold px-3 py-2 rounded-xl cursor-pointer transition-colors flex items-center gap-1.5 touch-target">
+                    <i class="fa-solid fa-upload text-sm"></i> <span>Upload</span>
+                    <input type="file" accept="image/*,.pdf,.png,.jpg,.jpeg,.webp,.gif,.heic,.heif,.bmp,.zip,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,application/pdf" onchange="handleLibraryFileUpload(event, 'mac')" class="hidden">
+                  </label>
+                  <button type="button" onclick="promptLibraryUrl('mac')" class="bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 text-xs font-bold px-3 py-2 rounded-xl transition-colors flex items-center gap-1.5 touch-target">
+                    <i class="fa-solid fa-link text-sm"></i> <span>URL</span>
+                  </button>
+                </div>
+              </div>
+              <div id="macFileGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5 sm:gap-3"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- View 6: Frequency charts -->
+        <div id="viewFreq" class="max-w-5xl mx-auto bg-white rounded-2xl border border-slate-200 p-3.5 sm:p-6 shadow-2xs space-y-4 hidden">
+          <div class="section-toolbar border-b border-slate-200 pb-3">
+            <div>
+              <h3 class="font-f1 font-extrabold text-base sm:text-lg text-slate-900 uppercase flex items-center gap-2">
+                <i class="fa-solid fa-tower-broadcast text-emerald-600"></i> Frequency charts
+              </h3>
+              <p class="text-xs text-slate-500">Upload or link PDFs and other frequency files for this circuit. Kept separate from maps and MAC.</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <label class="bg-slate-200 hover:bg-slate-300 text-slate-800 text-xs font-bold px-3 py-2.5 rounded-xl cursor-pointer transition-colors flex items-center gap-1.5 touch-target">
+                <i class="fa-solid fa-upload text-sm"></i> <span>Upload</span>
+                <input type="file" accept="image/*,.pdf,.png,.jpg,.jpeg,.webp,.gif,.heic,.heif,.bmp,.zip,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,application/pdf" onchange="handleLibraryFileUpload(event, 'freq')" class="hidden">
+              </label>
+              <button type="button" onclick="promptLibraryUrl('freq')" class="bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 text-xs font-bold px-3 py-2.5 rounded-xl transition-colors flex items-center gap-1.5 touch-target">
+                <i class="fa-solid fa-link text-sm"></i> <span>URL</span>
+              </button>
+            </div>
+          </div>
+          <div id="freqFileGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5 sm:gap-3 pt-1"></div>
         </div>
 
       </div>
@@ -309,16 +813,19 @@
 
   <!-- MODAL: Image Lightbox Viewer -->
   <div id="lightboxModal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex flex-col items-center justify-between p-4 hidden">
-    <div class="w-full flex justify-end p-2">
-      <button onclick="closeModal('lightboxModal')" class="text-white hover:text-slate-300 text-2xl p-2 touch-target">
+    <div class="w-full flex items-center justify-between p-2">
+      <button type="button" onclick="event.stopPropagation(); removeCurrentLightboxImage()" class="flex items-center gap-1.5 text-white bg-red-600 hover:bg-red-700 text-xs font-bold px-3 py-2.5 rounded-xl touch-target">
+        <i class="fa-solid fa-trash"></i> Delete
+      </button>
+      <button type="button" onclick="closeModal('lightboxModal')" class="text-white hover:text-slate-300 text-2xl p-2 touch-target" title="Close">
         <i class="fa-solid fa-xmark"></i>
       </button>
     </div>
     <div class="flex-1 flex items-center justify-center max-w-4xl max-h-[80vh] w-full">
-      <img id="lightboxImage" src="" alt="Enlarged circuit map" class="max-w-full max-h-full object-contain rounded-xl shadow-2xl">
+      <img id="lightboxImage" src="" alt="Enlarged circuit map" class="max-w-full max-h-full object-contain rounded-xl shadow-2xl pointer-events-none">
     </div>
     <div class="p-4 text-slate-400 text-xs text-center">
-      Tik buiten de foto of op de X om te sluiten
+      Tap X to close. Delete only with the red button.
     </div>
   </div>
 
@@ -327,7 +834,7 @@
     <div class="bg-white rounded-2xl max-w-md w-full shadow-2xl border border-slate-100 overflow-hidden max-h-[90vh] flex flex-col">
       <div class="bg-slate-900 text-white p-4 flex items-center justify-between shrink-0">
         <h3 id="joinboxModalTitle" class="font-f1 font-bold text-base sm:text-lg uppercase tracking-wide flex items-center gap-2">
-          <i class="fa-solid fa-box-archive text-amber-400"></i> Joinbox Patchpunt
+          <i class="fa-solid fa-box-archive text-amber-400"></i> Joinbox patch point
         </h3>
         <button onclick="closeModal('joinboxModal')" class="text-slate-400 hover:text-white text-lg p-2 touch-target"><i class="fa-solid fa-xmark"></i></button>
       </div>
@@ -335,28 +842,28 @@
         <input type="hidden" id="joinboxIndex" value="-1">
         
         <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1 uppercase tracking-wider">Joinbox Naam / Locatie</label>
-          <input type="text" id="joinboxNameInput" required placeholder="bijv. Joinbox JB-01 (Pit Wall Turn 1)" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-medium focus:ring-2 focus:ring-amber-500 focus:outline-none">
+          <label class="block text-xs font-bold text-slate-700 mb-1 uppercase tracking-wider">Joinbox name / location</label>
+          <input type="text" id="joinboxNameInput" required placeholder="e.g. Joinbox JB-01 (Pit Wall Turn 1)" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-medium focus:ring-2 focus:ring-amber-500 focus:outline-none">
         </div>
 
         <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1 uppercase tracking-wider">Inkomende Kabel / Feed</label>
-          <input type="text" id="joinboxInCableInput" required placeholder="bijv. Tac 24 SC/APC TATA" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-medium focus:ring-2 focus:ring-amber-500 focus:outline-none">
+          <label class="block text-xs font-bold text-slate-700 mb-1 uppercase tracking-wider">Incoming cable / feed</label>
+          <input type="text" id="joinboxInCableInput" required placeholder="e.g. Tac 24 SC/APC TATA" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-medium focus:ring-2 focus:ring-amber-500 focus:outline-none">
         </div>
 
         <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1 uppercase tracking-wider">Uitgaande Kabel / Bestemming</label>
-          <input type="text" id="joinboxOutCableInput" required placeholder="bijv. Tac 24 A1 (300m)" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-medium focus:ring-2 focus:ring-amber-500 focus:outline-none">
+          <label class="block text-xs font-bold text-slate-700 mb-1 uppercase tracking-wider">Outgoing cable / destination</label>
+          <input type="text" id="joinboxOutCableInput" required placeholder="e.g. Tac 24 A1 (300m)" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-medium focus:ring-2 focus:ring-amber-500 focus:outline-none">
         </div>
 
         <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1 uppercase tracking-wider">Aantal Doorpatch Fibers</label>
+          <label class="block text-xs font-bold text-slate-700 mb-1 uppercase tracking-wider">Number of patched fibers</label>
           <input type="number" id="joinboxFiberCountInput" min="1" max="48" value="12" required class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-medium focus:ring-2 focus:ring-amber-500 focus:outline-none">
         </div>
 
         <div class="pt-2 flex justify-end gap-2 shrink-0">
-          <button type="button" onclick="closeModal('joinboxModal')" class="px-4 py-2.5 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl touch-target">Annuleren</button>
-          <button type="submit" class="px-5 py-2.5 text-xs font-bold text-white bg-amber-600 hover:bg-amber-700 rounded-xl shadow touch-target">Opslaan</button>
+          <button type="button" onclick="closeModal('joinboxModal')" class="px-4 py-2.5 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl touch-target">Cancel</button>
+          <button type="submit" class="px-5 py-2.5 text-xs font-bold text-white bg-amber-600 hover:bg-amber-700 rounded-xl shadow touch-target">Save</button>
         </div>
       </form>
     </div>
@@ -366,14 +873,14 @@
   <div id="copyModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4 hidden">
     <div class="bg-white rounded-2xl max-w-lg w-full shadow-2xl border border-slate-100 overflow-hidden max-h-[90vh] flex flex-col">
       <div class="bg-slate-900 text-white p-4 flex items-center justify-between shrink-0">
-        <h3 class="font-f1 font-bold text-base sm:text-lg uppercase tracking-wide flex items-center gap-2">
-          <i class="fa-regular fa-copy text-emerald-400"></i> Kopieer Indeling
+        <h3 id="copyModalTitle" class="font-f1 font-bold text-base sm:text-lg uppercase tracking-wide flex items-center gap-2">
+          <i class="fa-regular fa-copy text-emerald-400"></i> <span>Copy standard list</span>
         </h3>
         <button onclick="closeModal('copyModal')" class="text-slate-400 hover:text-white text-lg p-2 touch-target"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <div class="p-4 sm:p-5 space-y-3 overflow-y-auto">
-        <p class="text-xs sm:text-sm text-slate-600">
-          Kopieer de kabelstructuur en joinboxes van <strong id="copySourceRaceName" class="text-slate-900">...</strong> naar een of meerdere andere races.
+        <p id="copyModalHint" class="text-xs sm:text-sm text-slate-600">
+          Copy the standard patch list from <strong id="copySourceRaceName" class="text-slate-900">...</strong> to one or more other races.
         </p>
 
         <div class="border border-slate-200 rounded-xl p-2.5 bg-slate-50 max-h-60 overflow-y-auto space-y-1.5" id="copyTargetRaceList">
@@ -381,14 +888,14 @@
         </div>
 
         <div class="flex items-center justify-between text-xs text-slate-500 pt-1">
-          <button onclick="selectAllCopyTargets(true)" class="text-emerald-600 hover:underline font-semibold p-1">Selecteer Alles</button>
-          <button onclick="selectAllCopyTargets(false)" class="text-slate-500 hover:underline p-1">Deselecteer Alles</button>
+          <button onclick="selectAllCopyTargets(true)" class="text-emerald-600 hover:underline font-semibold p-1">Select all</button>
+          <button onclick="selectAllCopyTargets(false)" class="text-slate-500 hover:underline p-1">Deselect all</button>
         </div>
       </div>
       <div class="bg-slate-50 px-4 py-3 border-t border-slate-100 flex items-center justify-between shrink-0">
-        <button onclick="closeModal('copyModal')" class="text-slate-600 text-xs font-semibold px-3 py-2 touch-target">Annuleren</button>
-        <button onclick="executeCopyLayout()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow touch-target">
-          Kopieer Naar Races
+        <button onclick="closeModal('copyModal')" class="text-slate-600 text-xs font-semibold px-3 py-2 touch-target">Cancel</button>
+        <button id="copyModalConfirm" onclick="executeCopyLayout()" class="theme-btn-primary bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow touch-target">
+          Copy standard list
         </button>
       </div>
     </div>
@@ -398,19 +905,19 @@
   <div id="groupModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4 hidden">
     <div class="bg-white rounded-2xl max-w-md w-full shadow-2xl border border-slate-100 overflow-hidden max-h-[90vh] flex flex-col">
       <div class="bg-slate-900 text-white p-4 flex items-center justify-between shrink-0">
-        <h3 id="groupModalTitle" class="font-f1 font-bold text-base sm:text-lg uppercase tracking-wide">Nieuwe Kabelgroep</h3>
+        <h3 id="groupModalTitle" class="font-f1 font-bold text-base sm:text-lg uppercase tracking-wide">New cable group</h3>
         <button onclick="closeModal('groupModal')" class="text-slate-400 hover:text-white text-lg p-2 touch-target"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <form id="groupForm" onsubmit="saveGroupForm(event)" class="p-4 sm:p-5 space-y-4 overflow-y-auto">
         <input type="hidden" id="groupModalIndex" value="-1">
         
         <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1 uppercase tracking-wider">Kabel Naam & Lengte</label>
-          <input type="text" id="groupNameInput" required placeholder="bijv. Tac 24 A1 (300m) of Tac 12 D AUDIO (400m)" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-medium focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+          <label class="block text-xs font-bold text-slate-700 mb-1 uppercase tracking-wider">Cable name &amp; length</label>
+          <input type="text" id="groupNameInput" required placeholder="e.g. Tac 24 A1 (300m) or Tac 12 D AUDIO (400m)" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-medium focus:ring-2 focus:ring-emerald-500 focus:outline-none">
         </div>
 
         <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1 uppercase tracking-wider">Kleur Thema Banner</label>
+          <label class="block text-xs font-bold text-slate-700 mb-1 uppercase tracking-wider">Banner color</label>
           <div class="grid grid-cols-5 gap-2" id="colorPickerOptions">
             <button type="button" onclick="selectGroupColor('bg-emerald-600')" class="h-10 rounded-xl bg-emerald-600 border-2 border-emerald-800 touch-target"></button>
             <button type="button" onclick="selectGroupColor('bg-blue-600')" class="h-10 rounded-xl bg-blue-600 border-2 border-transparent touch-target"></button>
@@ -422,18 +929,18 @@
         </div>
 
         <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1 uppercase tracking-wider">Aantal Fiber Paren (Aanmaken)</label>
+          <label class="block text-xs font-bold text-slate-700 mb-1 uppercase tracking-wider">Number of fiber pairs (create)</label>
           <select id="groupPairCountInput" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-medium focus:ring-2 focus:ring-emerald-500 focus:outline-none">
-            <option value="6">6 Paren (12 Fibers)</option>
-            <option value="12" selected>12 Paren (24 Fibers)</option>
-            <option value="2">2 Paren (4 Fibers)</option>
-            <option value="24">24 Paren (48 Fibers)</option>
+            <option value="6">6 pairs (12 fibers)</option>
+            <option value="12" selected>12 pairs (24 fibers)</option>
+            <option value="2">2 pairs (4 fibers)</option>
+            <option value="24">24 pairs (48 fibers)</option>
           </select>
         </div>
 
         <div class="pt-2 flex justify-end gap-2 shrink-0">
-          <button type="button" onclick="closeModal('groupModal')" class="px-4 py-2.5 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl touch-target">Annuleren</button>
-          <button type="submit" class="px-5 py-2.5 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-xl shadow touch-target">Opslaan</button>
+          <button type="button" onclick="closeModal('groupModal')" class="px-4 py-2.5 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl touch-target">Cancel</button>
+          <button type="submit" class="theme-btn-primary px-5 py-2.5 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-xl shadow touch-target">Save</button>
         </div>
       </form>
     </div>
@@ -443,93 +950,97 @@
   <div id="raceModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4 hidden">
     <div class="bg-white rounded-2xl max-w-md w-full shadow-2xl border border-slate-100 overflow-hidden max-h-[90vh] flex flex-col">
       <div class="bg-slate-900 text-white p-4 flex items-center justify-between shrink-0">
-        <h3 id="raceModalTitle" class="font-f1 font-bold text-base sm:text-lg uppercase tracking-wide">Race Bewerken / Toevoegen</h3>
+        <h3 id="raceModalTitle" class="font-f1 font-bold text-base sm:text-lg uppercase tracking-wide">Edit / add race</h3>
         <button onclick="closeModal('raceModal')" class="text-slate-400 hover:text-white text-lg p-2 touch-target"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <form id="raceForm" onsubmit="saveRaceForm(event)" class="p-4 sm:p-5 space-y-4 overflow-y-auto">
         <input type="hidden" id="raceModalId" value="">
         
         <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1 uppercase tracking-wider">Grand Prix Naam</label>
-          <input type="text" id="raceNameInput" required placeholder="bijv. Dutch Grand Prix" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-medium focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+          <label class="block text-xs font-bold text-slate-700 mb-1 uppercase tracking-wider">Grand Prix name</label>
+          <input type="text" id="raceNameInput" required placeholder="e.g. Netherlands" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-medium focus:ring-2 focus:ring-emerald-500 focus:outline-none">
         </div>
 
         <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1 uppercase tracking-wider">Circuit Naam & Locatie</label>
-          <input type="text" id="raceCircuitInput" required placeholder="bijv. Circuit Zandvoort • Zandvoort, Nederland" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-medium focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+          <label class="block text-xs font-bold text-slate-700 mb-1 uppercase tracking-wider">Circuit name &amp; location</label>
+          <input type="text" id="raceCircuitInput" required placeholder="e.g. Circuit Zandvoort • Zandvoort, Netherlands" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-medium focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1 uppercase tracking-wider">Race day (optional)</label>
+          <input type="date" id="raceDateInput" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-medium focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+          <p class="mt-1 text-[11px] text-slate-500">From Monday 09:00 Netherlands time until the end of race day, the race is shown in red in the sidebar.</p>
         </div>
 
         <div class="pt-2 flex justify-end gap-2 shrink-0">
-          <button type="button" onclick="closeModal('raceModal')" class="px-4 py-2.5 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl touch-target">Annuleren</button>
-          <button type="submit" class="px-5 py-2.5 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-xl shadow touch-target">Opslaan</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- MODAL: Supabase Config -->
-  <div id="supabaseModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4 hidden">
-    <div class="bg-white rounded-2xl max-w-md w-full shadow-2xl border border-slate-100 overflow-hidden max-h-[90vh] flex flex-col">
-      <div class="bg-slate-900 text-white p-4 flex items-center justify-between shrink-0">
-        <h3 class="font-f1 font-bold text-base sm:text-lg uppercase tracking-wide flex items-center gap-2">
-          <i class="fa-solid fa-bolt text-amber-400"></i> Supabase Live Sync
-        </h3>
-        <button onclick="closeModal('supabaseModal')" class="text-slate-400 hover:text-white text-lg p-2 touch-target"><i class="fa-solid fa-xmark"></i></button>
-      </div>
-      <form onsubmit="saveSupabaseConfig(event)" class="p-4 sm:p-5 space-y-4 overflow-y-auto">
-        <p class="text-xs text-slate-600">
-          Vul je Supabase credentials in om wijzigingen realtime tussen apparaten te synchroniseren.
-        </p>
-
-        <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1 uppercase tracking-wider">Supabase Project URL</label>
-          <input type="url" id="sbUrlInput" placeholder="https://xyzcompany.supabase.co" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-xs font-mono focus:ring-2 focus:ring-emerald-500 focus:outline-none">
-        </div>
-
-        <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1 uppercase tracking-wider">Supabase Anon Key</label>
-          <input type="password" id="sbKeyInput" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6..." class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-xs font-mono focus:ring-2 focus:ring-emerald-500 focus:outline-none">
-        </div>
-
-        <div class="pt-2 flex justify-between items-center shrink-0">
-          <button type="button" onclick="clearSupabaseConfig()" class="text-xs text-red-600 hover:underline p-1">Verwijder Koppeling</button>
-          <div class="flex gap-2">
-            <button type="button" onclick="closeModal('supabaseModal')" class="px-3 py-2 text-xs font-semibold text-slate-600 touch-target">Annuleren</button>
-            <button type="submit" class="px-4 py-2.5 text-xs font-bold text-white bg-slate-900 hover:bg-black rounded-xl shadow touch-target">Opslaan</button>
-          </div>
+          <button type="button" onclick="closeModal('raceModal')" class="px-4 py-2.5 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl touch-target">Cancel</button>
+          <button type="submit" class="theme-btn-primary px-5 py-2.5 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-xl shadow touch-target">Save</button>
         </div>
       </form>
     </div>
   </div>
 
   <script>
+    // Official F1 2027 poster calendar — 24 rounds, names without "Grand Prix".
+    // Stable ids keep existing raceCableData mapped to the same circuits.
+    // weekendStart–raceDate = the 2027 poster weekend. raceDate is race day.
+    const RETIRED_DEFAULT_RACE_IDS = ["r8", "r16"]; // Imola, Zandvoort — not on 2027 poster
     const DEFAULT_F1_CALENDAR_2027 = [
-      { id: "r1", code: "R1", name: "Bahrain Grand Prix", circuit: "Bahrain International Circuit • Sakhir, Bahrein" },
-      { id: "r2", code: "R2", name: "Saudi Arabian Grand Prix", circuit: "Jeddah Corniche Circuit • Jeddah, Saoedi-Arabië" },
-      { id: "r3", code: "R3", name: "Australian Grand Prix", circuit: "Albert Park Circuit • Melbourne, Australië" },
-      { id: "r4", code: "R4", name: "Japanese Grand Prix", circuit: "Suzuka Circuit • Suzuka, Japan" },
-      { id: "r5", code: "R5", name: "Chinese Grand Prix", circuit: "Shanghai International Circuit • Shanghai, China" },
-      { id: "r6", code: "R6", name: "Miami Grand Prix", circuit: "Miami International Autodrome • Florida, VS" },
-      { id: "r7", code: "R7", name: "Portuguese Grand Prix", circuit: "Autódromo Internacional do Algarve • Portimão, Portugal" },
-      { id: "r8", code: "R8", name: "Emilia Romagna Grand Prix", circuit: "Autodromo Enzo e Dino Ferrari • Imola, Italië" },
-      { id: "r9", code: "R9", name: "Monaco Grand Prix", circuit: "Circuit de Monaco • Monte Carlo, Monaco" },
-      { id: "r10", code: "R10", name: "Spanish Grand Prix", circuit: "Madrid Street Circuit • Madrid, Spanje" },
-      { id: "r11", code: "R11", name: "Canadian Grand Prix", circuit: "Circuit Gilles Villeneuve • Montréal, Canada" },
-      { id: "r12", code: "R12", name: "Austrian Grand Prix", circuit: "Red Bull Ring • Spielberg, Oostenrijk" },
-      { id: "r13", code: "R13", name: "British Grand Prix", circuit: "Silverstone Circuit • Silverstone, VK" },
-      { id: "r14", code: "R14", name: "Belgian Grand Prix", circuit: "Circuit de Spa-Francorchamps • Stavelot, België" },
-      { id: "r15", code: "R15", name: "Hungarian Grand Prix", circuit: "Hungaroring • Mogyoród, Hongarije" },
-      { id: "r16", code: "R16", name: "Dutch Grand Prix", circuit: "Circuit Zandvoort • Zandvoort, Nederland" },
-      { id: "r17", code: "R17", name: "Italian Grand Prix", circuit: "Autodromo Nazionale Monza • Monza, Italië" },
-      { id: "r18", code: "R18", name: "Azerbaijan Grand Prix", circuit: "Baku City Circuit • Bakoe, Azerbeidzjan" },
-      { id: "r19", code: "R19", name: "Singapore Grand Prix", circuit: "Marina Bay Street Circuit • Singapore" },
-      { id: "r20", code: "R20", name: "United States Grand Prix", circuit: "Circuit of the Americas • Austin, VS" },
-      { id: "r21", code: "R21", name: "Mexico City Grand Prix", circuit: "Autódromo Hermanos Rodríguez • Mexico-Stad" },
-      { id: "r22", code: "R22", name: "São Paulo Grand Prix", circuit: "Autódromo José Carlos Pace • São Paulo, Brazilië" },
-      { id: "r23", code: "R23", name: "Las Vegas Grand Prix", circuit: "Las Vegas Strip Circuit • Nevada, VS" },
-      { id: "r24", code: "R24", name: "Qatar Grand Prix", circuit: "Lusail International Circuit • Lusail, Qatar" },
-      { id: "r25", code: "R25", name: "Abu Dhabi Grand Prix", circuit: "Yas Marina Circuit • Abu Dhabi, VAE" }
+      { id: "r1", code: "R1", name: "Bahrain", circuit: "Bahrain International Circuit • Sakhir, Bahrain", weekendStart: "2027-03-12", raceDate: "2027-03-14" },
+      { id: "r2", code: "R2", name: "Saudi Arabia", circuit: "Jeddah Corniche Circuit • Jeddah, Saudi Arabia", weekendStart: "2027-03-19", raceDate: "2027-03-21" },
+      { id: "r3", code: "R3", name: "Australia", circuit: "Albert Park Circuit • Melbourne, Australia", weekendStart: "2027-04-02", raceDate: "2027-04-04" },
+      { id: "r5", code: "R4", name: "China", circuit: "Shanghai International Circuit • Shanghai, China", weekendStart: "2027-04-16", raceDate: "2027-04-18" },
+      { id: "r4", code: "R5", name: "Japan", circuit: "Suzuka Circuit • Suzuka, Japan", weekendStart: "2027-04-09", raceDate: "2027-04-11" },
+      { id: "r6", code: "R6", name: "Miami", circuit: "Miami International Autodrome • Florida, USA", weekendStart: "2027-04-30", raceDate: "2027-05-02" },
+      { id: "r11", code: "R7", name: "Canada", circuit: "Circuit Gilles Villeneuve • Montréal, Canada", weekendStart: "2027-05-21", raceDate: "2027-05-23" },
+      { id: "r9", code: "R8", name: "Monaco", circuit: "Circuit de Monaco • Monte Carlo, Monaco", weekendStart: "2027-06-04", raceDate: "2027-06-06" },
+      { id: "r7", code: "R9", name: "Portugal", circuit: "Autódromo Internacional do Algarve • Portimão, Portugal", weekendStart: "2027-06-18", raceDate: "2027-06-20" },
+      { id: "r12", code: "R10", name: "Austria", circuit: "Red Bull Ring • Spielberg, Austria", weekendStart: "2027-07-09", raceDate: "2027-07-11" },
+      { id: "r13", code: "R11", name: "Great Britain", circuit: "Silverstone Circuit • Silverstone, UK", weekendStart: "2027-07-02", raceDate: "2027-07-04" },
+      { id: "r14", code: "R12", name: "Belgium", circuit: "Circuit de Spa-Francorchamps • Stavelot, Belgium", weekendStart: "2027-07-23", raceDate: "2027-07-25" },
+      { id: "r15", code: "R13", name: "Hungary", circuit: "Hungaroring • Mogyoród, Hungary", weekendStart: "2027-07-30", raceDate: "2027-08-01" },
+      { id: "r10", code: "R14", name: "Spain", circuit: "Madrid Street Circuit • Madrid, Spain", weekendStart: "2027-09-10", raceDate: "2027-09-12" },
+      { id: "r17", code: "R15", name: "Italy", circuit: "Autodromo Nazionale Monza • Monza, Italy", weekendStart: "2027-09-03", raceDate: "2027-09-05" },
+      { id: "r26", code: "R16", name: "Turkey", circuit: "Istanbul Park • Istanbul, Turkey", weekendStart: "2027-10-01", raceDate: "2027-10-03" },
+      { id: "r18", code: "R17", name: "Azerbaijan", circuit: "Baku City Circuit • Baku, Azerbaijan", weekendStart: "2027-09-24", raceDate: "2027-09-26" },
+      { id: "r19", code: "R18", name: "Singapore", circuit: "Marina Bay Street Circuit • Singapore", weekendStart: "2027-10-08", raceDate: "2027-10-10" },
+      { id: "r20", code: "R19", name: "United States", circuit: "Circuit of the Americas • Austin, USA", weekendStart: "2027-10-22", raceDate: "2027-10-24" },
+      { id: "r21", code: "R20", name: "Mexico City", circuit: "Autódromo Hermanos Rodríguez • Mexico City", weekendStart: "2027-10-29", raceDate: "2027-10-31" },
+      { id: "r22", code: "R21", name: "Sao Paulo", circuit: "Autódromo José Carlos Pace • São Paulo, Brazil", weekendStart: "2027-11-05", raceDate: "2027-11-07" },
+      { id: "r23", code: "R22", name: "Las Vegas", circuit: "Las Vegas Strip Circuit • Nevada, USA", weekendStart: "2027-11-18", raceDate: "2027-11-20" },
+      { id: "r24", code: "R23", name: "Qatar", circuit: "Lusail International Circuit • Lusail, Qatar", weekendStart: "2027-12-03", raceDate: "2027-12-05" },
+      { id: "r25", code: "R24", name: "Abu Dhabi", circuit: "Yas Marina Circuit • Abu Dhabi, UAE", weekendStart: "2027-12-10", raceDate: "2027-12-12" }
     ];
+
+    // Live-season race days by sidebar name (FIA/F1.com). Highlight uses the
+    // current year when that GP exists, otherwise the stored 2027 raceDate.
+    const RACE_WEEKEND_DATES = {
+      // 2026 Bahrain GP was at Sepang (2–4 Oct), not Sakhir. This row is the 2027 opener.
+      bahrain: ['2027-03-14'],
+      'saudi arabia': ['2027-03-21'],
+      australia: ['2026-03-08', '2027-04-04'],
+      china: ['2026-03-15', '2027-04-18'],
+      japan: ['2026-03-29', '2027-04-11'],
+      miami: ['2026-05-03', '2027-05-02'],
+      canada: ['2026-05-24', '2027-05-23'],
+      monaco: ['2026-06-07', '2027-06-06'],
+      portugal: ['2027-06-20'],
+      austria: ['2026-06-28', '2027-07-11'],
+      'great britain': ['2026-07-05', '2027-07-04'],
+      belgium: ['2026-07-19', '2027-07-25'],
+      hungary: ['2026-07-26', '2027-08-01'],
+      spain: ['2026-09-13', '2027-09-12'],
+      italy: ['2026-09-06', '2027-09-05'],
+      turkey: ['2027-10-03'],
+      azerbaijan: ['2026-09-26', '2027-09-26'],
+      singapore: ['2026-10-11', '2027-10-10'],
+      'united states': ['2026-10-25', '2027-10-24'],
+      'mexico city': ['2026-11-01', '2027-10-31'],
+      'sao paulo': ['2026-11-08', '2027-11-07'],
+      'las vegas': ['2026-11-21', '2027-11-20'],
+      qatar: ['2026-11-29', '2027-12-05'],
+      'abu dhabi': ['2026-12-06', '2027-12-12']
+    };
 
     const SAMPLE_CABLE_GROUPS = [
       {
@@ -540,10 +1051,10 @@
         items: [
           { pair: "1,2", label: "FIREWALL MAIN", connector: "SC/APC", defect: false, half: false, full: true },
           { pair: "3,4", label: "CAM 9 (K)", connector: "SC/APC", defect: false, half: false, full: false },
-          { pair: "5,6", label: "Blackmagic Fiber converter t.b.v. 32\"", connector: "SC/APC", defect: false, half: false, full: false },
-          { pair: "7,8", label: "LABEL / BESTEMMING", connector: "SC/APC", defect: false, half: false, full: false },
-          { pair: "9,10", label: "LABEL / BESTEMMING", connector: "SC/APC", defect: false, half: false, full: false },
-          { pair: "11,12", label: "LABEL / BESTEMMING", connector: "ST", defect: false, half: false, full: false }
+          { pair: "5,6", label: "Blackmagic Fiber converter for 32\"", connector: "SC/APC", defect: false, half: false, full: false },
+          { pair: "7,8", label: "LABEL / DESTINATION", connector: "SC/APC", defect: false, half: false, full: false },
+          { pair: "9,10", label: "LABEL / DESTINATION", connector: "SC/APC", defect: false, half: false, full: false },
+          { pair: "11,12", label: "LABEL / DESTINATION", connector: "ST", defect: false, half: false, full: false }
         ]
       },
       {
@@ -555,101 +1066,82 @@
           { pair: "1,2", label: "SWITCH MAIN AP", connector: "LC", defect: true, half: false, full: false },
           { pair: "3,4", label: "RADIO REPEATER 1", connector: "ST", defect: false, half: true, full: false },
           { pair: "5,6", label: "TIMING GRAPHICS 1", connector: "ST", defect: false, half: false, full: true },
-          { pair: "7,8", label: "LABEL / BESTEMMING", connector: "ST", defect: false, half: false, full: false }
+          { pair: "7,8", label: "LABEL / DESTINATION", connector: "ST", defect: false, half: false, full: false }
         ]
       }
     ];
 
-    // Standard broadcast connection templates
-    const DEFAULT_BROADCAST_GROUPS = [
+    const DEFAULT_FIBER_ROUTE_DEFS = [
       {
-        id: "g_toc_tata",
-        title: "TOC <> TATA",
-        joinbox: "",
-        autoCount: false,
-        startFiber: 1,
-        color: "bg-blue-700",
-        items: [
-          { fiberNum: "1", pair: "1", label: "FIREWALL 1", connector: "SC/APC", defect: false, half: false, full: false },
-          { fiberNum: "2", pair: "2", label: "FIREWALL 2", connector: "SC/APC", defect: false, half: false, full: false },
-          { fiberNum: "3", pair: "3", label: "SR2 TOC<>TATA - A", connector: "SC/APC", defect: false, half: false, full: false },
-          { fiberNum: "4", pair: "4", label: "SR2 TOC<>TATA - A", connector: "SC/APC", defect: false, half: false, full: false },
-          { fiberNum: "5", pair: "5", label: "SR2 MAIN<>TATA - B", connector: "SC/APC", defect: false, half: false, full: false },
-          { fiberNum: "6", pair: "6", label: "SR2 MAIN<>TATA - B", connector: "SC/APC", defect: false, half: false, full: false },
-          { fiberNum: "7", pair: "7", label: "SR2 COMMENTARY <> TATA - C", connector: "SC/APC", defect: false, half: false, full: false },
-          { fiberNum: "8", pair: "8", label: "SR2 COMMENTARY <> TATA - C", connector: "SC/APC", defect: false, half: false, full: false }
+        id: 'plan_tata',
+        color: 'bg-emerald-600',
+        title: 'TOC <> TATA',
+        labels: [
+          'FIREWALL 1',
+          'FIREWALL 2',
+          'SR2 TOC<>TATA - A',
+          'SR2 TOC<>TATA - A',
+          'SR2 MAIN<>TATA - B',
+          'SR2 MAIN<>TATA - B',
+          'SR2 COMMENTARY <> TATA - C',
+          'SR2 COMMENTARY <> TATA - C'
         ]
       },
       {
-        id: "g_toc_main_rf",
-        title: "TOC <> MAIN RF",
-        joinbox: "Joinbox Main RF",
-        autoCount: true,
-        startFiber: 1,
-        color: "bg-emerald-700",
-        items: [
-          { fiberNum: "1", pair: "1", label: "SWITCH MAIN RF", connector: "SC/APC", defect: false, half: false, full: false },
-          { fiberNum: "2", pair: "2", label: "SPARE SWITCH MAIN", connector: "SC/APC", defect: false, half: false, full: false },
-          { fiberNum: "3", pair: "3", label: "STAGERACER MAIN A <> TOC - B", connector: "SC/APC", defect: false, half: false, full: false },
-          { fiberNum: "4", pair: "4", label: "STAGERACER MAIN A <> TOC - B", connector: "SC/APC", defect: false, half: false, full: false },
-          { fiberNum: "5", pair: "5", label: "STAGERACER MAIN B <> TATA - B", connector: "SC/APC", defect: false, half: false, full: false },
-          { fiberNum: "6", pair: "6", label: "STAGERACER MAIN B <> TATA- B", connector: "SC/APC", defect: false, half: false, full: false },
-          { fiberNum: "7", pair: "7", label: "WISYCOM Main TTT <> Remote RRR", connector: "SC/APC", defect: false, half: false, full: false },
-          { fiberNum: "8", pair: "8", label: "WISYCOM Main TTT <> Remote RRR", connector: "SC/APC", defect: false, half: false, full: false },
-          { fiberNum: "9", pair: "9", label: "RF OVER FIBER 1", connector: "SC/APC", defect: false, half: false, full: false },
-          { fiberNum: "10", pair: "10", label: "RF OVER FIBER 2", connector: "SC/APC", defect: false, half: false, full: false }
+        id: 'plan_mainrf',
+        color: 'bg-blue-600',
+        title: 'TOC <> MAIN RF',
+        labels: [
+          'SWITCH MAIN RF',
+          'SPARE SWITCH MAIN',
+          'STAGERACER MAIN <> TOC - B',
+          'STAGERACER MAIN <> TOC - B',
+          'STAGERACER MAIN <> TATA - B',
+          'STAGERACER MAIN <> TATA - B',
+          'WISYCOM MAIN <> WISYCOM REMOTE 1',
+          'WISYCOM MAIN <> WISYCOM REMOTE 2',
+          'RF OVER FIBER 1',
+          'RF OVER FIBER 2'
         ]
       },
       {
-        id: "g_toc_remote",
-        title: "TOC <> REMOTE",
-        joinbox: "Joinbox Main RF <> Remote/commentaar",
-        autoCount: true,
-        startFiber: 9,
-        color: "bg-amber-600",
-        items: [
-          { fiberNum: "9-9", pair: "9", label: "SPARE COM", connector: "SC/APC", defect: false, half: false, full: false },
-          { fiberNum: "10-10", pair: "10", label: "SPARE COM", connector: "SC/APC", defect: false, half: false, full: false },
-          { fiberNum: "11-11", pair: "11", label: "SWITCH REMOTE", connector: "SC/APC", defect: false, half: false, full: false },
-          { fiberNum: "12-12", pair: "12", label: "SWITCH REMOTE SPARE", connector: "SC/APC", defect: false, half: false, full: false },
-          { fiberNum: "13-13", pair: "13", label: "WISYCOM REMOTE RRR <> Main TTT", connector: "SC/APC", defect: false, half: false, full: false },
-          { fiberNum: "14-14", pair: "14", label: "WISYCOM REMOTE RRR <> Main TTT", connector: "SC/APC", defect: false, half: false, full: false },
-          { fiberNum: "15-15", pair: "15", label: "SPARE Remote", connector: "SC/APC", defect: false, half: false, full: false }
+        id: 'plan_remote',
+        color: 'bg-amber-600',
+        title: 'TOC <> REMOTE',
+        labels: [
+          'SWITCH REMOTE',
+          'SWITCH REMOTE SPARE',
+          'WISYCOM MAIN NAAR REMOTE 1',
+          'WISYCOM MAIN NAAR REMOTE 2',
+          'SPARE',
+          'SPARE'
         ]
       },
       {
-        id: "g_toc_commentary",
-        title: "TOC <> COMMENTARY",
-        joinbox: "Joinbox <> Remote",
-        autoCount: true,
-        startFiber: 16,
-        color: "bg-purple-700",
-        items: [
-          { fiberNum: "16-16", pair: "16", label: "SWITCH COMMENTARY", connector: "SC/APC", defect: false, half: false, full: false },
-          { fiberNum: "17-17", pair: "17", label: "SWICHT COMMENTARY Spare", connector: "SC/APC", defect: false, half: false, full: false },
-          { fiberNum: "18-18", pair: "18", label: "SR 2 COMMENTARY A <> TOC - D", connector: "SC/APC", defect: false, half: false, full: false },
-          { fiberNum: "19-19", pair: "19", label: "SR 2 COMMENTARY A <> TOC - D", connector: "SC/APC", defect: false, half: false, full: false },
-          { fiberNum: "20-20", pair: "20", label: "SR 2 COMMENTARY B <> TATA - C", connector: "SC/APC", defect: false, half: false, full: false },
-          { fiberNum: "21-21", pair: "21", label: "SR 2 COMMENTAAR B <> TATA - C", connector: "SC/APC", defect: false, half: false, full: false },
-          { fiberNum: "22-22", pair: "22", label: "SPARE REMOTE", connector: "SC/APC", defect: false, half: false, full: false },
-          { fiberNum: "23-23", pair: "23", label: "SPARE REMOTE", connector: "SC/APC", defect: false, half: false, full: false },
-          { fiberNum: "24-24", pair: "24", label: "SPARE REMOTE", connector: "SC/APC", defect: false, half: false, full: false }
+        id: 'plan_commentary',
+        color: 'bg-purple-600',
+        title: 'TOC <> COMMENTARY',
+        start: 7,
+        labels: [
+          'SWITCH COMMENTARY',
+          'SR 2 COMMENTARY <> TOC - C',
+          'SR 2 COMMENTARY <> TOC - C',
+          'SR 2 COMMENTARY <> TATA - C',
+          'SR 2 COMMENTAAR <> TATA - C'
         ]
       },
       {
-        id: "g_toc_c4",
-        title: "TOC <> C4",
-        joinbox: "Joinbox C4",
-        autoCount: false,
-        startFiber: 11,
-        color: "bg-indigo-700",
-        items: [
-          { fiberNum: "11", pair: "11", label: "SWITCH C4", connector: "SC/APC", defect: false, half: false, full: false },
-          { fiberNum: "12", pair: "12", label: "SWITCH SPARE C4", connector: "SC/APC", defect: false, half: false, full: false },
-          { fiberNum: "13", pair: "13", label: "SR2 - A <> TOC - C", connector: "SC/APC", defect: false, half: false, full: false },
-          { fiberNum: "14", pair: "14", label: "SR2 - A <> TOC - C", connector: "SC/APC", defect: false, half: false, full: false },
-          { fiberNum: "15", pair: "15", label: "SR2 - B <> TATA - D", connector: "SC/APC", defect: false, half: false, full: false },
-          { fiberNum: "16", pair: "16", label: "SR2 - B <> TATA - D", connector: "SC/APC", defect: false, half: false, full: false }
+        id: 'plan_c4',
+        color: 'bg-rose-600',
+        title: 'TOC <> C4',
+        start: 11,
+        labels: [
+          'SWITCH C4',
+          'SWITCH SPARE C4',
+          'SR2 - A <> TOC - C',
+          'SR2 - A <> TOC - C',
+          'SR2 - B <> TATA - D',
+          'SR2 - B <> TATA - D'
         ]
       }
     ];
@@ -669,12 +1161,15 @@
 
     let state = {
       races: [],
-      activeRaceId: "r1",
-      activeSubSection: "cables", // 'cables', 'maps', 'joinbox', 'notes'
-      expandedRaceId: "r1",       // Which race accordion is expanded in sidebar
+      activeRaceId: null,
+      activeSubSection: "cables", // 'cables', 'maps', 'notes', 'mac', 'freq'
+      expandedRaceId: null,       // Which race accordion is expanded in sidebar
       raceCableData: {},
       raceJoinboxData: {},
+      raceFiberPlanData: {},
       raceMediaData: {},
+      raceMacData: {},
+      raceFreqData: {},
       supabaseConfig: { url: '', key: '' }
     };
 
@@ -692,6 +1187,8 @@
     let liveRetry = null;
     let collapseMap = {};
     const COLLAPSE_KEY = 'f1_collapse_v1';
+    const UI_NAV_KEY = 'f1_ui_nav_v1';
+    const AMSTERDAM_TZ = 'Europe/Amsterdam';
     const clientId = (window.crypto && crypto.randomUUID)
       ? crypto.randomUUID()
       : ('c_' + Date.now().toString(36) + Math.random().toString(36).slice(2));
@@ -711,14 +1208,60 @@
       });
     });
 
+    function stripGrandPrixName(name) {
+      return String(name || '')
+        .replace(/\s*Grand Prix\s*/gi, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+    }
+
+    function migrateDefaultCalendarRaces() {
+      const defaults = DEFAULT_F1_CALENDAR_2027;
+      const defaultById = new Map(defaults.map((race) => [race.id, race]));
+      const retired = new Set(RETIRED_DEFAULT_RACE_IDS);
+      const current = Array.isArray(state.races) ? state.races : [];
+      const currentById = new Map(current.map((race) => [race.id, race]));
+
+      const next = [];
+      defaults.forEach((def) => {
+        const existing = currentById.get(def.id);
+        if (existing) {
+          existing.name = def.name;
+          existing.circuit = def.circuit;
+          existing.code = def.code;
+          existing.weekendStart = def.weekendStart;
+          existing.raceDate = def.raceDate;
+          next.push(existing);
+        } else {
+          next.push({ id: def.id, code: def.code, name: def.name, circuit: def.circuit, weekendStart: def.weekendStart, raceDate: def.raceDate });
+        }
+      });
+
+      current.forEach((race) => {
+        if (!race || !race.id) return;
+        if (defaultById.has(race.id) || retired.has(race.id)) return;
+        race.name = stripGrandPrixName(race.name);
+        next.push(race);
+      });
+
+      next.forEach((race, index) => {
+        race.code = `R${index + 1}`;
+      });
+
+      const changed = JSON.stringify(current) !== JSON.stringify(next);
+      if (changed) state.races = next;
+      return changed;
+    }
+
     function loadStateFromLocalStorage() {
       const savedRaces = localStorage.getItem('f1_races_v3');
       if (savedRaces) {
         state.races = JSON.parse(savedRaces);
       } else {
-        state.races = DEFAULT_F1_CALENDAR_2027;
-        localStorage.setItem('f1_races_v3', JSON.stringify(state.races));
+        state.races = DEFAULT_F1_CALENDAR_2027.map((race) => ({ ...race }));
       }
+      migrateDefaultCalendarRaces();
+      localStorage.setItem('f1_races_v3', JSON.stringify(state.races));
 
       const savedCableData = localStorage.getItem('f1_cable_data_v3');
       if (savedCableData) {
@@ -740,6 +1283,20 @@
       if (savedMediaData) {
         state.raceMediaData = JSON.parse(savedMediaData);
       }
+
+      const savedFiberPlans = localStorage.getItem('f1_fiber_plan_v1');
+      if (savedFiberPlans) {
+        state.raceFiberPlanData = JSON.parse(savedFiberPlans);
+      }
+      const savedMacData = localStorage.getItem('f1_mac_data_v1');
+      if (savedMacData) {
+        state.raceMacData = JSON.parse(savedMacData);
+      }
+      const savedFreqData = localStorage.getItem('f1_freq_data_v1');
+      if (savedFreqData) {
+        state.raceFreqData = JSON.parse(savedFreqData);
+      }
+      ensureAllFiberPlans();
 
       const savedSb = localStorage.getItem('f1_sb_config');
       if (savedSb) {
@@ -827,12 +1384,21 @@
         races: state.races,
         raceCableData: state.raceCableData,
         raceJoinboxData: state.raceJoinboxData,
-        raceMediaData: state.raceMediaData
+        raceFiberPlanData: state.raceFiberPlanData,
+        raceMediaData: state.raceMediaData,
+        raceMacData: state.raceMacData || {},
+        raceFreqData: state.raceFreqData || {}
       });
       Object.values(copy.raceCableData || {}).forEach(groups => {
         if (!Array.isArray(groups)) return;
         groups.forEach(group => {
           if (group && typeof group === 'object') delete group.collapsed;
+        });
+      });
+      Object.values(copy.raceFiberPlanData || {}).forEach(plans => {
+        if (!Array.isArray(plans)) return;
+        plans.forEach(plan => {
+          if (plan && typeof plan === 'object') delete plan.collapsed;
         });
       });
       return copy;
@@ -844,9 +1410,42 @@
         localStorage.setItem('f1_cable_data_v3', JSON.stringify(state.raceCableData));
         localStorage.setItem('f1_joinbox_data_v3', JSON.stringify(state.raceJoinboxData));
         localStorage.setItem('f1_media_data_v3', JSON.stringify(state.raceMediaData));
+        localStorage.setItem('f1_fiber_plan_v1', JSON.stringify(state.raceFiberPlanData));
+        localStorage.setItem('f1_mac_data_v1', JSON.stringify(state.raceMacData || {}));
+        localStorage.setItem('f1_freq_data_v1', JSON.stringify(state.raceFreqData || {}));
       } catch (e) {
         console.warn('Local cache skipped', e);
       }
+    }
+
+    function saveUiNav() {
+      try {
+        localStorage.setItem(UI_NAV_KEY, JSON.stringify({
+          activeRaceId: state.activeRaceId,
+          expandedRaceId: state.expandedRaceId,
+          activeSubSection: state.activeSubSection
+        }));
+      } catch (e) {}
+    }
+
+    function restoreUiNav() {
+      let saved = null;
+      try {
+        saved = JSON.parse(localStorage.getItem(UI_NAV_KEY) || 'null');
+      } catch (e) {
+        saved = null;
+      }
+      const raceIds = new Set((state.races || []).map((race) => race && race.id).filter(Boolean));
+      const validActive = saved && raceIds.has(saved.activeRaceId) ? saved.activeRaceId : null;
+      const validExpanded = saved && (saved.expandedRaceId === null || raceIds.has(saved.expandedRaceId))
+        ? saved.expandedRaceId
+        : null;
+      const validSub = saved && ['cables', 'maps', 'notes', 'mac', 'freq'].includes(saved.activeSubSection)
+        ? saved.activeSubSection
+        : 'cables';
+      state.activeRaceId = validActive || ((state.races[0] && state.races[0].id) || null);
+      state.expandedRaceId = validExpanded;
+      state.activeSubSection = validSub;
     }
 
     function isDirty() {
@@ -855,17 +1454,6 @@
     }
 
     function showDefaultSyncStatus() {
-      if (supabaseActive) return;
-      const dot = document.getElementById('syncStatusDot');
-      const text = document.getElementById('syncStatusText');
-      if (!dot || !text) return;
-      if (serverConnected) {
-        dot.className = "w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block";
-        text.innerText = "Server sync";
-      } else {
-        dot.className = "w-2.5 h-2.5 rounded-full bg-amber-500 inline-block animate-pulse";
-        text.innerText = "Local Storage Mode";
-      }
     }
 
     function canRenderNow() {
@@ -903,15 +1491,23 @@
       state.races = next.races;
       state.raceCableData = next.raceCableData || {};
       state.raceJoinboxData = next.raceJoinboxData || {};
+      state.raceFiberPlanData = next.raceFiberPlanData || {};
       state.raceMediaData = next.raceMediaData || {};
-      applyCollapseOverlay();
-      if (!state.races.some(race => race.id === state.activeRaceId)) {
-        state.activeRaceId = state.races[0].id;
-        state.expandedRaceId = state.races[0].id;
-      }
+      state.raceMacData = next.raceMacData || {};
+      state.raceFreqData = next.raceFreqData || {};
       syncRevision = revision;
       syncBase = sharedSnapshot();
+      const migrated = migrateDefaultCalendarRaces();
+      const seededPlans = seedMissingFiberPlans();
+      applyCollapseOverlay();
+      if (state.activeRaceId && !state.races.some(race => race.id === state.activeRaceId)) {
+        state.activeRaceId = state.races[0] ? state.races[0].id : null;
+      }
+      if (state.expandedRaceId && !state.races.some(race => race.id === state.expandedRaceId)) {
+        state.expandedRaceId = null;
+      }
       writeLocalCache();
+      return seededPlans || migrated;
     }
 
     function queueServerSync() {
@@ -1040,9 +1636,10 @@
         if (!res.ok) throw new Error('state');
         const data = await res.json();
         if (data.initialized && data.state) {
-          adoptServerState(data.state, data.revision);
+          const seededPlans = adoptServerState(data.state, data.revision);
           serverConnected = true;
           loadedFromServer = true;
+          if (seededPlans) queueServerSync();
         }
       } catch (e) {
         serverConnected = false;
@@ -1054,6 +1651,9 @@
         syncRevision = 0;
         await flushServerSync({ bootstrap: true });
       }
+
+      restoreUiNav();
+      saveUiNav();
 
       connectLive();
       initSupabase();
@@ -1071,8 +1671,8 @@
         try {
           supabaseClient = window.supabase.createClient(url, key);
           supabaseActive = true;
-          dot.className = "w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block animate-pulse";
-          text.innerText = "Supabase Realtime";
+          if (dot) dot.className = "w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block animate-pulse";
+          if (text) text.innerText = "Supabase Realtime";
 
           supabaseClient
             .channel('public:f1_cables_v3')
@@ -1081,12 +1681,18 @@
                 const nextCables = payload.new.data.cables || state.raceCableData;
                 const nextJoinboxes = payload.new.data.joinboxes || state.raceJoinboxData;
                 const nextMedia = payload.new.data.media || state.raceMediaData;
-                if (deepEqual(nextCables, state.raceCableData) && deepEqual(nextJoinboxes, state.raceJoinboxData) && deepEqual(nextMedia, state.raceMediaData)) {
+                const nextPlans = payload.new.data.fiberPlans || state.raceFiberPlanData;
+                const nextMac = payload.new.data.mac || state.raceMacData;
+                const nextFreq = payload.new.data.freq || state.raceFreqData;
+                if (deepEqual(nextCables, state.raceCableData) && deepEqual(nextJoinboxes, state.raceJoinboxData) && deepEqual(nextMedia, state.raceMediaData) && deepEqual(nextPlans, state.raceFiberPlanData) && deepEqual(nextMac, state.raceMacData) && deepEqual(nextFreq, state.raceFreqData)) {
                   return;
                 }
                 state.raceCableData = nextCables;
                 state.raceJoinboxData = nextJoinboxes;
+                state.raceFiberPlanData = nextPlans;
                 state.raceMediaData = nextMedia;
+                state.raceMacData = nextMac;
+                state.raceFreqData = nextFreq;
                 queueServerSync();
                 safeRender();
               }
@@ -1096,8 +1702,8 @@
         } catch (e) {
           console.error("Supabase connect error:", e);
           supabaseActive = false;
-          dot.className = "w-2.5 h-2.5 rounded-full bg-red-500 inline-block";
-          text.innerText = "Sync Fout";
+          if (dot) dot.className = "w-2.5 h-2.5 rounded-full bg-red-500 inline-block";
+          if (text) text.innerText = "Sync error";
         }
       } else {
         supabaseActive = false;
@@ -1112,9 +1718,146 @@
         data: {
           cables: state.raceCableData,
           joinboxes: state.raceJoinboxData,
-          media: state.raceMediaData
+          fiberPlans: state.raceFiberPlanData,
+          media: state.raceMediaData,
+          mac: state.raceMacData,
+          freq: state.raceFreqData
         } 
       });
+    }
+
+    function parseRaceDateIso(race) {
+      const raw = race && typeof race.raceDate === 'string' ? race.raceDate.trim() : '';
+      const match = raw.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+      return match ? match[0] : null;
+    }
+
+    function raceNameKey(race) {
+      return String(race && race.name || '')
+        .toLowerCase()
+        .replace(/\s*grand prix\s*/gi, ' ')
+        .replace(/[^a-z0-9]+/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+    }
+
+    function amsterdamYear(now) {
+      const parts = new Intl.DateTimeFormat('en-US', {
+        timeZone: AMSTERDAM_TZ,
+        year: 'numeric'
+      }).formatToParts(now instanceof Date ? now : new Date());
+      const year = parts.find((part) => part.type === 'year');
+      return year ? Number(year.value) : (now instanceof Date ? now : new Date()).getFullYear();
+    }
+
+    function datesForRace(race) {
+      const dates = new Set();
+      const stored = parseRaceDateIso(race);
+      if (stored) dates.add(stored);
+      const mapped = RACE_WEEKEND_DATES[raceNameKey(race)] || [];
+      mapped.forEach((iso) => dates.add(iso));
+      return Array.from(dates);
+    }
+
+    function highlightDatesForRace(race, now) {
+      const all = datesForRace(race);
+      if (!all.length) return [];
+      const year = String(amsterdamYear(now));
+      const thisYear = all.filter((iso) => iso.indexOf(year + '-') === 0);
+      return thisYear.length ? thisYear : all;
+    }
+
+    function addDaysIso(isoDate, days) {
+      const [y, m, d] = isoDate.split('-').map(Number);
+      const next = new Date(Date.UTC(y, m - 1, d + days));
+      return next.toISOString().slice(0, 10);
+    }
+
+    function mondayIsoOfRaceWeek(isoDate) {
+      const [y, m, d] = isoDate.split('-').map(Number);
+      const weekday = new Date(Date.UTC(y, m - 1, d)).getUTCDay();
+      const daysFromMonday = (weekday + 6) % 7;
+      return addDaysIso(isoDate, -daysFromMonday);
+    }
+
+    function tzOffsetMs(date, timeZone) {
+      const parts = Object.fromEntries(
+        new Intl.DateTimeFormat('en-US', {
+          timeZone,
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+          hourCycle: 'h23'
+        }).formatToParts(date).filter((part) => part.type !== 'literal').map((part) => [part.type, part.value])
+      );
+      const asUtc = Date.UTC(
+        Number(parts.year),
+        Number(parts.month) - 1,
+        Number(parts.day),
+        Number(parts.hour),
+        Number(parts.minute),
+        Number(parts.second)
+      );
+      return asUtc - date.getTime();
+    }
+
+    function amsterdamDateTime(isoDate, hour, minute, second, ms) {
+      const [y, mo, d] = isoDate.split('-').map(Number);
+      const utcGuess = Date.UTC(y, mo - 1, d, hour, minute, second, ms);
+      let instant = utcGuess - tzOffsetMs(new Date(utcGuess), AMSTERDAM_TZ);
+      instant = utcGuess - tzOffsetMs(new Date(instant), AMSTERDAM_TZ);
+      return new Date(instant);
+    }
+
+    function raceWeekWindow(isoDate) {
+      const monday = mondayIsoOfRaceWeek(isoDate);
+      return {
+        start: amsterdamDateTime(monday, 9, 0, 0, 0),
+        end: amsterdamDateTime(isoDate, 23, 59, 59, 999)
+      };
+    }
+
+    const NL_MONTHS_SHORT = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+    function formatNlDayMonth(isoDate) {
+      const [, m, d] = isoDate.split('-').map(Number);
+      return `${d} ${NL_MONTHS_SHORT[m - 1]}`;
+    }
+
+    function formatDateRange(startIso, endIso) {
+      if (!startIso) return '';
+      if (!endIso || startIso === endIso) return formatNlDayMonth(startIso);
+      if (startIso.slice(0, 7) === endIso.slice(0, 7)) {
+        return `${Number(startIso.slice(8, 10))}–${formatNlDayMonth(endIso)}`;
+      }
+      return `${formatNlDayMonth(startIso)} – ${formatNlDayMonth(endIso)}`;
+    }
+
+    function raceListDateLabel(race) {
+      const end = parseRaceDateIso(race);
+      const startRaw = race && typeof race.weekendStart === 'string' ? race.weekendStart.trim() : '';
+      const start = /^\d{4}-\d{2}-\d{2}$/.test(startRaw) ? startRaw : '';
+      if (start && end) return formatDateRange(start, end);
+      return end ? formatNlDayMonth(end) : '';
+    }
+
+    function currentRaceWeekId(now) {
+      const at = now instanceof Date ? now : new Date();
+      const hits = [];
+      (state.races || []).forEach((race) => {
+        highlightDatesForRace(race, at).forEach((isoDate) => {
+          const window = raceWeekWindow(isoDate);
+          if (at >= window.start && at <= window.end) {
+            hits.push({ id: race.id, isoDate, start: window.start });
+          }
+        });
+      });
+      if (!hits.length) return null;
+      hits.sort((a, b) => (a.isoDate < b.isoDate ? -1 : a.isoDate > b.isoDate ? 1 : a.start - b.start));
+      return hits[0].id;
     }
 
     function renderRaceSidebar() {
@@ -1123,39 +1866,56 @@
 
       raceListEl.innerHTML = '';
 
+      const now = new Date();
+      const currentWeekId = currentRaceWeekId(now);
+      const visible = [];
       state.races.forEach((race, index) => {
         if (searchVal && !race.name.toLowerCase().includes(searchVal) && !race.circuit.toLowerCase().includes(searchVal)) {
           return;
         }
+        visible.push({ race, index });
+      });
+      visible.sort((a, b) => {
+        if (a.race.id === currentWeekId) return -1;
+        if (b.race.id === currentWeekId) return 1;
+        return a.index - b.index;
+      });
 
+      visible.forEach(({ race, index }) => {
         const isSelectedRace = race.id === state.activeRaceId;
         const isExpanded = race.id === state.expandedRaceId;
+        const isCurrentWeek = race.id === currentWeekId;
         const code = race.code || `R${index + 1}`;
+        const weekLabel = raceListDateLabel(race);
+        const weekClass = isCurrentWeek || isSelectedRace ? 'text-white/80' : 'text-slate-400';
 
         const raceWrapper = document.createElement('div');
         raceWrapper.className = "space-y-1";
 
         const raceBtn = document.createElement('div');
         raceBtn.className = `group flex items-center justify-between p-2.5 sm:p-3 rounded-xl cursor-pointer transition-all ${
-          isSelectedRace 
-            ? 'bg-emerald-600 text-white font-semibold shadow-md shadow-emerald-900/30' 
+          isCurrentWeek
+            ? 'theme-race-current text-white font-semibold'
+            : isSelectedRace
+            ? 'theme-race-active bg-emerald-600 text-white font-semibold shadow-md shadow-emerald-900/30'
             : 'text-slate-300 hover:bg-sidebarHover hover:text-white'
         }`;
 
         raceBtn.onclick = () => toggleRaceAccordion(race.id);
 
         raceBtn.innerHTML = `
-          <div class="flex items-center space-x-2.5 overflow-hidden">
-            <i class="fa-solid fa-chevron-right text-[10px] transition-transform duration-200 ${isExpanded ? 'rotate-90 text-emerald-300' : 'text-slate-500'}"></i>
-            <span class="text-[10px] font-f1 font-extrabold px-1.5 py-0.5 rounded ${
-              isSelectedRace ? 'bg-black/30 text-white' : 'bg-slate-800 text-slate-400 group-hover:text-slate-200'
+          <div class="flex items-center space-x-2.5 overflow-hidden min-w-0">
+            <i class="fa-solid fa-chevron-right text-[10px] transition-transform duration-200 shrink-0 ${isExpanded ? (isCurrentWeek ? 'rotate-90 text-white/80' : 'rotate-90 text-emerald-300') : 'text-slate-500'}"></i>
+            <span class="text-[10px] font-f1 font-extrabold px-1.5 py-0.5 rounded shrink-0 ${
+              isCurrentWeek || isSelectedRace ? 'bg-black/30 text-white' : 'bg-slate-800 text-slate-400 group-hover:text-slate-200'
             }">${code}</span>
-            <div class="truncate">
+            <div class="min-w-0">
               <p class="text-xs sm:text-sm font-bold leading-snug truncate">${race.name}</p>
+              ${weekLabel ? `<p class="text-[10px] font-semibold leading-tight tracking-wide truncate ${weekClass}">${weekLabel}</p>` : ''}
             </div>
           </div>
           <div class="flex items-center space-x-1">
-            <button onclick="event.stopPropagation(); deleteRace('${race.id}')" class="p-2 hover:text-red-400 text-xs text-slate-400 touch-target flex items-center justify-center" title="Race verwijderen">
+            <button onclick="event.stopPropagation(); deleteRace('${race.id}')" class="p-2 text-xs touch-target flex items-center justify-center ${isCurrentWeek ? 'text-white/70 hover:text-white' : 'hover:text-red-400 text-slate-400'}" title="Delete race">
               <i class="fa-solid fa-trash"></i>
             </button>
           </div>
@@ -1169,10 +1929,11 @@
           subContainer.className = "ml-5 pl-2 border-l border-slate-800 space-y-1 my-1";
 
           const subItems = [
-            { key: 'cables', label: 'Fiber Indeling', icon: 'fa-network-wired', color: 'text-emerald-400' },
-            { key: 'maps', label: "Plattegronden & Foto's", icon: 'fa-map-location-dot', color: 'text-blue-400' },
-            { key: 'joinbox', label: 'Joinbox Patchpunten', icon: 'fa-box-archive', color: 'text-amber-400' },
-            { key: 'notes', label: 'Opmerkingen / Notities', icon: 'fa-pen-to-square', color: 'text-purple-400' }
+            { key: 'cables', label: 'Fiber layout', icon: 'fa-network-wired', color: 'text-emerald-400' },
+            { key: 'maps', label: 'Maps & photos', icon: 'fa-map-location-dot', color: 'text-blue-400' },
+            { key: 'notes', label: 'Notes', icon: 'fa-pen-to-square', color: 'text-purple-400' },
+            { key: 'mac', label: 'MAC', icon: 'fa-id-card', color: 'text-amber-400' },
+            { key: 'freq', label: 'Frequency charts', icon: 'fa-tower-broadcast', color: 'text-cyan-400' }
           ];
 
           subItems.forEach(item => {
@@ -1211,6 +1972,7 @@
         state.expandedRaceId = raceId;
         state.activeRaceId = raceId;
       }
+      saveUiNav();
       renderRaceSidebar();
       renderCurrentView();
     }
@@ -1219,6 +1981,7 @@
       state.activeRaceId = raceId;
       state.expandedRaceId = raceId;
       state.activeSubSection = subKey;
+      saveUiNav();
 
       renderRaceSidebar();
       renderCurrentView();
@@ -1254,6 +2017,10 @@
       const activeRace = state.races.find(r => r.id === state.activeRaceId) || state.races[0];
       if (!activeRace) return;
 
+      if (state.activeSubSection === 'joinbox') {
+        state.activeSubSection = 'cables';
+      }
+
       document.getElementById('headerRaceBadge').innerText = activeRace.code || 'RACE';
       document.getElementById('headerRaceTitle').innerText = activeRace.name;
       document.getElementById('headerRaceSub').innerText = activeRace.circuit;
@@ -1262,29 +2029,43 @@
       const viewMaps = document.getElementById('viewMaps');
       const viewJoinbox = document.getElementById('viewJoinbox');
       const viewNotes = document.getElementById('viewNotes');
+      const viewMac = document.getElementById('viewMac');
+      const viewFreq = document.getElementById('viewFreq');
+      const mainActionButton = document.getElementById('mainActionButton');
       const mainActionText = document.getElementById('mainActionButtonText');
+      const mainActionIcon = document.getElementById('mainActionButtonIcon');
 
       viewCables.classList.add('hidden');
       viewMaps.classList.add('hidden');
       viewJoinbox.classList.add('hidden');
       viewNotes.classList.add('hidden');
+      if (viewMac) viewMac.classList.add('hidden');
+      if (viewFreq) viewFreq.classList.add('hidden');
+      if (mainActionButton) mainActionButton.classList.remove('hidden');
+      if (mainActionIcon) mainActionIcon.classList.remove('hidden');
 
       if (state.activeSubSection === 'cables') {
         viewCables.classList.remove('hidden');
-        if(mainActionText) mainActionText.innerText = "+ Nieuwe kabel";
+        if(mainActionText) mainActionText.innerText = "New cable";
         renderCableBoard();
       } else if (state.activeSubSection === 'maps') {
         viewMaps.classList.remove('hidden');
-        if(mainActionText) mainActionText.innerText = "+ Plattegrond URL";
+        if(mainActionText) mainActionText.innerText = "File URL";
         renderMapsView();
-      } else if (state.activeSubSection === 'joinbox') {
-        viewJoinbox.classList.remove('hidden');
-        if(mainActionText) mainActionText.innerText = "+ Nieuwe Joinbox";
-        renderJoinboxBoard();
       } else if (state.activeSubSection === 'notes') {
         viewNotes.classList.remove('hidden');
-        if(mainActionText) mainActionText.innerText = "Opslaan";
+        if (mainActionIcon) mainActionIcon.classList.add('hidden');
+        if(mainActionText) mainActionText.innerText = "Save";
         renderNotesView();
+      } else if (state.activeSubSection === 'mac') {
+        if (viewMac) viewMac.classList.remove('hidden');
+        if (mainActionIcon) mainActionIcon.classList.add('hidden');
+        if(mainActionText) mainActionText.innerText = "Save";
+        renderMacView();
+      } else if (state.activeSubSection === 'freq') {
+        if (viewFreq) viewFreq.classList.remove('hidden');
+        if(mainActionText) mainActionText.innerText = "File URL";
+        renderFreqView();
       }
     }
 
@@ -1292,18 +2073,905 @@
       if (state.activeSubSection === 'cables') {
         openAddGroupModal();
       } else if (state.activeSubSection === 'maps') {
-        promptMediaUrlUpload();
-      } else if (state.activeSubSection === 'joinbox') {
-        openAddJoinboxModal();
+        promptLibraryUrl('maps');
       } else if (state.activeSubSection === 'notes') {
         saveNotesManually();
+      } else if (state.activeSubSection === 'mac') {
+        saveMacManually();
+      } else if (state.activeSubSection === 'freq') {
+        promptLibraryUrl('freq');
       }
+    }
+
+
+    function newUid(prefix) {
+      return prefix + '_' + Math.random().toString(36).slice(2, 8) + Date.now().toString(36).slice(-4);
+    }
+
+    function makeDefaultFiberPlans() {
+      return DEFAULT_FIBER_ROUTE_DEFS.map((def) => {
+        const start = Number(def.start) || 1;
+        const items = def.labels.map((label, index) => {
+          const num = start + index;
+          return {
+            id: def.id + '_i' + (index + 1),
+            auto: index > 0 || start === 1,
+            numIn: num,
+            numOut: num,
+            label,
+            defect: false,
+            half: false,
+            full: false
+          };
+        });
+        if (start !== 1) items[0].auto = false;
+        return {
+          id: def.id,
+          title: def.title,
+          color: def.color,
+          collapsed: false,
+          segments: [{
+            id: def.id + '_s1',
+            title: def.title,
+            throughJoinbox: false,
+            items
+          }]
+        };
+      });
+    }
+
+    function ensureFiberPlans(raceId) {
+      if (!state.raceFiberPlanData) state.raceFiberPlanData = {};
+      if (!Object.prototype.hasOwnProperty.call(state.raceFiberPlanData, raceId)) {
+        state.raceFiberPlanData[raceId] = makeDefaultFiberPlans();
+      }
+      (state.raceFiberPlanData[raceId] || []).forEach(applyAutoFiberNumbers);
+    }
+
+    function ensureAllFiberPlans() {
+      return seedMissingFiberPlans();
+    }
+
+    function seedMissingFiberPlans() {
+      let seeded = false;
+      if (!state.raceFiberPlanData) state.raceFiberPlanData = {};
+      (state.races || []).forEach((race) => {
+        if (!Object.prototype.hasOwnProperty.call(state.raceFiberPlanData, race.id)) {
+          state.raceFiberPlanData[race.id] = makeDefaultFiberPlans();
+          seeded = true;
+        }
+        (state.raceFiberPlanData[race.id] || []).forEach(applyAutoFiberNumbers);
+      });
+      return seeded;
+    }
+
+    function getFiberPlans() {
+      ensureFiberPlans(state.activeRaceId);
+      return state.raceFiberPlanData[state.activeRaceId];
+    }
+
+    function fiberPlanTheme(color) {
+      const themes = {
+        'bg-emerald-600': {
+          accent: 'bg-emerald-500',
+          edge: 'border-emerald-500',
+          add: 'text-emerald-600 hover:text-emerald-500'
+        },
+        'bg-blue-600': {
+          accent: 'bg-blue-500',
+          edge: 'border-blue-500',
+          add: 'text-blue-600 hover:text-blue-500'
+        },
+        'bg-amber-600': {
+          accent: 'bg-amber-500',
+          edge: 'border-amber-500',
+          add: 'text-amber-600 hover:text-amber-500'
+        },
+        'bg-purple-600': {
+          accent: 'bg-violet-500',
+          edge: 'border-violet-500',
+          add: 'text-violet-600 hover:text-violet-500'
+        },
+        'bg-rose-600': {
+          accent: 'bg-f1red',
+          edge: 'border-f1red',
+          add: 'text-f1red hover:text-red-500'
+        },
+        'bg-slate-700': {
+          accent: 'bg-emerald-500',
+          edge: 'border-emerald-500',
+          add: 'text-emerald-600 hover:text-emerald-500'
+        }
+      };
+      return themes[color] || themes['bg-slate-700'];
+    }
+
+    function applyAutoFiberNumbers(plan) {
+      if (!plan || !Array.isArray(plan.segments)) return;
+      let last = 0;
+      plan.segments.forEach((segment) => {
+        const viaJoin = !!segment.throughJoinbox;
+        (segment.items || []).forEach((item) => {
+          if (item.auto !== false) {
+            const next = last + 1;
+            item.numIn = next;
+            item.numOut = next;
+          } else {
+            item.numIn = parseInt(item.numIn, 10);
+            if (!item.numIn || item.numIn < 1) item.numIn = last + 1;
+            item.numOut = parseInt(item.numOut, 10);
+            if (!item.numOut || item.numOut < 1) item.numOut = item.numIn;
+            if (!viaJoin) item.numOut = item.numIn;
+          }
+          last = viaJoin ? Math.max(item.numIn, item.numOut) : item.numIn;
+        });
+      });
+    }
+
+    function saveFiberPlans() {
+      const plans = state.raceFiberPlanData[state.activeRaceId] || [];
+      plans.forEach(applyAutoFiberNumbers);
+      queueServerSync();
+    }
+
+    function isPlanCollapsed(plan) {
+      const key = 'plan:' + plan.id;
+      const raceMap = collapseMap[state.activeRaceId] || {};
+      if (Object.prototype.hasOwnProperty.call(raceMap, key)) return !!raceMap[key];
+      return !!plan.collapsed;
+    }
+
+    function togglePlanCollapse(pIdx) {
+      const plan = getFiberPlans()[pIdx];
+      const key = 'plan:' + plan.id;
+      if (!collapseMap[state.activeRaceId]) collapseMap[state.activeRaceId] = {};
+      const next = !isPlanCollapsed(plan);
+      collapseMap[state.activeRaceId][key] = next;
+      plan.collapsed = next;
+      localStorage.setItem(COLLAPSE_KEY, JSON.stringify(collapseMap));
+      renderFiberPlans();
+    }
+
+    const selectedItems = new Set();
+    let selectAnchor = null;
+    let rowDrag = null;
+
+    function getSortableList(kind, pIdx, sIdx, gIdx) {
+      if (kind === 'fiber') {
+        const plan = getFiberPlans()[pIdx];
+        return plan && plan.segments[sIdx] ? plan.segments[sIdx].items : [];
+      }
+      const groups = state.raceCableData[state.activeRaceId] || [];
+      return groups[gIdx] ? groups[gIdx].items : [];
+    }
+
+    function sameSortableGroup(a, kind, pIdx, sIdx, gIdx) {
+      if (!a || a.kind !== kind) return false;
+      if (kind === 'fiber') return a.pIdx === pIdx && a.sIdx === sIdx;
+      return a.gIdx === gIdx;
+    }
+
+    function reorderList(list, fromIdx, toIdx) {
+      return reorderBlock(list, [fromIdx], toIdx < fromIdx ? toIdx : toIdx + 1);
+    }
+
+    function reorderBlock(list, indices, insertAt) {
+      if (!Array.isArray(list)) return false;
+      const selected = [...new Set((indices || []).map(Number))]
+        .filter((idx) => Number.isInteger(idx) && idx >= 0 && idx < list.length)
+        .sort((a, b) => a - b);
+      if (!selected.length) return false;
+      let at = Number(insertAt);
+      if (!Number.isInteger(at)) return false;
+      at = Math.max(0, Math.min(list.length, at));
+      const moving = selected.map((idx) => list[idx]);
+      const remaining = list.filter((_, idx) => !selected.includes(idx));
+      const adjusted = at - selected.filter((idx) => idx < at).length;
+      const clamped = Math.max(0, Math.min(remaining.length, adjusted));
+      remaining.splice(clamped, 0, ...moving);
+      if (remaining.length === list.length && remaining.every((item, idx) => item === list[idx])) return false;
+      list.splice(0, list.length, ...remaining);
+      return true;
+    }
+
+    function freezeSegmentFiberNumbers(segment) {
+      (segment.items || []).forEach((item) => { item.auto = false; });
+    }
+
+    function moveFiberPlanItem(pIdx, sIdx, fromIdx, toIdx) {
+      moveFiberPlanItems(pIdx, sIdx, [fromIdx], toIdx < fromIdx ? toIdx : toIdx + 1);
+    }
+
+    function moveFiberPlanItems(pIdx, sIdx, indices, insertAt) {
+      const segment = getFiberPlans()[pIdx] && getFiberPlans()[pIdx].segments[sIdx];
+      if (!segment) return;
+      if (!reorderBlock(segment.items, indices, insertAt)) return;
+      freezeSegmentFiberNumbers(segment);
+      queueServerSync();
+      renderFiberPlans();
+    }
+
+    function moveCableItem(gIdx, fromIdx, toIdx) {
+      moveCableItems(gIdx, [fromIdx], toIdx < fromIdx ? toIdx : toIdx + 1);
+    }
+
+    function moveCableItems(gIdx, indices, insertAt) {
+      const group = (state.raceCableData[state.activeRaceId] || [])[gIdx];
+      if (!group) return;
+      if (!reorderBlock(group.items, indices, insertAt)) return;
+      saveCableDataToLocal();
+      renderCableBoard();
+    }
+
+    function refreshRowSelectClasses() {
+      document.querySelectorAll('.sortable-row').forEach((el) => {
+        const kind = el.getAttribute('data-kind');
+        const pIdx = Number(el.getAttribute('data-p') || 0);
+        const sIdx = Number(el.getAttribute('data-s') || 0);
+        const gIdx = Number(el.getAttribute('data-g') || 0);
+        const iIdx = Number(el.getAttribute('data-i') || 0);
+        const list = getSortableList(kind, pIdx, sIdx, gIdx);
+        const item = list[iIdx];
+        const on = !!(item && selectedItems.has(item));
+        el.classList.toggle('is-selected', on);
+        const box = el.querySelector('.row-select input');
+        if (box) box.checked = on;
+      });
+    }
+
+    function onRowSelectToggle(event, kind, pIdx, sIdx, gIdx, iIdx) {
+      event.stopPropagation();
+      const list = getSortableList(kind, pIdx, sIdx, gIdx);
+      const item = list[iIdx];
+      if (!item) return;
+      if (event.shiftKey && selectAnchor && sameSortableGroup(selectAnchor, kind, pIdx, sIdx, gIdx)) {
+        list.forEach((entry) => selectedItems.delete(entry));
+        const from = selectAnchor.iIdx;
+        const lo = Math.min(from, iIdx);
+        const hi = Math.max(from, iIdx);
+        for (let idx = lo; idx <= hi; idx += 1) selectedItems.add(list[idx]);
+      } else if (event.currentTarget.checked) {
+        selectedItems.add(item);
+        selectAnchor = { kind, pIdx, sIdx, gIdx, iIdx };
+      } else {
+        selectedItems.delete(item);
+        selectAnchor = { kind, pIdx, sIdx, gIdx, iIdx };
+      }
+      refreshRowSelectClasses();
+    }
+
+    function isSortableInteractiveTarget(target) {
+      const el = target && target.nodeType === 1 ? target : (target && target.parentElement);
+      return !!(el && el.closest && el.closest('input, textarea, select, button, a, label.row-select, .fiber-move-btns'));
+    }
+
+    function eventStartedOnGrip(event) {
+      const el = event.target && event.target.nodeType === 1 ? event.target : event.target && event.target.parentElement;
+      return !!(el && el.closest && el.closest('.fiber-row-grip'));
+    }
+
+    function sortableRowsInGroup(kind, pIdx, sIdx, gIdx) {
+      if (kind === 'fiber') {
+        return [...document.querySelectorAll(`.sortable-row[data-kind="fiber"][data-p="${pIdx}"][data-s="${sIdx}"]`)];
+      }
+      return [...document.querySelectorAll(`.sortable-row[data-kind="cable"][data-g="${gIdx}"]`)];
+    }
+
+    function clearRowDragChrome() {
+      document.querySelectorAll('.sortable-row.is-row-dragging').forEach((el) => el.classList.remove('is-row-dragging'));
+      if (rowDrag && rowDrag.ghost) rowDrag.ghost.remove();
+      if (rowDrag && rowDrag.line) rowDrag.line.remove();
+      document.body.classList.remove('is-sorting-rows');
+    }
+
+    function stopRowDragListeners() {
+      window.removeEventListener('pointermove', onSortablePointerMove);
+      window.removeEventListener('pointerup', onSortablePointerUp);
+      window.removeEventListener('pointercancel', onSortablePointerUp);
+      window.removeEventListener('touchmove', onSortableTouchMove, { capture: true });
+      window.removeEventListener('touchend', onSortableTouchEnd, { capture: true });
+      window.removeEventListener('touchcancel', onSortableTouchEnd, { capture: true });
+    }
+
+    function onSortableTouchMove(event) {
+      if (!rowDrag) return;
+      if (rowDrag.fromGrip || rowDrag.started) event.preventDefault();
+      if (rowDrag.started) return;
+      const touch = event.touches && event.touches[0];
+      if (!touch) return;
+      rowDrag.lastX = touch.clientX;
+      rowDrag.lastY = touch.clientY;
+      const dy = Math.abs(touch.clientY - rowDrag.startY);
+      const dx = Math.abs(touch.clientX - rowDrag.startX);
+      if (rowDrag.fromGrip) {
+        if (dx >= 2 || dy >= 2) beginRowDrag();
+        return;
+      }
+      if (dy > 10 || dx > 10) cancelPendingRowDrag();
+    }
+
+    function onSortableTouchEnd() {
+      if (!rowDrag || !rowDrag.isTouch) return;
+      onSortablePointerUp({ pointerId: rowDrag.pointerId, shiftKey: false });
+    }
+
+    function cancelPendingRowDrag() {
+      if (!rowDrag || rowDrag.started) return;
+      if (rowDrag.longPressTimer) {
+        clearTimeout(rowDrag.longPressTimer);
+        rowDrag.longPressTimer = null;
+      }
+      stopRowDragListeners();
+      rowDrag = null;
+    }
+
+    function beginRowDrag() {
+      if (!rowDrag || rowDrag.started) return;
+      if (rowDrag.longPressTimer) {
+        clearTimeout(rowDrag.longPressTimer);
+        rowDrag.longPressTimer = null;
+      }
+      const list = getSortableList(rowDrag.kind, rowDrag.pIdx, rowDrag.sIdx, rowDrag.gIdx);
+      const item = list[rowDrag.iIdx];
+      if (!item) {
+        cancelPendingRowDrag();
+        return;
+      }
+      let indices;
+      if (selectedItems.has(item)) {
+        indices = list.map((entry, idx) => (selectedItems.has(entry) ? idx : -1)).filter((idx) => idx >= 0);
+      } else {
+        indices = [rowDrag.iIdx];
+      }
+      rowDrag.started = true;
+      rowDrag.indices = indices;
+      rowDrag.listLength = list.length;
+      const rows = sortableRowsInGroup(rowDrag.kind, rowDrag.pIdx, rowDrag.sIdx, rowDrag.gIdx);
+      rows.forEach((el) => {
+        if (indices.includes(Number(el.getAttribute('data-i')))) el.classList.add('is-row-dragging');
+      });
+      const ghost = document.createElement('div');
+      ghost.className = 'row-drag-ghost';
+      const label = String(item.label || '').trim() || 'Row';
+      ghost.textContent = indices.length > 1 ? `${indices.length} rows` : label;
+      document.body.appendChild(ghost);
+      const line = document.createElement('div');
+      line.className = 'row-drop-line';
+      document.body.appendChild(line);
+      rowDrag.ghost = ghost;
+      rowDrag.line = line;
+      document.body.classList.add('is-sorting-rows');
+      const captureEl = rowDrag.captureEl || rowDrag.rowEl;
+      try { captureEl.setPointerCapture(rowDrag.pointerId); } catch (e) {}
+      const active = document.activeElement;
+      if (active && active !== document.body && typeof active.blur === 'function') active.blur();
+      if (navigator.vibrate) navigator.vibrate(12);
+      positionRowDragChrome(rowDrag.lastX, rowDrag.lastY);
+    }
+
+    function positionRowDragChrome(clientX, clientY) {
+      if (!rowDrag || !rowDrag.started) return;
+      if (rowDrag.ghost) {
+        rowDrag.ghost.style.left = clientX + 'px';
+        rowDrag.ghost.style.top = clientY + 'px';
+      }
+      if (clientY < 70) window.scrollBy(0, -18);
+      else if (clientY > window.innerHeight - 70) window.scrollBy(0, 18);
+      const rows = sortableRowsInGroup(rowDrag.kind, rowDrag.pIdx, rowDrag.sIdx, rowDrag.gIdx);
+      const dragged = new Set(rowDrag.indices);
+      const remaining = rows.filter((el) => !dragged.has(Number(el.getAttribute('data-i'))));
+      let insertAt = rowDrag.listLength;
+      let place = null;
+      for (let r = 0; r < remaining.length; r += 1) {
+        const el = remaining[r];
+        const rect = el.getBoundingClientRect();
+        const orig = Number(el.getAttribute('data-i'));
+        if (clientY < rect.top + rect.height / 2) {
+          insertAt = orig;
+          place = { left: rect.left, width: rect.width, y: rect.top };
+          break;
+        }
+        insertAt = orig + 1;
+        place = { left: rect.left, width: rect.width, y: rect.bottom };
+      }
+      if (!remaining.length && rows[0]) {
+        const rect = rows[0].getBoundingClientRect();
+        insertAt = 0;
+        place = { left: rect.left, width: rect.width, y: rect.top };
+      }
+      rowDrag.insertAt = insertAt;
+      if (rowDrag.line && place) {
+        rowDrag.line.style.left = place.left + 'px';
+        rowDrag.line.style.width = place.width + 'px';
+        rowDrag.line.style.top = place.y + 'px';
+        rowDrag.line.style.display = 'block';
+      }
+    }
+
+    function onSortableGripTouchStart(event) {
+      if (event.touches && event.touches.length > 1) return;
+      const row = event.currentTarget.closest('.sortable-row');
+      if (!row || rowDrag) return;
+      const touch = event.touches[0];
+      onSortablePointerDown({
+        button: 0,
+        pointerId: 'touch-1',
+        pointerType: 'touch',
+        clientX: touch.clientX,
+        clientY: touch.clientY,
+        target: event.currentTarget,
+        currentTarget: row,
+        preventDefault: function () { event.preventDefault(); }
+      }, true);
+    }
+
+    function onSortableGripDown(event) {
+      event.preventDefault();
+      const row = event.currentTarget.closest('.sortable-row');
+      if (!row) return;
+      onSortablePointerDown(event, true);
+    }
+
+    function onSortablePointerDown(event, fromGripFlag) {
+      if (event.button != null && event.button !== 0) return;
+      if (rowDrag) return;
+      const fromGrip = !!fromGripFlag || eventStartedOnGrip(event);
+      let rowEl = event.currentTarget;
+      if (!rowEl || !rowEl.classList || !rowEl.classList.contains('sortable-row')) {
+        rowEl = rowEl && rowEl.closest ? rowEl.closest('.sortable-row') : null;
+      }
+      if (!rowEl) return;
+      const onInput = isSortableInteractiveTarget(event.target);
+      if (onInput && !fromGrip) return;
+      const isTouch = event.pointerType === 'touch' || (fromGrip && event.pointerType !== 'mouse');
+      if (fromGrip) {
+        try { event.preventDefault(); } catch (e) {}
+        const active = document.activeElement;
+        if (active && active !== document.body && typeof active.blur === 'function') active.blur();
+      }
+      const kind = rowEl.getAttribute('data-kind');
+      const pIdx = Number(rowEl.getAttribute('data-p') || 0);
+      const sIdx = Number(rowEl.getAttribute('data-s') || 0);
+      const gIdx = Number(rowEl.getAttribute('data-g') || 0);
+      const iIdx = Number(rowEl.getAttribute('data-i') || 0);
+      const captureEl = fromGrip ? (event.target.closest && event.target.closest('.fiber-row-grip')) || rowEl : rowEl;
+      rowDrag = {
+        kind,
+        pIdx,
+        sIdx,
+        gIdx,
+        iIdx,
+        pointerId: event.pointerId,
+        startX: event.clientX,
+        startY: event.clientY,
+        lastX: event.clientX,
+        lastY: event.clientY,
+        started: false,
+        longPressTimer: null,
+        fromInput: onInput,
+        fromGrip,
+        isTouch,
+        rowEl,
+        captureEl,
+        indices: [],
+        insertAt: iIdx,
+        listLength: 0,
+        ghost: null,
+        line: null
+      };
+      if (fromGrip) {
+        try { captureEl.setPointerCapture(event.pointerId); } catch (e) {}
+      }
+      window.addEventListener('pointermove', onSortablePointerMove);
+      window.addEventListener('pointerup', onSortablePointerUp);
+      window.addEventListener('pointercancel', onSortablePointerUp);
+      window.addEventListener('touchmove', onSortableTouchMove, { capture: true, passive: false });
+      window.addEventListener('touchend', onSortableTouchEnd, { capture: true });
+      window.addEventListener('touchcancel', onSortableTouchEnd, { capture: true });
+      if (isTouch) {
+        rowDrag.longPressTimer = setTimeout(() => beginRowDrag(), fromGrip ? 200 : 280);
+      }
+    }
+
+    function onSortablePointerMove(event) {
+      if (!rowDrag || event.pointerId !== rowDrag.pointerId) return;
+      rowDrag.lastX = event.clientX;
+      rowDrag.lastY = event.clientY;
+      const dx = event.clientX - rowDrag.startX;
+      const dy = event.clientY - rowDrag.startY;
+      if (!rowDrag.started) {
+        if (rowDrag.fromGrip) {
+          if (Math.abs(dx) >= 3 || Math.abs(dy) >= 3) beginRowDrag();
+          return;
+        }
+        if (rowDrag.isTouch) {
+          if (Math.abs(dx) > 10 || Math.abs(dy) > 10) cancelPendingRowDrag();
+          return;
+        }
+        const threshold = rowDrag.fromInput ? 14 : 6;
+        if (Math.abs(dy) >= threshold || Math.abs(dx) >= threshold) {
+          if (rowDrag.fromInput && Math.abs(dx) > Math.abs(dy) + 4) {
+            cancelPendingRowDrag();
+            return;
+          }
+          event.preventDefault();
+          beginRowDrag();
+        }
+        return;
+      }
+      event.preventDefault();
+      positionRowDragChrome(event.clientX, event.clientY);
+    }
+
+    function onSortablePointerUp(event) {
+      if (!rowDrag) return;
+      if (event && !rowDrag.isTouch && event.pointerId !== rowDrag.pointerId) return;
+      const drag = rowDrag;
+      if (drag.longPressTimer) clearTimeout(drag.longPressTimer);
+      stopRowDragListeners();
+      const started = drag.started;
+      const shiftSelect = !started && event && event.shiftKey;
+      clearRowDragChrome();
+      rowDrag = null;
+      if (shiftSelect) {
+        const list = getSortableList(drag.kind, drag.pIdx, drag.sIdx, drag.gIdx);
+        if (selectAnchor && sameSortableGroup(selectAnchor, drag.kind, drag.pIdx, drag.sIdx, drag.gIdx)) {
+          list.forEach((entry) => selectedItems.delete(entry));
+          const lo = Math.min(selectAnchor.iIdx, drag.iIdx);
+          const hi = Math.max(selectAnchor.iIdx, drag.iIdx);
+          for (let idx = lo; idx <= hi; idx += 1) selectedItems.add(list[idx]);
+        } else if (list[drag.iIdx]) {
+          selectedItems.add(list[drag.iIdx]);
+          selectAnchor = { kind: drag.kind, pIdx: drag.pIdx, sIdx: drag.sIdx, gIdx: drag.gIdx, iIdx: drag.iIdx };
+        }
+        refreshRowSelectClasses();
+        return;
+      }
+      if (!started) return;
+      if (drag.kind === 'fiber') moveFiberPlanItems(drag.pIdx, drag.sIdx, drag.indices, drag.insertAt);
+      else moveCableItems(drag.gIdx, drag.indices, drag.insertAt);
+    }
+
+    function renderRowSelect(kind, pIdx, sIdx, gIdx, iIdx, item, isFirst, isLast) {
+      const checked = item && selectedItems.has(item) ? 'checked' : '';
+      const up = kind === 'fiber'
+        ? `moveFiberPlanItem(${pIdx},${sIdx},${iIdx},${iIdx - 1})`
+        : `moveCableItem(${gIdx},${iIdx},${iIdx - 1})`;
+      const down = kind === 'fiber'
+        ? `moveFiberPlanItem(${pIdx},${sIdx},${iIdx},${iIdx + 1})`
+        : `moveCableItem(${gIdx},${iIdx},${iIdx + 1})`;
+      return `
+        <div class="fiber-row-move">
+          <div class="fiber-row-grip" role="button" aria-label="Drag" title="Drag" onpointerdown="onSortableGripDown(event)" ontouchstart="onSortableGripTouchStart(event)">
+            <i class="fa-solid fa-grip-vertical"></i>
+          </div>
+          <label class="row-select" onpointerdown="event.stopPropagation()">
+            <input type="checkbox" ${checked} onchange="onRowSelectToggle(event, '${kind}', ${pIdx}, ${sIdx}, ${gIdx}, ${iIdx})" title="Select rows">
+          </label>
+          <div class="fiber-move-btns">
+            <button type="button" onclick="${up}" ${isFirst ? 'disabled' : ''} title="Move up"><i class="fa-solid fa-chevron-up"></i></button>
+            <button type="button" onclick="${down}" ${isLast ? 'disabled' : ''} title="Move down"><i class="fa-solid fa-chevron-down"></i></button>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderFiberPlans() {
+      const container = document.getElementById('fiberPlanContainer');
+      if (!container) return;
+      const plans = getFiberPlans();
+
+      container.innerHTML = `
+        <div class="max-w-5xl mx-auto space-y-2">
+          <div class="fiber-list-banner bg-slate-700 rounded-lg overflow-hidden px-3 py-2 border-l-2 border-f1red">
+            <div></div>
+            <h3 class="font-f1 font-extrabold text-sm text-white uppercase tracking-[0.08em]">Standard patch list</h3>
+            <button onclick="addFiberPlan()" class="text-[11px] font-bold text-emerald-300 hover:text-white border border-slate-500 hover:border-emerald-400 px-2.5 py-1 rounded-md touch-target">
+              <i class="fa-solid fa-plus"></i> Group
+            </button>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5">
+            ${plans.map((plan, pIdx) => renderFiberPlanTable(pIdx, plan)).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderFiberNumberInput(pIdx, sIdx, iIdx, field, value) {
+      return `<input type="number" min="1" inputmode="numeric" value="${value}" oninput="draftFiberNumber(${pIdx},${sIdx},${iIdx}, '${field}', this.value)" onchange="commitFiberNumber(${pIdx},${sIdx},${iIdx}, '${field}', this.value)" class="fiber-num-input" title="Fiber number">`;
+    }
+
+    function renderFiberPlanTable(pIdx, plan) {
+      const theme = fiberPlanTheme(plan.color);
+      return `
+        <div class="fiber-plan-card border border-slate-200 flex">
+          <div class="w-1 ${theme.accent} shrink-0"></div>
+          <div class="flex-1 min-w-0">
+          <div class="fiber-plan-head bg-slate-700">
+            <div class="fiber-plan-head-side" aria-hidden="true"></div>
+            <input value="${escapeHtml(plan.title || '')}" onchange="renameFiberPlan(${pIdx}, this.value)" class="fiber-title-input on-route fiber-plan-head-title text-xs" title="Route name">
+            <div class="fiber-plan-head-side fiber-plan-head-actions">
+              <button onclick="addFiberSegment(${pIdx})" class="text-[9px] font-bold uppercase tracking-wide text-slate-300 hover:text-white px-1.5 py-0.5 joinbox-label" title="Joinbox section">+ Joinbox</button>
+              <button onclick="deleteFiberPlan(${pIdx})" class="text-slate-400 hover:text-f1red p-1" title="Delete group"><i class="fa-regular fa-trash-can text-xs"></i></button>
+            </div>
+          </div>
+          <table class="fiber-plan-table w-full text-left border-collapse">
+            <thead>
+              <tr class="text-[9px] uppercase text-slate-400">
+                <th class="col-nr py-1 pl-2 pr-1">Nr</th>
+                <th class="py-1 px-1">Label</th>
+                <th class="col-act py-1 pr-1.5"> </th>
+              </tr>
+            </thead>
+            <tbody>
+              ${(plan.segments || []).map((segment, sIdx) => renderFiberTableSection(pIdx, sIdx, segment, theme)).join('')}
+            </tbody>
+          </table>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderFiberTableSection(pIdx, sIdx, segment, theme) {
+      const viaJoin = !!segment.throughJoinbox;
+      const showHeader = viaJoin || sIdx > 0;
+      const itemCount = (segment.items || []).length;
+      const rows = (segment.items || []).map((item, iIdx) => {
+        return `
+          <tr class="fiber-row sortable-row border-b border-slate-100${selectedItems.has(item) ? ' is-selected' : ''}" data-kind="fiber" data-p="${pIdx}" data-s="${sIdx}" data-g="0" data-i="${iIdx}" onpointerdown="onSortablePointerDown(event)">
+            <td colspan="3" class="align-middle py-0.5 pl-2 pr-1">
+              <div class="fiber-row-layout">
+                ${renderRowSelect('fiber', pIdx, sIdx, 0, iIdx, item, iIdx === 0, iIdx === itemCount - 1)}
+                <div class="fiber-nums${viaJoin ? ' is-pair' : ''}">
+                  ${renderFiberNumberInput(pIdx, sIdx, iIdx, 'numIn', item.numIn)}${viaJoin ? `<span class="fiber-num-slash">/</span>${renderFiberNumberInput(pIdx, sIdx, iIdx, 'numOut', item.numOut)}` : ''}
+                </div>
+                <input type="text" value="${escapeHtml(item.label)}" onchange="updateFiberPlanLabel(${pIdx},${sIdx},${iIdx}, this.value)" class="fiber-label-input text-xs text-slate-800">
+                <button onclick="deleteFiberPlanItem(${pIdx},${sIdx},${iIdx})" class="text-slate-300 hover:text-f1red justify-self-center px-0.5" title="Delete row"><i class="fa-regular fa-trash-can text-[11px]"></i></button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+      return `
+        ${showHeader ? `
+          <tr class="${viaJoin ? 'bg-amber-50' : 'bg-slate-100'}">
+            <td colspan="3" class="px-2 py-0.5">
+              <div class="flex items-center gap-1.5">
+                <input value="${escapeHtml(segment.title)}" onchange="renameFiberSegment(${pIdx},${sIdx}, this.value)" class="fiber-title-input flex-1 min-w-0 text-[10px] text-slate-600 text-center sm:text-left">
+                <button onclick="toggleFiberJoinbox(${pIdx},${sIdx})" class="text-[9px] font-bold px-1.5 py-0.5 rounded shrink-0 ${viaJoin ? 'bg-amber-500 text-white' : 'bg-white border border-slate-200 text-slate-500'}">JB</button>
+                ${sIdx > 0 ? `<button onclick="deleteFiberSegment(${pIdx},${sIdx})" class="text-slate-400 hover:text-f1red"><i class="fa-regular fa-trash-can text-[10px]"></i></button>` : ''}
+              </div>
+            </td>
+          </tr>
+        ` : ''}
+        ${rows}
+        <tr>
+          <td colspan="3" class="px-2 py-1">
+            <button onclick="addFiberPlanItem(${pIdx},${sIdx})" class="text-[10px] font-semibold ${theme.add}">+ row</button>
+          </td>
+        </tr>
+      `;
+    }
+
+    function renameFiberPlan(pIdx, value) {
+      const plan = getFiberPlans()[pIdx];
+      plan.title = value;
+      if (plan.segments.length === 1) plan.segments[0].title = value;
+      saveFiberPlans();
+    }
+
+    function renameFiberSegment(pIdx, sIdx, value) {
+      getFiberPlans()[pIdx].segments[sIdx].title = value;
+      saveFiberPlans();
+    }
+
+    function toggleFiberJoinbox(pIdx, sIdx) {
+      const segment = getFiberPlans()[pIdx].segments[sIdx];
+      segment.throughJoinbox = !segment.throughJoinbox;
+      if (segment.throughJoinbox && !/joinbox/i.test(segment.title)) {
+        segment.title = 'Joinbox ' + segment.title;
+      }
+      saveFiberPlans();
+      renderFiberPlans();
+    }
+
+    function draftFiberNumber(pIdx, sIdx, iIdx, field, value) {
+      const segment = getFiberPlans()[pIdx].segments[sIdx];
+      const item = segment.items[iIdx];
+      item.auto = false;
+      const parsed = parseInt(value, 10);
+      if (parsed >= 1) {
+        item[field] = parsed;
+        if (field === 'numIn' && !segment.throughJoinbox) item.numOut = parsed;
+      }
+    }
+
+    function commitFiberNumber(pIdx, sIdx, iIdx, field, value) {
+      draftFiberNumber(pIdx, sIdx, iIdx, field, value);
+      const item = getFiberPlans()[pIdx].segments[sIdx].items[iIdx];
+      if (!(parseInt(item[field], 10) >= 1)) item[field] = 1;
+      if (field === 'numIn' && !getFiberPlans()[pIdx].segments[sIdx].throughJoinbox) {
+        item.numOut = item.numIn;
+      }
+      saveFiberPlans();
+      renderFiberPlans();
+    }
+
+    function updateFiberNumber(pIdx, sIdx, iIdx, field, value) {
+      commitFiberNumber(pIdx, sIdx, iIdx, field, value);
+    }
+
+    function updateFiberPlanLabel(pIdx, sIdx, iIdx, value) {
+      getFiberPlans()[pIdx].segments[sIdx].items[iIdx].label = value;
+      saveFiberPlans();
+    }
+
+    function toggleFiberPlanStatus(pIdx, sIdx, iIdx, key) {
+      const item = getFiberPlans()[pIdx].segments[sIdx].items[iIdx];
+      item[key] = !item[key];
+      saveFiberPlans();
+      renderFiberPlans();
+    }
+
+    function addFiberPlanItem(pIdx, sIdx) {
+      const plan = getFiberPlans()[pIdx];
+      const segment = plan.segments[sIdx];
+      segment.items.push({
+        id: newUid('f'),
+        auto: true,
+        numIn: 1,
+        numOut: 1,
+        label: 'SPARE',
+        defect: false,
+        half: false,
+        full: false
+      });
+      saveFiberPlans();
+      renderFiberPlans();
+    }
+
+    function deleteFiberPlanItem(pIdx, sIdx, iIdx) {
+      const item = getFiberPlans()[pIdx].segments[sIdx].items[iIdx];
+      if (item) selectedItems.delete(item);
+      getFiberPlans()[pIdx].segments[sIdx].items.splice(iIdx, 1);
+      saveFiberPlans();
+      renderFiberPlans();
+    }
+
+    function addFiberSegment(pIdx) {
+      const plan = getFiberPlans()[pIdx];
+      const prev = plan.segments[plan.segments.length - 1];
+      plan.segments.push({
+        id: newUid('seg'),
+        title: 'Joinbox ' + (prev ? prev.title : 'new'),
+        throughJoinbox: true,
+        items: [
+          { id: newUid('f'), auto: true, numIn: 1, numOut: 1, label: 'SPARE', defect: false, half: false, full: false }
+        ]
+      });
+      saveFiberPlans();
+      renderFiberPlans();
+    }
+
+    function deleteFiberSegment(pIdx, sIdx) {
+      const plan = getFiberPlans()[pIdx];
+      if (plan.segments.length <= 1) return;
+      plan.segments.splice(sIdx, 1);
+      saveFiberPlans();
+      renderFiberPlans();
+    }
+
+    function addFiberPlan() {
+      getFiberPlans().push({
+        id: newUid('plan'),
+        title: 'New route',
+        color: 'bg-slate-700',
+        collapsed: false,
+        segments: [{
+          id: newUid('seg'),
+          title: 'New route',
+          throughJoinbox: false,
+          items: [
+            { id: newUid('f'), auto: true, numIn: 1, numOut: 1, label: 'LABEL / DESTINATION', defect: false, half: false, full: false }
+          ]
+        }]
+      });
+      saveFiberPlans();
+      renderFiberPlans();
+    }
+
+    function deleteFiberPlan(pIdx) {
+      if (!confirm('Delete this standard fiber route?')) return;
+      getFiberPlans().splice(pIdx, 1);
+      saveFiberPlans();
+      renderFiberPlans();
+    }
+
+    function parseCablePair(pair) {
+      const text = String(pair == null ? '' : pair).trim();
+      const parts = text.split(/[\s,\/\-–—]+/).filter(Boolean);
+      const first = parseInt(parts[0], 10);
+      const second = parseInt(parts[1], 10);
+      const numIn = first >= 1 ? first : 1;
+      const numOut = second >= 1 ? second : numIn;
+      return { numIn, numOut };
+    }
+
+    function formatCablePair(numIn, numOut) {
+      const a = parseInt(numIn, 10) >= 1 ? parseInt(numIn, 10) : 1;
+      const b = parseInt(numOut, 10) >= 1 ? parseInt(numOut, 10) : a;
+      return `${a}-${b}`;
+    }
+
+    function cablePairFromItem(item) {
+      const numIn = parseInt(item && item.numIn, 10);
+      const numOut = parseInt(item && item.numOut, 10);
+      if (numIn >= 1 && numOut >= 1) return { numIn, numOut };
+      return parseCablePair(item && item.pair);
+    }
+
+    function applyCablePair(item, numIn, numOut) {
+      const nums = {
+        numIn: parseInt(numIn, 10) >= 1 ? parseInt(numIn, 10) : 1,
+        numOut: parseInt(numOut, 10) >= 1 ? parseInt(numOut, 10) : 1
+      };
+      item.numIn = nums.numIn;
+      item.numOut = nums.numOut;
+      item.pair = formatCablePair(nums.numIn, nums.numOut);
+      return item;
+    }
+
+    function cablePairLabel(item) {
+      const raw = item && typeof item.pair === 'string' ? item.pair.trim() : '';
+      if (raw) return raw;
+      const nums = cablePairFromItem(item);
+      return formatCablePair(nums.numIn, nums.numOut);
+    }
+
+    function applyCablePairText(item, value) {
+      const text = String(value == null ? '' : value).trim();
+      item.pair = text || formatCablePair(1, 2);
+      const parsed = parseCablePair(item.pair);
+      item.numIn = parsed.numIn;
+      item.numOut = parsed.numOut;
+      return item;
+    }
+
+    function lastCablePairEnd(items) {
+      let last = 0;
+      (items || []).forEach((item) => {
+        const nums = cablePairFromItem(item);
+        last = Math.max(last, nums.numIn, nums.numOut);
+      });
+      return last;
+    }
+
+    function nextCablePair(items) {
+      const last = lastCablePairEnd(items);
+      return { numIn: last + 1, numOut: last + 2 };
+    }
+
+    function renderCablePairInput(gIdx, iIdx, item) {
+      return `<input type="text" inputmode="text" autocomplete="off" spellcheck="false" value="${escapeHtml(cablePairLabel(item))}" oninput="draftCablePairText(${gIdx}, ${iIdx}, this.value)" onchange="commitCablePairText(${gIdx}, ${iIdx}, this.value)" class="cable-pair-input" title="Fiber number">`;
+    }
+
+    function draftCablePairText(gIdx, iIdx, value) {
+      const item = state.raceCableData[state.activeRaceId][gIdx].items[iIdx];
+      applyCablePairText(item, value);
+    }
+
+    function commitCablePairText(gIdx, iIdx, value) {
+      draftCablePairText(gIdx, iIdx, value);
+      saveCableDataToLocal();
+      renderCableBoard();
     }
 
     function renderCableBoard() {
       const activeRaceId = state.activeRaceId;
       const container = document.getElementById('cableGroupContainer');
       container.innerHTML = '';
+
+      renderFiberPlans();
 
       const groups = state.raceCableData[activeRaceId] || [];
 
@@ -1313,12 +2981,11 @@
             <div class="w-12 h-12 sm:w-16 sm:h-16 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-3 text-lg sm:text-2xl">
               <i class="fa-solid fa-network-wired"></i>
             </div>
-            <h3 class="font-f1 font-bold text-base sm:text-lg text-slate-800 uppercase">Nog geen kabel indeling</h3>
-            <p class="text-xs text-slate-500 mt-1 mb-5">Voeg je eerste fiber-kabelgroep toe of kopieer de indeling uit een andere race.</p>
+            <h3 class="font-f1 font-bold text-base sm:text-lg text-slate-800 uppercase">No cable layout yet</h3>
+            <p class="text-xs text-slate-500 mt-1 mb-5">Add your first fiber cable group, or copy the layout from another race.</p>
             <div class="flex flex-wrap justify-center gap-2.5">
-              <button onclick="openAddGroupModal()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-3 rounded-xl shadow transition-all touch-target">+ Nieuwe Kabelgroep</button>
-              <button onclick="loadDefaultBroadcastGroups()" class="bg-slate-900 hover:bg-black text-white text-xs font-bold px-4 py-3 rounded-xl shadow transition-all touch-target">Standaard Broadcast Indeling</button>
-              <button onclick="openCopyModal()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold px-4 py-3 rounded-xl transition-all touch-target">Kopieer Indeling</button>
+              <button onclick="openAddGroupModal()" class="theme-btn-primary bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-3 rounded-xl shadow transition-all touch-target">+ New cable group</button>
+              <button onclick="openCopyModal('cables')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold px-4 py-3 rounded-xl transition-all touch-target">Copy cables</button>
             </div>
           </div>
         `;
@@ -1340,84 +3007,58 @@
             
             <div class="flex items-center gap-2 sm:gap-3 overflow-hidden">
               <i class="fa-solid fa-chevron-down text-xs sm:text-sm transition-transform duration-200 ${isCollapsed ? '-rotate-90 text-white/70' : 'rotate-0 text-white'} shrink-0"></i>
-              <h3 class="font-f1 font-extrabold text-xs xs:text-sm sm:text-base tracking-wide uppercase truncate">${group.title}</h3>
+              <h3 class="font-f1 font-extrabold text-xs xs:text-sm sm:text-base tracking-wide uppercase line-clamp-2 sm:truncate leading-tight">${group.title}</h3>
             </div>
 
             <div class="flex items-center gap-1 sm:gap-1.5 shrink-0" onclick="event.stopPropagation()">
-              <button onclick="openEditGroupModal(${gIdx})" class="text-white/80 hover:text-white p-2 hover:bg-black/10 rounded-xl transition-colors touch-target flex items-center justify-center" title="Groep bewerken">
+              <button onclick="openEditGroupModal(${gIdx})" class="text-white/80 hover:text-white p-2 hover:bg-black/10 rounded-xl transition-colors touch-target flex items-center justify-center" title="Edit group">
                 <i class="fa-solid fa-pen text-xs"></i>
               </button>
-              <button onclick="deleteGroup(${gIdx})" class="text-white/80 hover:text-white p-2 hover:bg-black/10 rounded-xl transition-colors touch-target flex items-center justify-center" title="Groep verwijderen">
+              <button onclick="deleteGroup(${gIdx})" class="text-white/80 hover:text-white p-2 hover:bg-black/10 rounded-xl transition-colors touch-target flex items-center justify-center" title="Delete group">
                 <i class="fa-solid fa-trash text-xs"></i>
               </button>
 
-              <span class="bg-slate-900 text-white font-f1 font-extrabold text-[11px] xs:text-xs px-2 py-0.5 sm:py-1 rounded-full min-w-[22px] sm:min-w-[26px] text-center shadow-inner" title="Totaal aders">${totalCount}</span>
-              <span class="bg-statusRed text-white font-f1 font-extrabold text-[11px] xs:text-xs px-2 py-0.5 sm:py-1 rounded-full min-w-[22px] sm:min-w-[26px] text-center shadow-inner" title="Defect">${defectCount}</span>
-              <span class="bg-statusYellow text-white font-f1 font-extrabold text-[11px] xs:text-xs px-2 py-0.5 sm:py-1 rounded-full min-w-[22px] sm:min-w-[26px] text-center shadow-inner" title="1-Kant gestoken">${halfCount}</span>
-              <span class="bg-statusGreen text-white font-f1 font-extrabold text-[11px] xs:text-xs px-2 py-0.5 sm:py-1 rounded-full min-w-[22px] sm:min-w-[26px] text-center shadow-inner" title="Volledig gestoken">${fullCount}</span>
+              <span class="bg-slate-900 text-white font-f1 font-extrabold text-[11px] xs:text-xs px-2 py-0.5 sm:py-1 rounded-full min-w-[22px] sm:min-w-[26px] text-center shadow-inner" title="Total pairs">${totalCount}</span>
+              <span class="bg-statusRed text-white font-f1 font-extrabold text-[11px] xs:text-xs px-2 py-0.5 sm:py-1 rounded-full min-w-[22px] sm:min-w-[26px] text-center shadow-inner" title="Fault">${defectCount}</span>
+              <span class="bg-statusYellow text-white font-f1 font-extrabold text-[11px] xs:text-xs px-2 py-0.5 sm:py-1 rounded-full min-w-[22px] sm:min-w-[26px] text-center shadow-inner" title="One end patched">${halfCount}</span>
+              <span class="bg-statusGreen text-white font-f1 font-extrabold text-[11px] xs:text-xs px-2 py-0.5 sm:py-1 rounded-full min-w-[22px] sm:min-w-[26px] text-center shadow-inner" title="Fully patched">${fullCount}</span>
             </div>
-          </div>
-
-          <!-- Joinbox & fiber numbering -->
-          <div class="bg-slate-800 text-white px-3 sm:px-4 py-2 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-xs ${isCollapsed ? 'hidden' : ''}">
-            <label class="flex items-center gap-1.5 flex-1 min-w-[180px]">
-              <i class="fa-solid fa-box-archive text-amber-400"></i>
-              <input type="text" value="${escapeHtml(group.joinbox || '')}" onchange="updateGroupJoinbox(${gIdx}, this.value)" placeholder="Via Joinbox? (bijv. Joinbox 1)" class="bg-transparent text-white placeholder-white/50 text-xs font-semibold focus:outline-none focus:bg-white/10 rounded px-1 py-1 w-full">
-            </label>
-            <label class="flex items-center gap-1.5 cursor-pointer" title="Auto doortellen vanaf gekozen fibernummer">
-              <input type="checkbox" ${group.autoCount ? 'checked' : ''} onchange="toggleGroupAutoCount(${gIdx}, this.checked)" class="accent-emerald-500">
-              <span class="text-[10px] text-white/80 font-bold uppercase">Doortellen</span>
-            </label>
-            <label class="flex items-center gap-1.5" title="Eerste fibernummer van deze groep">
-              <span class="text-[10px] text-white/80 font-bold">Start #</span>
-              <input type="number" min="1" value="${parseInt(group.startFiber) || 1}" onchange="updateGroupStartFiber(${gIdx}, this.value)" class="w-14 bg-black/40 text-white font-bold text-center text-xs rounded border border-white/20 focus:outline-none py-1">
-            </label>
           </div>
 
           <!-- Cable Items Container -->
           <div class="p-2 sm:p-4 space-y-2 sm:space-y-3 bg-slate-50/50 ${isCollapsed ? 'hidden' : ''}">
             ${group.items.map((item, iIdx) => `
-              <div class="bg-white border border-slate-200 rounded-xl p-2.5 sm:p-3 flex flex-col sm:flex-row sm:items-center gap-2 shadow-2xs hover:border-slate-300">
-                <div class="flex items-center justify-between gap-2 w-full sm:w-auto">
-                  <div class="flex items-center gap-1.5">
-                    <input type="text" value="${escapeHtml(String(item.fiberNum || item.pair || ''))}" onchange="updateItemFiberNum(${gIdx}, ${iIdx}, this.value)" title="Fibernummer" class="bg-slate-100 text-slate-900 border border-slate-300 font-f1 font-extrabold text-xs sm:text-sm px-2 py-1 rounded-lg text-center shrink-0 w-[64px] focus:outline-none focus:border-emerald-500">
-                    <select onchange="updateCableConnector(${gIdx}, ${iIdx}, this.value)" class="text-xs font-extrabold text-slate-700 bg-slate-100 rounded-lg px-2 py-1 border border-slate-300 focus:outline-none cursor-pointer uppercase">
-                      <option value="ST" ${item.connector === 'ST' ? 'selected' : ''}>ST</option>
-                      <option value="SC" ${item.connector === 'SC' ? 'selected' : ''}>SC</option>
-                      <option value="SC/APC" ${item.connector === 'SC/APC' ? 'selected' : ''}>SC/APC</option>
-                      <option value="LC" ${item.connector === 'LC' ? 'selected' : ''}>LC</option>
-                      <option value="APC" ${item.connector === 'APC' ? 'selected' : ''}>APC</option>
-                    </select>
-                  </div>
-                  <div class="flex items-center gap-1.5 shrink-0 sm:hidden">
-                    <button onclick="toggleCableStatus(${gIdx}, ${iIdx}, 'defect')" title="Defect (Rood)" class="status-btn status-btn-red ${item.defect ? 'active' : ''} w-7 h-7 rounded-lg flex items-center justify-center font-bold active:scale-95">
-                      <i class="fa-solid fa-check text-[11px]"></i>
-                    </button>
-                    <button onclick="toggleCableStatus(${gIdx}, ${iIdx}, 'half')" title="1-kant gestoken (Geel)" class="status-btn status-btn-yellow ${item.half ? 'active' : ''} w-7 h-7 rounded-lg flex items-center justify-center font-bold active:scale-95">
-                      <i class="fa-solid fa-check text-[11px]"></i>
-                    </button>
-                    <button onclick="toggleCableStatus(${gIdx}, ${iIdx}, 'full')" title="Volledig gestoken (Groen)" class="status-btn status-btn-green ${item.full ? 'active' : ''} w-7 h-7 rounded-lg flex items-center justify-center font-bold active:scale-95">
-                      <i class="fa-solid fa-check text-[11px]"></i>
-                    </button>
-                    <button onclick="deleteCableItem(${gIdx}, ${iIdx})" title="Verwijder" class="text-slate-300 hover:text-red-500 p-1 flex items-center justify-center">
-                      <i class="fa-regular fa-trash-can text-xs"></i>
-                    </button>
-                  </div>
+              <div class="cable-item-row sortable-row bg-white border border-slate-200/90 rounded-xl p-2.5 shadow-2xs hover:border-slate-300 transition-all${selectedItems.has(item) ? ' is-selected' : ''}" data-kind="cable" data-p="0" data-s="0" data-g="${gIdx}" data-i="${iIdx}" onpointerdown="onSortablePointerDown(event)">
+                <div class="cable-item-move">
+                  ${renderRowSelect('cable', 0, 0, gIdx, iIdx, item, iIdx === 0, iIdx === group.items.length - 1)}
                 </div>
-                <div class="flex-1 min-w-0 w-full">
-                  <input type="text" value="${escapeHtml(item.label)}" onchange="updateCableLabel(${gIdx}, ${iIdx}, this.value)" placeholder="LABEL / BESTEMMING" class="w-full bg-slate-50 border border-slate-200 hover:border-slate-300 focus:border-emerald-500 focus:bg-white text-xs sm:text-sm font-semibold text-slate-900 rounded-lg px-2.5 py-1.5 transition-all focus:outline-none">
+                <div class="cable-item-meta flex items-center gap-2 min-w-0">
+                  ${renderCablePairInput(gIdx, iIdx, item)}
+                  <select onchange="updateCableConnector(${gIdx}, ${iIdx}, this.value)" class="text-xs font-bold text-slate-600 bg-slate-100 rounded-lg px-2 py-1.5 border border-slate-200 focus:outline-none cursor-pointer uppercase shrink-0">
+                    <option value="ST" ${item.connector === 'ST' ? 'selected' : ''}>ST</option>
+                    <option value="SC" ${item.connector === 'SC' ? 'selected' : ''}>SC</option>
+                    <option value="SC/APC" ${item.connector === 'SC/APC' ? 'selected' : ''}>SC/APC</option>
+                    <option value="LC" ${item.connector === 'LC' ? 'selected' : ''}>LC</option>
+                    <option value="APC" ${item.connector === 'APC' ? 'selected' : ''}>APC</option>
+                  </select>
                 </div>
-                <div class="hidden sm:flex items-center gap-1.5 shrink-0">
-                  <button onclick="toggleCableStatus(${gIdx}, ${iIdx}, 'defect')" title="Defect (Rood)" class="status-btn status-btn-red ${item.defect ? 'active' : ''} w-8 h-8 rounded-lg flex items-center justify-center font-bold active:scale-95">
-                    <i class="fa-solid fa-check text-xs"></i>
+
+                <div class="cable-item-label">
+                  <input type="text" value="${escapeHtml(item.label)}" onchange="updateCableLabel(${gIdx}, ${iIdx}, this.value)" placeholder="LABEL / DESTINATION" class="w-full min-w-0 bg-slate-50 border border-slate-200 hover:border-slate-300 focus:border-emerald-500 focus:bg-white text-xs sm:text-sm font-bold text-slate-800 rounded-xl px-3 py-2 transition-all focus:outline-none">
+                </div>
+
+                <div class="cable-item-status flex items-center justify-end gap-1 sm:gap-2 shrink-0">
+                  <button onclick="toggleCableStatus(${gIdx}, ${iIdx}, 'defect')" title="Fault (red)" class="status-btn status-btn-red ${item.defect ? 'active' : ''} rounded-lg sm:rounded-xl flex items-center justify-center font-bold text-[11px] sm:text-sm active:scale-95">
+                    <i class="fa-solid fa-check"></i>
                   </button>
-                  <button onclick="toggleCableStatus(${gIdx}, ${iIdx}, 'half')" title="1-kant gestoken (Geel)" class="status-btn status-btn-yellow ${item.half ? 'active' : ''} w-8 h-8 rounded-lg flex items-center justify-center font-bold active:scale-95">
-                    <i class="fa-solid fa-check text-xs"></i>
+                  <button onclick="toggleCableStatus(${gIdx}, ${iIdx}, 'half')" title="One end patched (yellow)" class="status-btn status-btn-yellow ${item.half ? 'active' : ''} rounded-lg sm:rounded-xl flex items-center justify-center font-bold text-[11px] sm:text-sm active:scale-95">
+                    <i class="fa-solid fa-check"></i>
                   </button>
-                  <button onclick="toggleCableStatus(${gIdx}, ${iIdx}, 'full')" title="Volledig gestoken (Groen)" class="status-btn status-btn-green ${item.full ? 'active' : ''} w-8 h-8 rounded-lg flex items-center justify-center font-bold active:scale-95">
-                    <i class="fa-solid fa-check text-xs"></i>
+                  <button onclick="toggleCableStatus(${gIdx}, ${iIdx}, 'full')" title="Fully patched (green)" class="status-btn status-btn-green ${item.full ? 'active' : ''} rounded-lg sm:rounded-xl flex items-center justify-center font-bold text-[11px] sm:text-sm active:scale-95">
+                    <i class="fa-solid fa-check"></i>
                   </button>
-                  <button onclick="deleteCableItem(${gIdx}, ${iIdx})" title="Verwijder" class="text-slate-300 hover:text-red-500 p-2 transition-colors touch-target flex items-center justify-center">
+
+                  <button onclick="deleteCableItem(${gIdx}, ${iIdx})" title="Delete" class="text-slate-300 hover:text-red-500 p-1.5 sm:p-2 transition-colors flex items-center justify-center">
                     <i class="fa-regular fa-trash-can text-sm"></i>
                   </button>
                 </div>
@@ -1426,7 +3067,7 @@
 
             <div class="pt-1 flex justify-end">
               <button onclick="addPairToGroup(${gIdx})" class="text-xs font-bold text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 border border-emerald-200/80 px-3 py-2 rounded-xl transition-all flex items-center gap-1.5 touch-target">
-                <i class="fa-solid fa-plus text-xs"></i> + Extra Ader-paar Toevoegen
+                <i class="fa-solid fa-plus text-xs"></i> Add extra fiber pair
               </button>
             </div>
           </div>
@@ -1436,46 +3077,160 @@
       });
     }
 
-    function renderMapsView() {
+    function ensureMediaEntry(raceId) {
+      if (!state.raceMediaData[raceId]) {
+        state.raceMediaData[raceId] = { notes: '', images: [], files: [] };
+      }
+      const media = state.raceMediaData[raceId];
+      if (!Array.isArray(media.images)) media.images = [];
+      if (!Array.isArray(media.files)) media.files = [];
+      return media;
+    }
+
+    function fileNameFromUrl(url) {
+      const value = String(url || '');
+      if (value.startsWith('data:')) return 'afbeelding';
+      try {
+        const clean = value.split('?')[0];
+        const base = clean.split('/').pop() || 'file';
+        return decodeURIComponent(base);
+      } catch (e) {
+        return 'file';
+      }
+    }
+
+    function isImageFile(file) {
+      const type = String(file?.type || '').toLowerCase();
+      if (type.startsWith('image/')) return true;
+      return /\.(jpe?g|png|gif|webp|bmp|heic|heif)$/i.test(String(file?.name || file?.url || ''));
+    }
+
+    function fileKindLabel(file) {
+      const name = String(file?.name || file?.url || '').toLowerCase();
+      const type = String(file?.type || '').toLowerCase();
+      if (isImageFile(file)) return 'Image';
+      if (type.includes('pdf') || name.endsWith('.pdf')) return 'PDF';
+      if (name.endsWith('.zip') || type.includes('zip')) return 'ZIP';
+      if (/\.(xlsx?|csv)$/i.test(name) || type.includes('excel') || type.includes('spreadsheet')) return 'Spreadsheet';
+      if (/\.(docx?|txt)$/i.test(name) || type.includes('word')) return 'Document';
+      if (/\.pptx?$/i.test(name) || type.includes('presentation')) return 'Presentation';
+      return 'File';
+    }
+
+    function fileKindIcon(file) {
+      const label = fileKindLabel(file);
+      if (label === 'PDF') return 'fa-file-pdf';
+      if (label === 'ZIP') return 'fa-file-zipper';
+      if (label === 'Spreadsheet') return 'fa-file-excel';
+      if (label === 'Presentation') return 'fa-file-powerpoint';
+      if (label === 'Image') return 'fa-file-image';
+      return 'fa-file-lines';
+    }
+
+    function listLibraryFiles(lib) {
       const raceId = state.activeRaceId;
-      const media = state.raceMediaData[raceId] || { notes: '', images: [] };
-      const grid = document.getElementById('circuitMediaGrid');
+      if (lib === 'mac') {
+        return (getMacEntry(raceId).files || []).slice();
+      }
+      if (lib === 'freq') {
+        return (getFreqEntry(raceId).files || []).slice();
+      }
+      const media = ensureMediaEntry(raceId);
+      const files = media.files.slice();
+      const seen = new Set(files.map((file) => file && file.url).filter(Boolean));
+      media.images.forEach((url, index) => {
+        if (typeof url === 'string' && url && !seen.has(url)) {
+          seen.add(url);
+          files.push({ id: 'legacy_' + index, url, name: fileNameFromUrl(url), type: 'image/*' });
+        }
+      });
+      return files;
+    }
+
+    function libraryGridId(lib) {
+      if (lib === 'mac') return 'macFileGrid';
+      if (lib === 'freq') return 'freqFileGrid';
+      return 'circuitMediaGrid';
+    }
+
+    function libraryEmptyMessage(lib) {
+      if (lib === 'mac') return 'No MAC files yet. Upload a PDF or paste a file link.';
+      if (lib === 'freq') return 'No frequency files yet. Upload a PDF or paste a file link.';
+      return "No files yet. Upload a photo, PDF or paste a URL.";
+    }
+
+    function renderFileLibrary(lib) {
+      const grid = document.getElementById(libraryGridId(lib));
+      if (!grid) return;
       grid.innerHTML = '';
-
-      const images = media.images || [];
-
-      if (images.length === 0) {
-        grid.innerHTML = `
-          <div class="col-span-full py-10 text-center text-slate-400 text-xs border border-dashed border-slate-200 rounded-2xl p-4">
-            Geen plattegronden of foto's toegevoegd voor deze race. Tik bovenaan op Upload of URL om een afbeelding toe te voegen.
-          </div>
-        `;
+      const files = listLibraryFiles(lib);
+      if (files.length === 0) {
+        grid.innerHTML = `<div class="col-span-full py-8 text-center text-slate-400 text-xs border border-dashed border-slate-200 rounded-2xl p-4">${libraryEmptyMessage(lib)}</div>`;
         return;
       }
 
-      images.forEach((imgUrl, idx) => {
+      files.forEach((file, idx) => {
         const card = document.createElement('div');
-        card.className = "relative group rounded-xl overflow-hidden border border-slate-200 bg-slate-900 h-32 sm:h-44 shadow-2xs cursor-pointer";
-        card.onclick = () => openLightbox(imgUrl);
-
-        card.innerHTML = `
-          <img src="${imgUrl}" alt="Circuit media" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
-          <div class="absolute inset-0 bg-slate-900/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-            <button onclick="event.stopPropagation(); openLightbox('${imgUrl}')" class="p-2.5 bg-white/90 text-slate-900 rounded-xl text-xs hover:bg-white touch-target" title="Groot bekijken">
-              <i class="fa-solid fa-expand"></i>
-            </button>
-            <button onclick="event.stopPropagation(); removeMediaImage(${idx})" class="p-2.5 bg-red-600/90 text-white rounded-xl text-xs hover:bg-red-600 touch-target" title="Verwijderen">
-              <i class="fa-solid fa-trash"></i>
-            </button>
-          </div>
-        `;
+        card.className = 'file-card rounded-xl overflow-hidden border border-slate-200 bg-white shadow-2xs flex flex-col';
+        if (isImageFile(file)) {
+          const thumb = document.createElement('button');
+          thumb.type = 'button';
+          thumb.className = 'relative block w-full h-32 sm:h-40 bg-slate-900 p-0 border-0 cursor-pointer';
+          thumb.title = 'View';
+          const img = document.createElement('img');
+          img.src = file.url;
+          img.alt = file.name || 'Image';
+          img.className = 'w-full h-full object-cover pointer-events-none';
+          thumb.appendChild(img);
+          thumb.addEventListener('click', () => openLightbox(file.url, idx, lib));
+          card.appendChild(thumb);
+        } else {
+          const body = document.createElement('div');
+          body.className = 'flex-1 p-3 min-h-[8rem] flex flex-col items-center justify-center text-center gap-2 bg-slate-50';
+          body.innerHTML = `
+            <i class="fa-solid ${fileKindIcon(file)} text-2xl text-slate-500"></i>
+            <p class="text-[11px] font-bold text-slate-800 break-all line-clamp-2">${escapeHtml(file.name || fileNameFromUrl(file.url))}</p>
+            <p class="text-[10px] uppercase tracking-wider text-slate-400">${fileKindLabel(file)}</p>
+            <div class="flex flex-wrap justify-center gap-1.5">
+              <a href="${escapeHtml(file.url)}" target="_blank" rel="noopener noreferrer" class="text-[10px] font-bold text-emerald-700 hover:underline">Open</a>
+              <a href="${escapeHtml(file.url)}" download class="text-[10px] font-bold text-slate-500 hover:underline">Download</a>
+            </div>
+          `;
+          card.appendChild(body);
+        }
+        const delBtn = document.createElement('button');
+        delBtn.type = 'button';
+        delBtn.className = 'w-full flex items-center justify-center gap-1.5 px-2 py-2.5 text-xs font-bold text-red-700 bg-red-50 hover:bg-red-100 border-t border-red-100 touch-target';
+        delBtn.innerHTML = '<i class="fa-solid fa-trash text-[11px]"></i> Delete';
+        delBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          removeLibraryFile(lib, idx);
+        });
+        card.appendChild(delBtn);
         grid.appendChild(card);
       });
     }
 
-    function openLightbox(url) {
+    function renderMapsView() {
+      renderFileLibrary('maps');
+    }
+
+    function renderFreqView() {
+      renderFileLibrary('freq');
+    }
+
+    let lightboxCtx = { lib: 'maps', idx: -1 };
+
+    function openLightbox(url, idx, lib) {
+      lightboxCtx = { lib: lib || 'maps', idx: typeof idx === 'number' ? idx : -1 };
       document.getElementById('lightboxImage').src = url;
       openModal('lightboxModal');
+    }
+
+    function removeCurrentLightboxImage() {
+      if (lightboxCtx.idx < 0) return;
+      removeLibraryFile(lightboxCtx.lib, lightboxCtx.idx);
     }
 
     function renderJoinboxBoard() {
@@ -1491,9 +3246,9 @@
             <div class="w-12 h-12 bg-amber-50 text-amber-500 rounded-full flex items-center justify-center mx-auto mb-3 text-lg">
               <i class="fa-solid fa-box-archive"></i>
             </div>
-            <h3 class="font-f1 font-bold text-base sm:text-lg text-slate-800 uppercase">Geen Joinboxes ingesteld</h3>
-            <p class="text-xs text-slate-500 mt-1 mb-5">Voeg een Joinbox patchpunt toe om glasvezels door te koppelen.</p>
-            <button onclick="openAddJoinboxModal()" class="bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold px-4 py-3 rounded-xl shadow transition-all touch-target">+ Nieuwe Joinbox Toevoegen</button>
+            <h3 class="font-f1 font-bold text-base sm:text-lg text-slate-800 uppercase">No joinboxes set up</h3>
+            <p class="text-xs text-slate-500 mt-1 mb-5">Add a joinbox patch point to pass fibers through.</p>
+            <button onclick="openAddJoinboxModal()" class="bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold px-4 py-3 rounded-xl shadow transition-all touch-target">+ Add joinbox</button>
           </div>
         `;
         return;
@@ -1511,7 +3266,7 @@
               </div>
               <div class="min-w-0">
                 <h3 class="font-f1 font-bold text-xs xs:text-sm sm:text-base tracking-wide uppercase truncate">${jb.name}</h3>
-                <p class="text-[10px] sm:text-xs text-slate-400 truncate">IN: <span class="text-slate-200 font-semibold">${jb.inCable}</span> → UIT: <span class="text-slate-200 font-semibold">${jb.outCable}</span></p>
+                <p class="text-[10px] sm:text-xs text-slate-400 truncate">IN: <span class="text-slate-200 font-semibold">${jb.inCable}</span> → OUT: <span class="text-slate-200 font-semibold">${jb.outCable}</span></p>
               </div>
             </div>
             <div class="flex items-center gap-1 shrink-0">
@@ -1526,10 +3281,10 @@
                 <div class="flex items-center gap-1.5 shrink-0">
                   <span class="bg-slate-100 font-f1 font-bold px-2 py-1 rounded-lg border border-slate-200 text-slate-700">${patch.fiberIn || 'In ' + (pIdx+1)}</span>
                   <i class="fa-solid fa-arrow-right text-slate-400 text-[10px]"></i>
-                  <span class="bg-slate-100 font-f1 font-bold px-2 py-1 rounded-lg border border-slate-200 text-slate-700">${patch.fiberOut || 'Uit ' + (pIdx+1)}</span>
+                  <span class="bg-slate-100 font-f1 font-bold px-2 py-1 rounded-lg border border-slate-200 text-slate-700">${patch.fiberOut || 'Out ' + (pIdx+1)}</span>
                 </div>
                 
-                <input type="text" value="${escapeHtml(patch.notes)}" onchange="updateJoinboxPatchNotes(${jIdx}, ${pIdx}, this.value)" placeholder="Patch opmerking..." class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-1.5 text-xs font-medium focus:outline-none focus:border-amber-500">
+                <input type="text" value="${escapeHtml(patch.notes)}" onchange="updateJoinboxPatchNotes(${jIdx}, ${pIdx}, this.value)" placeholder="Patch note..." class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-1.5 text-xs font-medium focus:outline-none focus:border-amber-500">
                 
                 <button onclick="deleteJoinboxPatchRow(${jIdx}, ${pIdx})" class="text-slate-300 hover:text-red-500 p-2 self-end xs:self-center touch-target flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
               </div>
@@ -1537,7 +3292,7 @@
 
             <div class="pt-2 flex justify-end">
               <button onclick="addJoinboxPatchRow(${jIdx})" class="text-xs font-bold text-amber-600 hover:text-amber-700 hover:bg-amber-50 border border-amber-200 px-3 py-2 rounded-xl transition-all touch-target">
-                + Extra Patch Lijn
+                + Extra patch line
               </button>
             </div>
           </div>
@@ -1557,10 +3312,8 @@
 
     function saveCircuitNotes(notes) {
       const raceId = state.activeRaceId;
-      if (!state.raceMediaData[raceId]) {
-        state.raceMediaData[raceId] = { notes: '', images: [] };
-      }
-      state.raceMediaData[raceId].notes = notes;
+      const media = ensureMediaEntry(raceId);
+      media.notes = notes;
       saveMediaDataToLocal();
     }
 
@@ -1568,17 +3321,145 @@
       saveCircuitNotes(document.getElementById('circuitNotesInput').value);
       clearTimeout(syncTimer);
       await flushServerSync();
-      alert("Notities opgeslagen!");
+      alert("Notes saved!");
     }
 
-    function promptMediaUrlUpload() {
-      const url = prompt("Voer de afbeelding/plattegrond URL in:");
-      if (url && url.trim()) {
-        addMediaImage(url.trim());
+    function emptyMacEntry() {
+      return { name: '', url: '', mapsUrl: '', notes: '' , files: [] };
+    }
+
+    function getMacEntry(raceId) {
+      if (!state.raceMacData) state.raceMacData = {};
+      const current = state.raceMacData[raceId];
+      if (!current || typeof current !== 'object') {
+        state.raceMacData[raceId] = emptyMacEntry();
+      } else {
+        state.raceMacData[raceId] = {
+          name: typeof current.name === 'string' ? current.name : '',
+          url: typeof current.url === 'string' ? current.url : '',
+          mapsUrl: typeof current.mapsUrl === 'string' ? current.mapsUrl : '',
+          notes: typeof current.notes === 'string' ? current.notes : '',
+          files: Array.isArray(current.files) ? current.files : []
+        };
+      }
+      return state.raceMacData[raceId];
+    }
+
+    function getFreqEntry(raceId) {
+      if (!state.raceFreqData) state.raceFreqData = {};
+      const current = state.raceFreqData[raceId];
+      if (!current || typeof current !== 'object') {
+        state.raceFreqData[raceId] = { files: [] };
+      } else {
+        state.raceFreqData[raceId] = {
+          files: Array.isArray(current.files) ? current.files : []
+        };
+      }
+      return state.raceFreqData[raceId];
+    }
+
+    function saveMacField(field, value) {
+      const entry = getMacEntry(state.activeRaceId);
+      entry[field] = value;
+      queueServerSync();
+    }
+
+    function isSafeHttpUrl(value) {
+      try {
+        const parsed = new URL(value);
+        return parsed.protocol === 'http:' || parsed.protocol === 'https:';
+      } catch (e) {
+        return false;
       }
     }
 
-    async function handleMediaFileUpload(event) {
+    function mapsEmbedUrl(value) {
+      if (!isSafeHttpUrl(value)) return null;
+      try {
+        const parsed = new URL(value);
+        const host = parsed.hostname.replace(/^www\./, '').toLowerCase();
+        const isGoogle = host === 'google.com' || host === 'maps.google.com' || host.endsWith('.google.com');
+        if (!isGoogle) return null;
+        if (parsed.pathname.includes('/maps/embed') || parsed.searchParams.get('output') === 'embed') return parsed.toString();
+        const query = parsed.searchParams.get('q') || parsed.searchParams.get('query');
+        if (query) return 'https://www.google.com/maps?q=' + encodeURIComponent(query) + '&output=embed';
+        const place = parsed.pathname.match(/\/maps\/place\/([^/]+)/);
+        if (place) return 'https://www.google.com/maps?q=' + place[1] + '&output=embed';
+        const coords = parsed.pathname.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/);
+        if (coords) return 'https://www.google.com/maps?q=' + coords[1] + ',' + coords[2] + '&output=embed';
+        return null;
+      } catch (e) {
+        return null;
+      }
+    }
+
+    function refreshMacMapsPreview() {
+      const mapsUrl = (document.getElementById('macMapsInput')?.value || '').trim();
+      const openMaps = document.getElementById('macOpenMaps');
+      const wrap = document.getElementById('macMapsEmbedWrap');
+      const frame = document.getElementById('macMapsEmbed');
+
+      if (openMaps) {
+        if (isSafeHttpUrl(mapsUrl)) {
+          openMaps.href = mapsUrl;
+          openMaps.classList.remove('hidden');
+        } else {
+          openMaps.href = '#';
+          openMaps.classList.add('hidden');
+        }
+      }
+      const embed = mapsEmbedUrl(mapsUrl);
+      if (wrap && frame) {
+        if (embed) {
+          if (frame.src !== embed) frame.src = embed;
+          wrap.classList.remove('hidden');
+        } else {
+          frame.removeAttribute('src');
+          wrap.classList.add('hidden');
+        }
+      }
+    }
+
+    function renderMacView() {
+      const entry = getMacEntry(state.activeRaceId);
+      const fields = {
+        macNameInput: entry.name,
+        macMapsInput: entry.mapsUrl,
+        macNotesInput: entry.notes
+      };
+      Object.entries(fields).forEach(([id, value]) => {
+        const el = document.getElementById(id);
+        if (!el || document.activeElement === el) return;
+        el.value = value || '';
+      });
+      refreshMacMapsPreview();
+      renderFileLibrary('mac');
+    }
+
+    async function saveMacManually() {
+      const entry = getMacEntry(state.activeRaceId);
+      entry.name = document.getElementById('macNameInput')?.value || '';
+      entry.mapsUrl = document.getElementById('macMapsInput')?.value || '';
+      entry.notes = document.getElementById('macNotesInput')?.value || '';
+      queueServerSync();
+      clearTimeout(syncTimer);
+      await flushServerSync();
+      refreshMacMapsPreview();
+      alert('MAC saved!');
+    }
+
+    function promptLibraryUrl(lib) {
+      const url = prompt(lib === 'mac'
+        ? 'Paste a file link (PDF, photo or document) for MAC:'
+        : lib === 'freq'
+          ? 'Paste a file link (PDF or document) for frequency charts:'
+          : 'Paste a file link (photo, PDF or document):');
+      if (url && url.trim()) {
+        addLibraryFile(lib, { url: url.trim(), name: fileNameFromUrl(url.trim()), type: '' });
+      }
+    }
+
+    async function handleLibraryFileUpload(event, lib) {
       const input = event.target;
       const file = input.files && input.files[0];
       input.value = '';
@@ -1590,41 +3471,71 @@
         const res = await fetch('/api/uploads', { method: 'POST', body });
         const data = await res.json().catch(() => ({}));
         if (!res.ok || !data.url) {
-          alert(data.error || 'Upload mislukt.');
+          alert(data.error || 'Upload failed.');
           return;
         }
-        addMediaImage(data.url);
+        addLibraryFile(lib, { url: data.url, name: data.name || file.name, type: data.type || file.type || '' });
       } catch (e) {
-        const reader = new FileReader();
-        reader.onload = (ev) => addMediaImage(ev.target.result);
-        reader.readAsDataURL(file);
+        if (file.type && file.type.startsWith('image/')) {
+          const reader = new FileReader();
+          reader.onload = (ev) => addLibraryFile(lib, { url: ev.target.result, name: file.name, type: file.type });
+          reader.readAsDataURL(file);
+          return;
+        }
+        alert('Upload failed. Try again while the server is reachable.');
       }
     }
 
-    function addMediaImage(imgUrl) {
+    function addLibraryFile(lib, file) {
       const raceId = state.activeRaceId;
-      if (!state.raceMediaData[raceId]) {
-        state.raceMediaData[raceId] = { notes: '', images: [] };
+      const item = {
+        id: newUid('file'),
+        url: file.url,
+        name: file.name || fileNameFromUrl(file.url),
+        type: file.type || ''
+      };
+      if (lib === 'mac') {
+        const entry = getMacEntry(raceId);
+        if (!Array.isArray(entry.files)) entry.files = [];
+        entry.files.push(item);
+      } else if (lib === 'freq') {
+        const entry = getFreqEntry(raceId);
+        if (!Array.isArray(entry.files)) entry.files = [];
+        entry.files.push(item);
+      } else {
+        const media = ensureMediaEntry(raceId);
+        media.files.push(item);
+        if (isImageFile(item) && !media.images.includes(item.url)) media.images.push(item.url);
       }
-      if (!state.raceMediaData[raceId].images) {
-        state.raceMediaData[raceId].images = [];
-      }
-      state.raceMediaData[raceId].images.push(imgUrl);
-      saveMediaDataToLocal();
-      renderMapsView();
+      queueServerSync();
+      renderFileLibrary(lib);
     }
 
-    function removeMediaImage(idx) {
+    function removeLibraryFile(lib, idx) {
+      if (!confirm('Delete this file?')) return;
       const raceId = state.activeRaceId;
-      if (state.raceMediaData[raceId]?.images) {
-        state.raceMediaData[raceId].images.splice(idx, 1);
-        saveMediaDataToLocal();
-        renderMapsView();
+      const files = listLibraryFiles(lib);
+      const target = files[idx];
+      if (!target) return;
+      if (lib === 'mac') {
+        const entry = getMacEntry(raceId);
+        entry.files = (entry.files || []).filter((file) => file.url !== target.url);
+      } else if (lib === 'freq') {
+        const entry = getFreqEntry(raceId);
+        entry.files = (entry.files || []).filter((file) => file.url !== target.url);
+      } else {
+        const media = ensureMediaEntry(raceId);
+        media.files = media.files.filter((file) => file.url !== target.url);
+        media.images = media.images.filter((url) => url !== target.url);
       }
+      queueServerSync();
+      closeModal('lightboxModal');
+      lightboxCtx = { lib, idx: -1 };
+      renderFileLibrary(lib);
     }
 
     function openAddJoinboxModal() {
-      document.getElementById('joinboxModalTitle').innerText = "Nieuwe Joinbox Patchpunt";
+      document.getElementById('joinboxModalTitle').innerText = "New joinbox patch point";
       document.getElementById('joinboxIndex').value = "-1";
       document.getElementById('joinboxNameInput').value = "";
       document.getElementById('joinboxInCableInput').value = "";
@@ -1636,7 +3547,7 @@
     function openEditJoinboxModal(jIdx) {
       const raceId = state.activeRaceId;
       const jb = state.raceJoinboxData[raceId][jIdx];
-      document.getElementById('joinboxModalTitle').innerText = "Joinbox Bewerken";
+      document.getElementById('joinboxModalTitle').innerText = "Edit joinbox";
       document.getElementById('joinboxIndex').value = jIdx;
       document.getElementById('joinboxNameInput').value = jb.name;
       document.getElementById('joinboxInCableInput').value = jb.inCable;
@@ -1715,7 +3626,7 @@
     }
 
     function deleteJoinbox(jIdx) {
-      if (confirm("Weet je zeker dat je deze Joinbox wilt verwijderen?")) {
+      if (confirm("Delete this joinbox?")) {
         const raceId = state.activeRaceId;
         state.raceJoinboxData[raceId].splice(jIdx, 1);
         saveJoinboxDataToLocal();
@@ -1752,101 +3663,31 @@
       saveCableDataToLocal();
     }
 
-    // With auto count on, every number follows from the group's start number.
-    // Through a joinbox it becomes a double number (e.g. 9-9).
-    function fiberNumberFor(group, idx) {
-      const num = (parseInt(group.startFiber) || 1) + idx;
-      return (group.joinbox && group.joinbox.trim()) ? `${num}-${num}` : `${num}`;
-    }
-
-    function recalculateFiberNumbers(group) {
-      if (!group.autoCount) return;
-      group.items.forEach((item, idx) => {
-        item.fiberNum = fiberNumberFor(group, idx);
-      });
-    }
-
-    function updateGroupJoinbox(gIdx, val) {
-      const group = state.raceCableData[state.activeRaceId][gIdx];
-      group.joinbox = val.trim();
-      recalculateFiberNumbers(group);
-      saveCableDataToLocal();
-      if (group.autoCount) renderCableBoard();
-    }
-
-    function updateGroupStartFiber(gIdx, val) {
-      const group = state.raceCableData[state.activeRaceId][gIdx];
-      group.startFiber = parseInt(val) || 1;
-      recalculateFiberNumbers(group);
-      saveCableDataToLocal();
-      if (group.autoCount) renderCableBoard();
-    }
-
-    function toggleGroupAutoCount(gIdx, enabled) {
-      const group = state.raceCableData[state.activeRaceId][gIdx];
-      group.autoCount = !!enabled;
-      if (group.startFiber === undefined) group.startFiber = 1;
-      recalculateFiberNumbers(group);
-      saveCableDataToLocal();
-      renderCableBoard();
-    }
-
-    // A hand-typed number wins, so auto count is switched off for the group.
-    function updateItemFiberNum(gIdx, iIdx, val) {
-      const group = state.raceCableData[state.activeRaceId][gIdx];
-      group.items[iIdx].fiberNum = val.trim();
-      const wasAuto = !!group.autoCount;
-      group.autoCount = false;
-      saveCableDataToLocal();
-      if (wasAuto) renderCableBoard();
-    }
-
     function addPairToGroup(gIdx) {
       const group = state.raceCableData[state.activeRaceId][gIdx];
-      const count = group.items.length + 1;
-      if (group.startFiber !== undefined) {
-        // Single-fiber group: continue from its start number.
-        const fiberNum = fiberNumberFor(group, count - 1);
-        group.items.push({
-          fiberNum,
-          pair: `${parseInt(fiberNum)}`,
-          label: "LABEL / BESTEMMING",
-          connector: "SC/APC",
-          defect: false,
-          half: false,
-          full: false
-        });
-      } else {
-        group.items.push({
-          pair: `${(count * 2) - 1},${count * 2}`,
-          label: "LABEL / BESTEMMING",
-          connector: "ST",
-          defect: false,
-          half: false,
-          full: false
-        });
-      }
+      const next = nextCablePair(group.items);
+      group.items.push(applyCablePair({
+        label: "LABEL / DESTINATION",
+        connector: "ST",
+        defect: false,
+        half: false,
+        full: false
+      }, next.numIn, next.numOut));
 
       saveCableDataToLocal();
       renderCableBoard();
     }
 
     function deleteCableItem(gIdx, iIdx) {
-      const group = state.raceCableData[state.activeRaceId][gIdx];
-      group.items.splice(iIdx, 1);
-      recalculateFiberNumbers(group);
-      saveCableDataToLocal();
-      renderCableBoard();
-    }
-
-    function loadDefaultBroadcastGroups() {
-      state.raceCableData[state.activeRaceId] = JSON.parse(JSON.stringify(DEFAULT_BROADCAST_GROUPS));
+      const item = state.raceCableData[state.activeRaceId][gIdx].items[iIdx];
+      if (item) selectedItems.delete(item);
+      state.raceCableData[state.activeRaceId][gIdx].items.splice(iIdx, 1);
       saveCableDataToLocal();
       renderCableBoard();
     }
 
     function deleteGroup(gIdx) {
-      if (confirm("Weet je zeker dat je deze gehele kabelgroep wilt verwijderen?")) {
+      if (confirm("Delete this entire cable group?")) {
         state.raceCableData[state.activeRaceId].splice(gIdx, 1);
         saveCableDataToLocal();
         renderCableBoard();
@@ -1854,7 +3695,7 @@
     }
 
     function openAddGroupModal() {
-      document.getElementById('groupModalTitle').innerText = "Nieuwe Kabelgroep";
+      document.getElementById('groupModalTitle').innerText = "New cable group";
       document.getElementById('groupModalIndex').value = "-1";
       document.getElementById('groupNameInput').value = "";
       document.getElementById('groupColorInput').value = "bg-emerald-600";
@@ -1864,7 +3705,7 @@
 
     function openEditGroupModal(gIdx) {
       const group = state.raceCableData[state.activeRaceId][gIdx];
-      document.getElementById('groupModalTitle').innerText = "Kabelgroep Bewerken";
+      document.getElementById('groupModalTitle').innerText = "Edit cable group";
       document.getElementById('groupModalIndex').value = gIdx;
       document.getElementById('groupNameInput').value = group.title;
       document.getElementById('groupColorInput').value = group.color || "bg-emerald-600";
@@ -1903,14 +3744,13 @@
       } else {
         const newItems = [];
         for (let i = 1; i <= pairCount; i++) {
-          newItems.push({
-            pair: `${(i * 2) - 1},${i * 2}`,
-            label: "LABEL / BESTEMMING",
+          newItems.push(applyCablePair({
+            label: "LABEL / DESTINATION",
             connector: "SC/APC",
             defect: false,
             half: false,
             full: false
-          });
+          }, (i * 2) - 1, i * 2));
         }
 
         state.raceCableData[state.activeRaceId].push({
@@ -1928,44 +3768,53 @@
     }
 
     function openAddRaceModal() {
-      document.getElementById('raceModalTitle').innerText = "Nieuwe Race Toevoegen";
+      document.getElementById('raceModalTitle').innerText = "Add race";
       document.getElementById('raceModalId').value = "";
       document.getElementById('raceNameInput').value = "";
       document.getElementById('raceCircuitInput').value = "";
+      document.getElementById('raceDateInput').value = "";
       openModal('raceModal');
     }
 
     function openEditRaceModal() {
       const race = state.races.find(r => r.id === state.activeRaceId);
       if (!race) return;
-      document.getElementById('raceModalTitle').innerText = "Race Bewerken";
+      document.getElementById('raceModalTitle').innerText = "Edit race";
       document.getElementById('raceModalId').value = race.id;
       document.getElementById('raceNameInput').value = race.name;
       document.getElementById('raceCircuitInput').value = race.circuit;
+      document.getElementById('raceDateInput').value = race.raceDate || "";
       openModal('raceModal');
     }
 
     function saveRaceForm(e) {
       e.preventDefault();
       const raceId = document.getElementById('raceModalId').value;
-      const name = document.getElementById('raceNameInput').value.trim();
+      const name = stripGrandPrixName(document.getElementById('raceNameInput').value.trim());
       const circuit = document.getElementById('raceCircuitInput').value.trim();
+      const raceDate = (document.getElementById('raceDateInput')?.value || '').trim();
 
       if (raceId) {
         const race = state.races.find(r => r.id === raceId);
         if (race) {
           race.name = name;
           race.circuit = circuit;
+          if (raceDate) race.raceDate = raceDate;
+          else delete race.raceDate;
         }
       } else {
         const newId = 'r_' + Date.now();
         const code = `R${state.races.length + 1}`;
-        state.races.push({ id: newId, code, name, circuit });
+        const created = { id: newId, code, name, circuit };
+        if (raceDate) created.raceDate = raceDate;
+        state.races.push(created);
         state.activeRaceId = newId;
         state.expandedRaceId = newId;
+        ensureFiberPlans(newId);
       }
 
       saveStateToLocal();
+      saveUiNav();
       closeModal('raceModal');
       renderRaceSidebar();
       renderCurrentView();
@@ -1973,20 +3822,26 @@
 
     function deleteRace(raceId) {
       if (state.races.length <= 1) {
-        alert("Er moet minimaal 1 race in de kalender blijven staan.");
+        alert("At least one race must stay on the calendar.");
         return;
       }
 
-      if (confirm("Weet je zeker dat je deze race en alle bijbehorende data wilt verwijderen?")) {
+      if (confirm("Delete this race and all of its data?")) {
         state.races = state.races.filter(r => r.id !== raceId);
         delete state.raceCableData[raceId];
         delete state.raceJoinboxData[raceId];
+        delete state.raceFiberPlanData[raceId];
         delete state.raceMediaData[raceId];
+        delete state.raceMacData[raceId];
+        delete state.raceFreqData[raceId];
 
         if (state.activeRaceId === raceId) {
           state.activeRaceId = state.races[0].id;
-          state.expandedRaceId = state.races[0].id;
         }
+        if (state.expandedRaceId === raceId) {
+          state.expandedRaceId = null;
+        }
+        saveUiNav();
 
         saveStateToLocal();
         renderRaceSidebar();
@@ -1994,9 +3849,26 @@
       }
     }
 
-    function openCopyModal() {
+    let copyModalMode = 'plans';
+
+    function openCopyModal(mode) {
+      copyModalMode = mode === 'cables' ? 'cables' : 'plans';
       const activeRace = state.races.find(r => r.id === state.activeRaceId);
-      document.getElementById('copySourceRaceName').innerText = activeRace ? activeRace.name : 'huidige race';
+      const sourceName = activeRace ? activeRace.name : 'current race';
+
+      const titleEl = document.getElementById('copyModalTitle');
+      const hintEl = document.getElementById('copyModalHint');
+      const confirmEl = document.getElementById('copyModalConfirm');
+      if (copyModalMode === 'plans') {
+        titleEl.innerHTML = '<i class="fa-regular fa-copy text-emerald-400"></i> <span>Copy standard list</span>';
+        hintEl.innerHTML = 'Copy the standard patch list (titles, numbers, labels and joinbox sections) from <strong id="copySourceRaceName" class="text-slate-900"></strong> to other races. Cables are left unchanged. Status ticks are reset.';
+        confirmEl.innerText = 'Copy standard list';
+      } else {
+        titleEl.innerHTML = '<i class="fa-solid fa-bezier-curve text-emerald-400"></i> <span>Copy cables</span>';
+        hintEl.innerHTML = 'Copy the cable layout and joinboxes from <strong id="copySourceRaceName" class="text-slate-900"></strong> to other races. The standard list is left unchanged. Status ticks are reset.';
+        confirmEl.innerText = 'Copy cables';
+      }
+      document.getElementById('copySourceRaceName').innerText = sourceName;
 
       const targetListEl = document.getElementById('copyTargetRaceList');
       targetListEl.innerHTML = '';
@@ -2024,38 +3896,101 @@
       checkboxes.forEach(cb => cb.checked = select);
     }
 
+    function selectedCopyTargets() {
+      return Array.from(document.querySelectorAll('.copy-target-checkbox:checked')).map(cb => cb.value);
+    }
+
+    function cloneFiberPlansForCopy(plans) {
+      const source = Array.isArray(plans) ? plans : [];
+      const cloned = source.map((plan) => {
+        const nextPlan = {
+          id: plan && plan.id ? plan.id : newUid('plan'),
+          title: plan && plan.title ? plan.title : '',
+          color: plan && plan.color ? plan.color : 'bg-slate-700',
+          collapsed: false,
+          segments: Array.isArray(plan && plan.segments) ? plan.segments.map((segment) => ({
+            id: segment && segment.id ? segment.id : newUid('seg'),
+            title: segment && segment.title ? segment.title : '',
+            throughJoinbox: !!(segment && segment.throughJoinbox),
+            items: Array.isArray(segment && segment.items) ? segment.items.map((item) => ({
+              id: item && item.id ? item.id : newUid('f'),
+              auto: !item || item.auto !== false,
+              numIn: item ? item.numIn : 1,
+              numOut: item ? item.numOut : 1,
+              label: item && item.label != null ? item.label : '',
+              defect: false,
+              half: false,
+              full: false
+            })) : []
+          })) : []
+        };
+        applyAutoFiberNumbers(nextPlan);
+        return nextPlan;
+      });
+      return cloned;
+    }
+
+    function cloneCableGroupsForCopy(groups) {
+      const copiedGroups = JSON.parse(JSON.stringify(Array.isArray(groups) ? groups : []));
+      copiedGroups.forEach(group => {
+        if (group && typeof group === 'object') delete group.collapsed;
+        (group.items || []).forEach(item => {
+          const nums = cablePairFromItem(item);
+          applyCablePairText(item, cablePairLabel(item));
+          item.defect = false;
+          item.half = false;
+          item.full = false;
+        });
+      });
+      return copiedGroups;
+    }
+
     function executeCopyLayout() {
-      const sourceGroups = state.raceCableData[state.activeRaceId];
-      const sourceJoinboxes = state.raceJoinboxData[state.activeRaceId];
-
-      const selectedTargets = Array.from(document.querySelectorAll('.copy-target-checkbox:checked')).map(cb => cb.value);
-
+      const selectedTargets = selectedCopyTargets();
       if (selectedTargets.length === 0) {
-        alert("Selecteer minimaal één race om de indeling naar toe te kopiëren.");
+        alert("Select at least one race to copy to.");
         return;
       }
 
+      if (copyModalMode === 'plans') {
+        copyStandardPlansToRaces(selectedTargets);
+      } else {
+        copyCablesToRaces(selectedTargets);
+      }
+
+      saveStateToLocal();
+      closeModal('copyModal');
+    }
+
+    function copyStandardPlansToRaces(selectedTargets) {
+      ensureFiberPlans(state.activeRaceId);
+      const sourcePlans = state.raceFiberPlanData[state.activeRaceId];
+      selectedTargets.forEach(targetRaceId => {
+        state.raceFiberPlanData[targetRaceId] = cloneFiberPlansForCopy(sourcePlans);
+        if (collapseMap[targetRaceId]) {
+          Object.keys(collapseMap[targetRaceId]).forEach((key) => {
+            if (key.indexOf('plan:') === 0) delete collapseMap[targetRaceId][key];
+          });
+        }
+      });
+      try {
+        localStorage.setItem(COLLAPSE_KEY, JSON.stringify(collapseMap));
+      } catch (e) {}
+      alert(`Standard list copied to ${selectedTargets.length} race(s).`);
+    }
+
+    function copyCablesToRaces(selectedTargets) {
+      const sourceGroups = state.raceCableData[state.activeRaceId];
+      const sourceJoinboxes = state.raceJoinboxData[state.activeRaceId];
       selectedTargets.forEach(targetRaceId => {
         if (sourceGroups) {
-          const copiedGroups = JSON.parse(JSON.stringify(sourceGroups));
-          copiedGroups.forEach(group => {
-            group.items.forEach(item => {
-              item.defect = false;
-              item.half = false;
-              item.full = false;
-            });
-          });
-          state.raceCableData[targetRaceId] = copiedGroups;
+          state.raceCableData[targetRaceId] = cloneCableGroupsForCopy(sourceGroups);
         }
-
         if (sourceJoinboxes) {
           state.raceJoinboxData[targetRaceId] = JSON.parse(JSON.stringify(sourceJoinboxes));
         }
       });
-
-      saveStateToLocal();
-      closeModal('copyModal');
-      alert(`Kabel & Joinbox indeling succesvol gekopieerd naar ${selectedTargets.length} race(s)!`);
+      alert(`Cables and joinboxes copied to ${selectedTargets.length} race(s).`);
     }
 
     function openModal(id) {
@@ -2064,30 +3999,6 @@
 
     function closeModal(id) {
       document.getElementById(id).classList.add('hidden');
-    }
-
-    function openSupabaseModal() {
-      document.getElementById('sbUrlInput').value = state.supabaseConfig.url || '';
-      document.getElementById('sbKeyInput').value = state.supabaseConfig.key || '';
-      openModal('supabaseModal');
-    }
-
-    function saveSupabaseConfig(e) {
-      e.preventDefault();
-      state.supabaseConfig.url = document.getElementById('sbUrlInput').value.trim();
-      state.supabaseConfig.key = document.getElementById('sbKeyInput').value.trim();
-      localStorage.setItem('f1_sb_config', JSON.stringify(state.supabaseConfig));
-      closeModal('supabaseModal');
-      initSupabase();
-    }
-
-    function clearSupabaseConfig() {
-      state.supabaseConfig = { url: '', key: '' };
-      localStorage.removeItem('f1_sb_config');
-      supabaseClient = null;
-      supabaseActive = false;
-      closeModal('supabaseModal');
-      initSupabase();
     }
 
     function escapeHtml(str) {

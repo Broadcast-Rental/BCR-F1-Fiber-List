@@ -9,8 +9,6 @@ const multer = require('multer');
 const { WebSocketServer } = require('ws');
 const { mergeState } = require('./merge');
 
-const MAX_IMAGE_BYTES = 20 * 1024 * 1024;
-
 // The image carries its build number in a file; see the Dockerfile for why the
 // file wins over the environment.
 function readBuildNumber() {
@@ -21,6 +19,8 @@ function readBuildNumber() {
   }
 }
 const BUILD_NUMBER = readBuildNumber();
+
+const MAX_UPLOAD_BYTES = 20 * 1024 * 1024;
 const MIME_EXT = {
   'image/jpeg': '.jpg',
   'image/jpg': '.jpg',
@@ -29,15 +29,33 @@ const MIME_EXT = {
   'image/webp': '.webp',
   'image/bmp': '.bmp',
   'image/heic': '.heic',
-  'image/heif': '.heif'
+  'image/heif': '.heif',
+  'application/pdf': '.pdf',
+  'application/zip': '.zip',
+  'application/x-zip-compressed': '.zip',
+  'application/msword': '.doc',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document': '.docx',
+  'application/vnd.ms-excel': '.xls',
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': '.xlsx',
+  'application/vnd.ms-powerpoint': '.ppt',
+  'application/vnd.openxmlformats-officedocument.presentationml.presentation': '.pptx',
+  'text/plain': '.txt',
+  'text/csv': '.csv'
 };
+const ALLOWED_EXT = new Set([
+  '.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.heic', '.heif',
+  '.pdf', '.zip', '.doc', '.docx', '.xls', '.xlsx', '.ppt', '.pptx', '.txt', '.csv'
+]);
 
 function emptyState() {
   return {
     races: [],
     raceCableData: {},
     raceJoinboxData: {},
-    raceMediaData: {}
+    raceFiberPlanData: {},
+    raceMediaData: {},
+    raceMacData: {},
+    raceFreqData: {}
   };
 }
 
@@ -47,11 +65,21 @@ function isPlainObject(value) {
 
 function stripCollapsed(state) {
   const cableData = state.raceCableData;
-  if (!isPlainObject(cableData)) return;
-  for (const groups of Object.values(cableData)) {
-    if (!Array.isArray(groups)) continue;
-    for (const group of groups) {
-      if (group && typeof group === 'object') delete group.collapsed;
+  if (isPlainObject(cableData)) {
+    for (const groups of Object.values(cableData)) {
+      if (!Array.isArray(groups)) continue;
+      for (const group of groups) {
+        if (group && typeof group === 'object') delete group.collapsed;
+      }
+    }
+  }
+  const plans = state.raceFiberPlanData;
+  if (isPlainObject(plans)) {
+    for (const list of Object.values(plans)) {
+      if (!Array.isArray(list)) continue;
+      for (const plan of list) {
+        if (plan && typeof plan === 'object') delete plan.collapsed;
+      }
     }
   }
 }
@@ -61,9 +89,31 @@ function normalizeState(input) {
   const media = {};
   if (isPlainObject(src.raceMediaData)) {
     for (const [raceId, value] of Object.entries(src.raceMediaData)) {
+      const files = normalizeFiles(value?.files, value?.images);
       media[raceId] = {
         notes: typeof value?.notes === 'string' ? value.notes : '',
-        images: Array.isArray(value?.images) ? value.images.filter((item) => typeof item === 'string') : []
+        images: imageUrlsFrom(files, value?.images),
+        files
+      };
+    }
+  }
+  const mac = {};
+  if (isPlainObject(src.raceMacData)) {
+    for (const [raceId, value] of Object.entries(src.raceMacData)) {
+      mac[raceId] = {
+        name: typeof value?.name === 'string' ? value.name : '',
+        url: typeof value?.url === 'string' ? value.url : '',
+        mapsUrl: typeof value?.mapsUrl === 'string' ? value.mapsUrl : '',
+        notes: typeof value?.notes === 'string' ? value.notes : '',
+        files: normalizeFiles(value?.files, value?.images)
+      };
+    }
+  }
+  const freq = {};
+  if (isPlainObject(src.raceFreqData)) {
+    for (const [raceId, value] of Object.entries(src.raceFreqData)) {
+      freq[raceId] = {
+        files: normalizeFiles(value?.files, value?.images)
       };
     }
   }
@@ -71,14 +121,95 @@ function normalizeState(input) {
     races: Array.isArray(src.races) ? src.races.filter((race) => race && typeof race.id === 'string' && race.id) : [],
     raceCableData: isPlainObject(src.raceCableData) ? src.raceCableData : {},
     raceJoinboxData: isPlainObject(src.raceJoinboxData) ? src.raceJoinboxData : {},
-    raceMediaData: media
+    raceFiberPlanData: isPlainObject(src.raceFiberPlanData) ? src.raceFiberPlanData : {},
+    raceMediaData: media,
+    raceMacData: mac,
+    raceFreqData: freq
   };
   stripCollapsed(state);
   return state;
 }
 
 function extFromMime(mime) {
-  return MIME_EXT[String(mime || '').toLowerCase()] || '';
+  const ext = MIME_EXT[String(mime || '').toLowerCase()] || '';
+  return ext === '.jpeg' ? '.jpg' : ext;
+}
+
+function extFromName(name) {
+  const ext = path.extname(String(name || '')).toLowerCase();
+  if (ext === '.jpeg') return '.jpg';
+  return ALLOWED_EXT.has(ext) ? ext : '';
+}
+
+function fileNameFromUrl(url) {
+  const value = String(url || '');
+  if (value.startsWith('data:')) return 'afbeelding';
+  try {
+    const clean = value.split('?')[0];
+    const base = path.basename(clean);
+    return base && base !== '/' ? decodeURIComponent(base) : 'bestand';
+  } catch (err) {
+    return 'bestand';
+  }
+}
+
+function normalizeFileItem(item, index) {
+  if (typeof item === 'string' && item) {
+    return {
+      id: 'legacy_' + index + '_' + item.slice(-48),
+      url: item,
+      name: fileNameFromUrl(item),
+      type: ''
+    };
+  }
+  if (!item || typeof item !== 'object' || typeof item.url !== 'string' || !item.url) return null;
+  return {
+    id: typeof item.id === 'string' && item.id ? item.id : ('file_' + index + '_' + item.url.slice(-32)),
+    url: item.url,
+    name: typeof item.name === 'string' && item.name ? item.name : fileNameFromUrl(item.url),
+    type: typeof item.type === 'string' ? item.type : ''
+  };
+}
+
+function normalizeFiles(files, images) {
+  const out = [];
+  const seen = new Set();
+  const push = (item, index) => {
+    const file = normalizeFileItem(item, index);
+    if (!file || seen.has(file.url)) return;
+    seen.add(file.url);
+    out.push(file);
+  };
+  if (Array.isArray(files)) files.forEach((item, index) => push(item, index));
+  if (Array.isArray(images)) {
+    images.forEach((item, index) => {
+      if (typeof item === 'string') push(item, 1000 + index);
+    });
+  }
+  return out;
+}
+
+function imageUrlsFrom(files, images) {
+  const urls = [];
+  const seen = new Set();
+  const push = (url) => {
+    if (typeof url !== 'string' || !url || seen.has(url)) return;
+    seen.add(url);
+    urls.push(url);
+  };
+  if (Array.isArray(images)) images.forEach(push);
+  if (Array.isArray(files)) {
+    files.forEach((file) => {
+      const url = typeof file === 'string' ? file : file?.url;
+      const type = typeof file === 'object' && file ? String(file.type || '') : '';
+      const name = typeof file === 'object' && file ? String(file.name || url || '') : String(url || '');
+      const ext = extFromName(name);
+      if (type.startsWith('image/') || ['.jpg', '.png', '.gif', '.webp', '.bmp', '.heic', '.heif'].includes(ext)) {
+        push(url);
+      }
+    });
+  }
+  return urls;
 }
 
 function createServer(options = {}) {
@@ -89,7 +220,7 @@ function createServer(options = {}) {
 
   fs.mkdirSync(uploadsDir, { recursive: true });
 
-  let store = loadStore(stateFile, uploadsDir);
+  let store = loadStore(stateFile);
   let writeChain = Promise.resolve();
 
   function withLock(fn) {
@@ -100,13 +231,22 @@ function createServer(options = {}) {
 
   function referencedUploads(state) {
     const names = new Set();
+    const collect = (ref) => {
+      const name = uploadNameFromRef(ref);
+      if (name) names.add(name);
+    };
     const media = state?.raceMediaData || {};
     for (const entry of Object.values(media)) {
-      const images = entry?.images || [];
-      for (const ref of images) {
-        const name = uploadNameFromRef(ref);
-        if (name) names.add(name);
-      }
+      for (const ref of entry?.images || []) collect(ref);
+      for (const file of entry?.files || []) collect(typeof file === 'string' ? file : file?.url);
+    }
+    const mac = state?.raceMacData || {};
+    for (const entry of Object.values(mac)) {
+      for (const file of entry?.files || []) collect(typeof file === 'string' ? file : file?.url);
+    }
+    const freq = state?.raceFreqData || {};
+    for (const entry of Object.values(freq)) {
+      for (const file of entry?.files || []) collect(typeof file === 'string' ? file : file?.url);
     }
     return names;
   }
@@ -114,10 +254,36 @@ function createServer(options = {}) {
   function persistEmbeddedImages(state) {
     const media = state.raceMediaData || {};
     for (const entry of Object.values(media)) {
-      if (!entry || !Array.isArray(entry.images)) continue;
-      entry.images = entry.images.map((src) => materializeImage(src)).filter(Boolean);
+      if (!entry) continue;
+      if (Array.isArray(entry.images)) {
+        entry.images = entry.images.map((src) => materializeImage(src)).filter(Boolean);
+      }
+      if (Array.isArray(entry.files)) {
+        entry.files = entry.files.map((file) => materializeFile(file)).filter(Boolean);
+      }
+    }
+    const mac = state.raceMacData || {};
+    for (const entry of Object.values(mac)) {
+      if (!entry || !Array.isArray(entry.files)) continue;
+      entry.files = entry.files.map((file) => materializeFile(file)).filter(Boolean);
+    }
+    const freq = state.raceFreqData || {};
+    for (const entry of Object.values(freq)) {
+      if (!entry || !Array.isArray(entry.files)) continue;
+      entry.files = entry.files.map((file) => materializeFile(file)).filter(Boolean);
     }
     return state;
+  }
+
+  function materializeFile(file) {
+    if (typeof file === 'string') {
+      const url = materializeImage(file);
+      return url ? { id: 'legacy_' + url.slice(-32), url, name: fileNameFromUrl(url), type: '' } : null;
+    }
+    if (!file || typeof file !== 'object') return null;
+    const url = materializeImage(file.url);
+    if (!url) return null;
+    return { ...file, url, name: file.name || fileNameFromUrl(url) };
   }
 
   function materializeImage(src) {
@@ -132,7 +298,7 @@ function createServer(options = {}) {
     } catch (err) {
       return null;
     }
-    if (!buf.length || buf.length > MAX_IMAGE_BYTES) {
+    if (!buf.length || buf.length > MAX_UPLOAD_BYTES) {
       console.warn('Skipping embedded image outside the allowed size');
       return null;
     }
@@ -187,7 +353,7 @@ function createServer(options = {}) {
 
   const upload = multer({
     storage,
-    limits: { fileSize: MAX_IMAGE_BYTES, files: 1 },
+    limits: { fileSize: MAX_UPLOAD_BYTES, files: 1 },
     fileFilter: (req, file, cb) => {
       const ext = extFromMime(file.mimetype) || extFromName(file.originalname);
       if (!ext) {
@@ -204,7 +370,7 @@ function createServer(options = {}) {
     res.setHeader('X-Content-Type-Options', 'nosniff');
     next();
   });
-  app.use(express.json({ limit: '8mb' }));
+  app.use(express.json({ limit: '40mb' }));
 
   app.get('/api/health', (req, res) => {
     res.json({ ok: true, build: BUILD_NUMBER });
@@ -284,7 +450,7 @@ function createServer(options = {}) {
       if (err) {
         const tooBig = err.code === 'LIMIT_FILE_SIZE';
         res.status(400).json({
-          error: tooBig ? 'Bestand is te groot (max 20 MB).' : 'Upload mislukt. Alleen afbeeldingen zijn toegestaan.'
+          error: tooBig ? 'Bestand is te groot (max 20 MB).' : 'Dit bestandstype is niet toegestaan.'
         });
         return;
       }
@@ -292,11 +458,21 @@ function createServer(options = {}) {
         res.status(400).json({ error: 'Geen bestand ontvangen.' });
         return;
       }
-      res.json({ url: `/uploads/${req.file.filename}` });
+      res.json({
+        url: `/uploads/${req.file.filename}`,
+        name: req.file.originalname || req.file.filename,
+        type: req.file.mimetype || ''
+      });
     });
   });
 
   app.use('/uploads', express.static(uploadsDir, {
+    fallthrough: false,
+    maxAge: '7d',
+    index: false
+  }));
+
+  app.use('/public', express.static(path.join(__dirname, 'public'), {
     fallthrough: false,
     maxAge: '7d',
     index: false
@@ -345,54 +521,10 @@ function uploadNameFromRef(ref) {
   return name;
 }
 
-function extFromName(name) {
-  const ext = path.extname(String(name || '')).toLowerCase();
-  const allowed = new Set(['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.heic', '.heif']);
-  if (ext === '.jpeg') return '.jpg';
-  return allowed.has(ext) ? ext : '';
-}
 
-function materializeDataUrlsInText(text, uploadsDir) {
-  if (!text.includes('data:image/')) return text;
-  return text.replace(/data:(image\/[a-zA-Z0-9.+-]+);base64,([A-Za-z0-9+/=\r\n]+)/g, (match, mime, b64) => {
-    const ext = extFromMime(mime);
-    if (!ext) return '';
-    let buf;
-    try {
-      buf = Buffer.from(b64.replace(/\s/g, ''), 'base64');
-    } catch (err) {
-      return '';
-    }
-    if (!buf.length || buf.length > MAX_IMAGE_BYTES) return '';
-    const name = crypto.createHash('sha256').update(buf).digest('hex').slice(0, 32) + ext;
-    const dest = path.join(uploadsDir, name);
-    try {
-      if (!fs.existsSync(dest)) fs.writeFileSync(dest, buf);
-    } catch (err) {
-      console.error('Could not store embedded image', err.message);
-      return '';
-    }
-    return `/uploads/${name}`;
-  });
-}
-
-function loadStore(stateFile, uploadsDir) {
+function loadStore(stateFile) {
   try {
-    const size = fs.statSync(stateFile).size;
-    if (size > 24 * 1024 * 1024) {
-      const parked = `${stateFile}.too-large-${Date.now()}`;
-      console.error(`State file is ${size} bytes and would be killed while loading. Moved to ${parked}`);
-      fs.renameSync(stateFile, parked);
-      return { initialized: false, revision: 0, state: emptyState() };
-    }
-    let text = fs.readFileSync(stateFile, 'utf8');
-    if (uploadsDir && text.includes('data:image/')) {
-      text = materializeDataUrlsInText(text, uploadsDir);
-      const tmp = `${stateFile}.slim`;
-      fs.writeFileSync(tmp, text);
-      fs.renameSync(tmp, stateFile);
-    }
-    const parsed = JSON.parse(text);
+    const parsed = JSON.parse(fs.readFileSync(stateFile, 'utf8'));
     if (parsed && parsed.initialized && parsed.state) {
       return {
         initialized: true,
@@ -422,14 +554,7 @@ function listen(server, port) {
 
 if (require.main === module) {
   const port = Number(process.env.PORT) || 8080;
-  const { server, wss, dataDir } = createServer();
-  const shutdown = () => {
-    wss.close();
-    server.close(() => process.exit(0));
-    setTimeout(() => process.exit(0), 2000).unref();
-  };
-  process.on('SIGTERM', shutdown);
-  process.on('SIGINT', shutdown);
+  const { server, dataDir } = createServer();
   listen(server, port).then(() => {
     console.log(`F1 Fiber manager listening on ${port}`);
     console.log(`Data directory: ${dataDir}`);
