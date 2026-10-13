@@ -9,6 +9,7 @@ RUN npm ci --omit=dev
 
 COPY server.js merge.js ./
 COPY f1_fiber_cable_management_app.html ./
+COPY public ./public
 
 ENV NODE_ENV=production
 ENV PORT=8080
